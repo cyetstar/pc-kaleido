@@ -1,0 +1,25 @@
+span.anticon {
+  // 百度 ant-design-vue 与 windicss样式冲突 https: //blog.csdn.net/weixin_38705829/article/details/129384218
+  vertical-align: 0.125em !important;
+}
+
+.ant-image-preview-img {
+  margin: 0 auto;
+}
+
+.ant-image-preview-img-wrapper::before {
+  height: 10% !important;
+}
+
+:deep(.ant-form-item) {
+  margin-bottom: 16px;
+}
+
+:deep(.ant-pagination) {
+  margin-top: 32px;
+}
+
+:deep(.ant-table-tbody > tr.ant-table-row-selected > td) {
+  background: #ecf4fc;
+  border-color: rgba(0, 0, 0, 0.03);
+}

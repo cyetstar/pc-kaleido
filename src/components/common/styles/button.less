@@ -1,0 +1,271 @@
+@import "variable.less";
+.btn-filled {
+  color: #ffffff;
+}
+.btn-outlined {
+  background-color: #ffffff;
+}
+.btn-disabled {
+  cursor: not-allowed;
+}
+.@{prefix}-btn-default {
+  &.is-disabled {
+    color: tint(@disable-font-color, 0);
+    background-color: tint(@disable-bg-color, 0);
+    border-color: tint(#ccc, 0);
+    &:extend(.btn-disabled);
+  }
+
+  &.is-link {
+    background-color: transparent;
+    border: none;
+  }
+}
+.@{prefix}-btn-primary {
+  border-color: @primary-color;
+  background-color: @primary-color;
+  &:extend(.btn-filled);
+
+  &:hover,
+  &:focus {
+    background-color: tint(@primary-color, 30%);
+    border-color: tint(@primary-color, 30%);
+    &:extend(.btn-filled);
+  }
+
+  &.is-disabled {
+    background-color: tint(@primary-color, 30%);
+    border-color: tint(@primary-color, 30%);
+    &:extend(.btn-disabled);
+  }
+
+  &.is-link {
+    color: @primary-color;
+    background-color: transparent;
+    border: none;
+  }
+}
+
+.@{prefix}-btn-success {
+  border-color: @success-color;
+  background-color: @success-color;
+  &:extend(.btn-filled);
+
+  &:hover,
+  &:focus {
+    background-color: tint(@success-color, 30%);
+    border-color: tint(@success-color, 30%);
+    &:extend(.btn-filled);
+  }
+
+  &.is-disabled {
+    background-color: tint(@success-color, 30%);
+    border-color: tint(@success-color, 30%);
+    &:extend(.btn-disabled);
+  }
+
+  &.is-link {
+    color: @success-color;
+    background-color: transparent;
+    border: none;
+  }
+}
+
+.@{prefix}-btn-warning {
+  border-color: @warning-color;
+  background-color: @warning-color;
+  &:extend(.btn-filled);
+
+  &:hover,
+  &:focus {
+    background-color: tint(@warning-color, 30%);
+    border-color: tint(@warning-color, 30%);
+    &:extend(.btn-filled);
+  }
+
+  &.is-disabled {
+    background-color: tint(@warning-color, 30%);
+    border-color: tint(@warning-color, 30%);
+    &:extend(.btn-disabled);
+  }
+
+  &.is-link {
+    color: @warning-color;
+    background-color: transparent;
+    border: none;
+  }
+}
+
+.@{prefix}-btn-danger {
+  border-color: @danger-color;
+  background-color: @danger-color;
+  &:extend(.btn-filled);
+
+  &:hover,
+  &:focus {
+    background-color: tint(@danger-color, 30%);
+    border-color: tint(@danger-color, 30%);
+    &:extend(.btn-filled);
+  }
+
+  &.is-disabled {
+    background-color: tint(@danger-color, 30%);
+    border-color: tint(@danger-color, 30%);
+    &:extend(.btn-disabled);
+  }
+
+  &.is-link {
+    color: @danger-color;
+    background-color: transparent;
+    border: none;
+  }
+}
+
+.@{prefix}-btn-info {
+  border-color: @info-color;
+  background-color: @info-color;
+  &:extend(.btn-filled);
+  &.is-disabled {
+    background-color: tint(@info-color, 30%);
+    border-color: tint(@info-color, 30%);
+    &:extend(.btn-disabled);
+  }
+
+  &:hover,
+  &:focus {
+    background-color: tint(@info-color, 30%);
+    border-color: tint(@info-color, 30%);
+    &:extend(.btn-filled);
+  }
+
+  &.is-link {
+    color: @info-color;
+    background-color: transparent;
+    border: none;
+  }
+}
+
+.@{prefix}-btn-outline-primary {
+  color: @primary-color;
+  border-color: tint(@primary-color, 50%);
+  background-color: tint(@primary-color, 100%);
+
+  &:hover,
+  &:focus {
+    color: tint(@primary-color, 20%);
+    border-color: tint(@primary-color, 60%);
+    background-color: tint(@primary-color, 100%);
+  }
+
+  &.is-disabled {
+    color: tint(@disable-font-color, 0);
+    background-color: tint(@disable-bg-color, 0);
+    border-color: tint(#ccc, 0);
+    &:extend(.btn-disabled);
+  }
+
+  &.is-link {
+    background-color: transparent;
+    border: none;
+  }
+}
+
+.@{prefix}-btn-outline-success {
+  color: @success-color;
+  border-color: tint(@success-color, 50%);
+  background-color: tint(@success-color, 100%);
+
+  &:hover,
+  &:focus {
+    color: tint(@success-color, 20%);
+    border-color: tint(@success-color, 60%);
+    background-color: tint(@success-color, 100%);
+  }
+
+  &.is-disabled {
+    color: tint(@disable-font-color, 0);
+    background-color: tint(@disable-bg-color, 0);
+    border-color: tint(#ccc, 0);
+    &:extend(.btn-disabled);
+  }
+
+  &.is-link {
+    background-color: transparent;
+    border: none;
+  }
+}
+
+.@{prefix}-btn-outline-warning {
+  color: @warning-color;
+  border-color: tint(@warning-color, 50%);
+  background-color: tint(@warning-color, 100%);
+
+  &:hover,
+  &:focus {
+    color: tint(@warning-color, 20%);
+    border-color: tint(@warning-color, 60%);
+    background-color: tint(@warning-color, 100%);
+  }
+
+  &.is-disabled {
+    color: tint(@disable-font-color, 0);
+    background-color: tint(@disable-bg-color, 0);
+    border-color: tint(#ccc, 0);
+    &:extend(.btn-disabled);
+  }
+
+  &.is-link {
+    background-color: transparent;
+    border: none;
+  }
+}
+
+.@{prefix}-btn-outline-danger {
+  color: @danger-color;
+  border-color: tint(@danger-color, 50%);
+  background-color: tint(@danger-color, 100%);
+
+  &:hover,
+  &:focus {
+    color: tint(@danger-color, 20%);
+    border-color: tint(@danger-color, 60%);
+    background-color: tint(@danger-color, 100%);
+  }
+
+  &.is-disabled {
+    color: tint(@disable-font-color, 0);
+    background-color: tint(@disable-bg-color, 0);
+    border-color: tint(#ccc, 0);
+    &:extend(.btn-disabled);
+  }
+
+  &.is-link {
+    background-color: transparent;
+    border: none;
+  }
+}
+
+.@{prefix}-btn-outline-info {
+  color: @info-color;
+  border-color: tint(@info-color, 50%);
+  background-color: tint(@info-color, 100%);
+
+  &:hover,
+  &:focus {
+    color: tint(@info-color, 20%);
+    border-color: tint(@info-color, 60%);
+    background-color: tint(@info-color, 100%);
+  }
+
+  &.is-disabled {
+    color: tint(@disable-font-color, 0);
+    background-color: tint(@disable-bg-color, 0);
+    border-color: tint(#ccc, 0);
+    &:extend(.btn-disabled);
+  }
+
+  &.is-link {
+    background-color: transparent;
+    border: none;
+  }
+}
