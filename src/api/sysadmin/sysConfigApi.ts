@@ -1,9 +1,9 @@
 import { useFetch } from "@/utils/http";
 
 export const sysConfigPageApi = (params: any) => {
-return useFetch.get<any>({
-  url: "/sysConfig/page",
-  params,
+  return useFetch.get<any>({
+    url: "/sysConfig/page",
+    params,
   });
 };
 
@@ -46,5 +46,19 @@ export const sysConfigExportApi = (params: any) => {
   return useFetch.get<any>({
     url: "/sysConfig/export",
     params,
+  });
+};
+
+export const apiSysConfigFindByKeys = (data: any) => {
+  return useFetch.post<any>({
+    url: "/sysConfig/findByKeys",
+    data,
+  });
+};
+
+export const apiSysConfigSave = (data: any) => {
+  return useFetch.post<any>({
+    url: "/sysConfig/save",
+    data,
   });
 };

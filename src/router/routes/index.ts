@@ -22,6 +22,7 @@ import sysDictTypeRoutes from "@/router/routes/sysadmin/sysDictTypeRoutes";
 import sysLogRoutes from "@/router/routes/sysadmin/sysLogRoutes";
 import musicReleaseRoutes from "@/router/routes/music/musicReleaseRoutes";
 import musicArtistRoutes from "@/router/routes/music/musicArtistRoutes";
+import sysConfigRoutes from "@/router/routes/sysadmin/sysConfigRoutes";
 
 const LoginRoute: AppRouteConfig = {
   path: "/login",
@@ -61,6 +62,7 @@ const BackstageRoute: AppRouteConfig = {
     ...fwtDmWgRoutes,
     ...webLogRoutes,
     ...sysLogRoutes,
+    ...sysConfigRoutes,
     ...musicReleaseRoutes,
     ...musicArtistRoutes,
   ],

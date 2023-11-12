@@ -42,25 +42,25 @@ export const MENUS = [
     children: [
       {
         title: "用户管理",
-        name: "sysUserPage",
+        name: "SysUserPage",
         path: "/sysadmin/sysUser/page",
         permission: "sysUser:page",
       },
       {
         title: "角色管理",
-        name: "sysRolePage",
+        name: "SysRolePage",
         path: "/sysadmin/sysRole/page",
         permission: "sysRole:page",
       },
       {
         title: "菜单管理",
-        name: "sysMenuPage",
+        name: "SysMenuPage",
         path: "/sysadmin/sysMenu/page",
         permission: "sysMenu:page",
       },
       {
         title: "资源管理",
-        name: "sysResourcePage",
+        name: "SysResourcePage",
         path: "/sysadmin/sysResource/page",
         permission: "sysResource:page",
       },
@@ -73,7 +73,7 @@ export const MENUS = [
       {
         title: "系统配置",
         name: "SysConfigForm",
-        path: "/sysConfig/form",
+        path: "/sysadmin/sysConfig/form",
         permission: "sysConfig:create",
       },
       {
@@ -84,7 +84,7 @@ export const MENUS = [
       },
       {
         title: "系统日志",
-        name: "sysLogPage",
+        name: "SysLogPage",
         path: "/sysadmin/sysLog/page",
         permission: "sysLog:page",
       },

@@ -5,136 +5,128 @@
 -->
 <template>
   <section class="h-page-section" ref="appManagePage">
-    <a-form
-      ref="formRef"
-      :label-col="{ span: 4 }"
-      width="600px"
-      v-model:form="form"
-      title="系统配置表"
-      @submit="submit"
-    >
-      <h-col :span="24">
-        <h-input
-          label="配置名称"
-          v-model:value="form.configName"
-          name="configName"
-        />
-      </h-col>
-      <h-col :span="24">
-        <h-input
-          label="配置键名"
-          v-model:value="form.configKey"
-          name="configKey"
-        />
-      </h-col>
-      <h-col :span="24">
-        <h-input
-          label="配置键值"
-          v-model:value="form.configValue"
-          name="configValue"
-        />
-      </h-col>
-      <h-col :span="24">
-        <h-select
-          label="是否已删除1：已删除，0：未删除"
-          dict-type="isDeleted"
-          v-model:value="form.isDeleted"
-          name="isDeleted"
-        />
-      </h-col>
-      <h-col :span="24">
-        <h-select
-          label="创建时间"
-          dict-type="createTime"
-          v-model:value="form.createTime"
-          name="createTime"
-        />
-      </h-col>
-      <h-col :span="24">
-        <h-select
-          label="更新时间"
-          dict-type="updateTime"
-          v-model:value="form.updateTime"
-          name="updateTime"
-        />
-      </h-col>
-      <h-col :span="24">
-        <h-input
-          label="创建人"
-          v-model:value="form.createdBy"
-          name="createdBy"
-        />
-      </h-col>
-      <h-col :span="24">
-        <h-input
-          label="更新人"
-          v-model:value="form.updatedBy"
-          name="updatedBy"
-        />
+    <a-form ref="refForm" :label-col="{ span: 6 }" v-model:form="form">
+      <a-tabs v-model:activeKey="activeKey">
+        <a-tab-pane key="plex" tab="Plex">
+          <h-col :span="12">
+            <h-input
+              label="Plex访问地址"
+              name="plexUrl"
+              v-model:value="form.plexUrl"
+            />
+          </h-col>
+          <h-col :span="12">
+            <h-input
+              label="Plex Token"
+              name="plexToken"
+              v-model:value="form.plexToken"
+            />
+          </h-col>
+          <h-col :span="12">
+            <h-select
+              label="Plex电影资料库"
+              :columns="columns"
+              name="plexMovieLibraryId"
+              v-model:value="form.plexMovieLibraryId"
+            />
+          </h-col>
+          <h-col :span="12">
+            <h-select
+              label="Plex音乐资料库"
+              :columns="columns"
+              name="plexMusicLibraryId"
+              v-model:value="form.plexMusicLibraryId"
+            />
+          </h-col>
+        </a-tab-pane>
+        <a-tab-pane key="movie" tab="电影">
+          <h-col :span="12">
+            <h-input
+              label="电影资料库位置"
+              name="movieLibraryPath"
+              v-model:value="form.movieLibraryPath"
+            />
+          </h-col>
+          <h-col :span="12">
+            <h-input
+              text-area
+              label="电影资料库忽略文件"
+              name="movieExcludePath"
+              v-model:value="form.movieExcludePath"
+            />
+          </h-col>
+        </a-tab-pane>
+        <a-tab-pane key="music" tab="音乐">
+          <h-col :span="12">
+            <h-input
+              label="音乐资料库位置"
+              name="musicLibraryPath"
+              v-model:value="form.musicLibraryPath"
+            />
+          </h-col>
+          <h-col :span="12">
+            <h-input
+              text-area
+              label="音乐资料库忽略文件"
+              name="musicExcludePath"
+              v-model:value="form.musicExcludePath"
+            />
+          </h-col>
+        </a-tab-pane>
+      </a-tabs>
+      <h-col :span="12" :offset="3">
+        <h-button type="primary" @click="onClick">保存</h-button>
       </h-col>
     </a-form>
   </section>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { message } from "ant-design-vue";
+import { apiPlexGetLibraries } from "@/api/plexApi";
+import {
+  apiSysConfigFindByKeys,
+  apiSysConfigSave,
+} from "@/api/sysadmin/sysConfigApi";
 
 const emits = defineEmits(["save-complete"]);
 
-let formAction = ref("create");
-
+let activeKey = ref();
+let columns = ref([]);
 let formRef = ref();
 
 let form = ref({
-  id: "",
-  configName: "",
-  configKey: "",
-  configValue: "",
-  isDeleted: "",
-  createTime: "",
-  updateTime: "",
-  createdBy: "",
-  updatedBy: "",
+  plexUrl: "",
+  plexToken: "",
+  plexMovieLibraryId: "",
+  plexMusicLibraryId: "",
+  movieLibraryPath: "",
+  movieExcludePath: "",
+  musicLibraryPath: "",
+  musicExcludePath: "",
 });
 
-const create = () => {
-  formAction.value = "create";
-  formRef.value.reset();
-  formRef.value.show();
-};
+onMounted(() => {
+  initData();
+});
 
-const update = async (id) => {
-  formAction.value = "update";
-  formRef.value.reset();
-  form.value = await sysConfigViewApi({ id });
-  formRef.value.show();
-};
-
-const submit = async () => {
-  try {
-    if (formAction.value === "create") {
-      let res = await sysConfigCreateApi(form.value);
-      if (res) {
-        message.success("操作成功");
-        emits("save-complete");
-        formRef.value.hide();
-      }
-    } else if (formAction.value === "update") {
-      let res = await sysConfigUpdateApi(form.value);
-      if (res) {
-        message.success("操作成功");
-        emits("save-complete");
-        formRef.value.hide();
-      }
+const initData = () => {
+  apiSysConfigFindByKeys(Object.keys(form.value)).then((res) => {
+    form.value = res;
+    if (form.value.plexUrl && form.value.plexToken) {
+      apiPlexGetLibraries(form.value).then((res) => {
+        columns.value = res.map((s) => ({ text: s.name, value: s.key, ...s }));
+      });
     }
-  } catch (e) {}
+  });
 };
 
-defineExpose({
-  create,
-  update,
-});
+const onClick = async () => {
+  apiSysConfigSave(form.value).then((res) => {
+    message.success("操作成功");
+  });
+};
 </script>
 
 <style lang="less" scoped></style>
