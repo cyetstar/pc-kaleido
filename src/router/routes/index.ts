@@ -5,8 +5,8 @@
  * @LastEditTime: 2023-10-18 15:38:02
  * @Description:
  */
-import type {AppRouteConfig} from "../types";
-import {PageLayout} from "@/router/constant";
+import type { AppRouteConfig } from "../types";
+import { PageLayout } from "@/router/constant";
 
 import sysDeptRoutes from "@/router/routes/sysadmin/sysDeptRoutes";
 import sysUserRoutes from "@/router/routes/sysadmin/sysUserRoutes";
@@ -20,47 +20,51 @@ import fwtDmWgRoutes from "@/router/routes/sysadmin/fwtDmWgRoutes";
 import webLogRoutes from "@/router/routes/sysadmin/webLogRoutes";
 import sysDictTypeRoutes from "@/router/routes/sysadmin/sysDictTypeRoutes";
 import sysLogRoutes from "@/router/routes/sysadmin/sysLogRoutes";
+import musicReleaseRoutes from "@/router/routes/music/musicReleaseRoutes";
+import musicArtistRoutes from "@/router/routes/music/musicArtistRoutes";
 
 const LoginRoute: AppRouteConfig = {
-    path: "/login",
-    name: "login",
-    component: () => import("@/views/login/index.vue"),
-    hidden: true,
-    meta: {
-        title: "登录",
-        requiresAuth: false,
-    }
-}
+  path: "/login",
+  name: "login",
+  component: () => import("@/views/login/index.vue"),
+  hidden: true,
+  meta: {
+    title: "登录",
+    requiresAuth: false,
+  },
+};
 
 const BackstageRoute: AppRouteConfig = {
-    path: "/",
-    name: "backstage",
-    component: PageLayout,
-    children: [
-        {
-            path: "/:path(.*)*",
-            name: "PageNotFound",
-            component: () => import("@/views/error/PageNotFound.vue"),
-            hidden: true,
-            meta: {
-                title: "404 - Page Not Found",
-                requiresAuth: false,
-            },
-        },
-        ...sysUserRoutes,
-        ...sysRoleRoutes,
-        ...sysDeptRoutes,
-        ...sysMenuRoutes,
-        ...sysResourceRoutes,
-        ...sysDictTypeRoutes,
-        ...fwtDmXzqhRoutes,
-        ...fwtDmXzjdRoutes,
-        ...fwtDmSqjwhRoutes,
-        ...fwtDmWgRoutes,
-        ...webLogRoutes,
-        ...sysLogRoutes,
-    ],
+  path: "/",
+  name: "backstage",
+  component: PageLayout,
+  children: [
+    {
+      path: "/:path(.*)*",
+      name: "PageNotFound",
+      component: () => import("@/views/error/PageNotFound.vue"),
+      hidden: true,
+      meta: {
+        title: "404 - Page Not Found",
+        requiresAuth: false,
+      },
+    },
+    ...sysUserRoutes,
+    ...sysRoleRoutes,
+    ...sysDeptRoutes,
+    ...sysMenuRoutes,
+    ...sysResourceRoutes,
+    ...sysDictTypeRoutes,
+    ...fwtDmXzqhRoutes,
+    ...fwtDmXzjdRoutes,
+    ...fwtDmSqjwhRoutes,
+    ...fwtDmWgRoutes,
+    ...webLogRoutes,
+    ...sysLogRoutes,
+    ...musicReleaseRoutes,
+    ...musicArtistRoutes,
+  ],
 };
 export const allRoutes = [LoginRoute, BackstageRoute];
-export const menuRoute = [BackstageRoute]
+export const menuRoute = [BackstageRoute];
 export const basicRoutes = [BackstageRoute];

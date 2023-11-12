@@ -13,7 +13,7 @@ export const MENUS = [
       {
         title: "电影管理",
         name: "moviePage",
-        path: "/movie/moviePage",
+        path: "/movie/movie/page",
         permission: "movie:page",
       },
     ],
@@ -24,9 +24,15 @@ export const MENUS = [
     children: [
       {
         title: "专辑管理",
-        name: "musicReleasePage",
-        path: "/music/musicReleasePage",
+        name: "MusicReleasePage",
+        path: "/musicRelease/page",
         permission: "musicRelease:page",
+      },
+      {
+        title: "艺术家",
+        name: "MusicArtistPage",
+        path: "/musicArtist/page",
+        permission: "musicArtist:page",
       },
     ],
   },
@@ -63,6 +69,12 @@ export const MENUS = [
         name: "sysDictTypePage",
         path: "/sysadmin/sysDictType/page",
         permission: "sysDictType:page",
+      },
+      {
+        title: "系统配置",
+        name: "SysConfigForm",
+        path: "/sysConfig/form",
+        permission: "sysConfig:create",
       },
       {
         title: "操作日志",

@@ -75,7 +75,7 @@ import { message } from "ant-design-vue";
 import { sysDictTypeViewApi } from "@/api/sysadmin/sysDictTypeApi";
 import {
   sysDictDeleteApi,
-  sysDictListByDictTypeApi,
+  apiSysDictListByDictType,
 } from "@/api/sysadmin/sysDictApi";
 
 let formRef = ref();
@@ -104,7 +104,7 @@ const initData = async () => {
   }
 };
 const listByDictType = async () => {
-  sysDictListByDictTypeApi(form.type).then((data) => {
+  apiSysDictListByDictType(form.type).then((data) => {
     dataSource.value = data;
   });
 };

@@ -1,9 +1,9 @@
 <!--
  * @Author: gongxiaofei
  * @Date: 2023-04-12 16:24:01
- * @LastEditors: gongxiaofei
- * @LastEditTime: 2023-10-19 13:14:04
- * @Description: 
+ * @LastEditors: ximusunian ximusunian@gmail.com
+ * @LastEditTime: 2023-10-26 09:24:04
+ * @Description:
 -->
 <template>
   <a-sub-menu
@@ -34,7 +34,7 @@
       <template v-else>
         <a-menu-item
           v-if="!item.hidden"
-          :key="item.path ? item.path : item.name"
+          :key="item.path"
           @click="router.push(item.path)"
         >
           <!--          <span v-if="level === 1" class="block w-6px h-6px border rounded-6px mr-10px"-->

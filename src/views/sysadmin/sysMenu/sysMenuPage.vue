@@ -13,9 +13,6 @@
       @reset="onReset"
     >
       <a-col :span="5">
-        <h-input v-model:value="searchForm.app" label="模块" name="app" />
-      </a-col>
-      <a-col :span="5">
         <h-input v-model:value="searchForm.name" label="菜单标识" name="name" />
       </a-col>
       <a-col :span="5">

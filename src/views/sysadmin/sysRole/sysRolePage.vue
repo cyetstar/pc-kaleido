@@ -76,7 +76,7 @@
               plain
               size="small"
               v-permissKey="'sysRole:other'"
-              @click="onPermission(record.id)"
+              @click="onClickAuthorize(record.id)"
             >
               权限
             </h-button>
@@ -167,6 +167,8 @@
       @loadColumn="loadColumn"
       @export="onExport"
     ></h-modal-export>
+
+    <sys-role-form-authorize ref="refSysRoleFormAuthorize" />
   </section>
 </template>
 
@@ -184,12 +186,9 @@ import {
 } from "@/api/sysadmin/sysRoleApi";
 import { ALL_RESOURCE } from "@/config/resourceInit";
 import { message } from "ant-design-vue";
-import {
-  sysResourceApi,
-  sysRoleResourceBindApi,
-} from "@/api/sysadmin/sysResourceApi";
 import HButtonDelete from "@c/common/ButtonDelete/ButtonDelete.vue";
 import HButton from "@c/common/Button/Button.vue";
+import SysRoleFormAuthorize from "@/views/sysadmin/sysRole/sysRoleFormAuthorize.vue";
 
 const { proxy } = getCurrentInstance() as any;
 
@@ -202,6 +201,8 @@ let searchForm = ref<SearchForm>({
   name: "",
   code: "",
 });
+
+const refSysRoleFormAuthorize = ref("");
 
 const loadData = (params: any, callbacks: any) => {
   callbacks(sysRolePageApi({ ...params, ...searchForm.value }));
@@ -234,9 +235,8 @@ const onUpdateRecord = async (id: string) => {
   roleModalData.value.form = res;
   roleModalData.value.visible = true;
 };
-const onCancelRoleModal = () => {
-  roleModalData.value.visible = false;
-  roleModalData.value.form = {};
+const onClickAuthorize = (id: string) => {
+  refSysRoleFormAuthorize.value.show(id);
 };
 const onSubmitRoleModal = async () => {
   try {

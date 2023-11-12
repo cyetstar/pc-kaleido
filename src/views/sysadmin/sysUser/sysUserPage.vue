@@ -12,38 +12,20 @@
       @search="onSearch"
       @reset="onReset"
     >
-      <a-col :span="4">
+      <a-col :span="5">
         <h-input
           v-model:value="searchForm.username"
           label="用户名"
-          name="username1"
+          name="username"
         />
       </a-col>
-      <a-col :span="4">
-        <h-input v-model:value="searchForm.name" label="姓名" name="name1" />
-      </a-col>
-      <a-col :span="4">
-        <h-input
-          v-model:value="searchForm.mobile"
-          label="手机号码"
-          name="mobile1"
-        />
-      </a-col>
-      <a-col :span="4">
+      <a-col :span="5">
         <h-select
           v-model:value="searchForm.enabled"
           label="状态"
           name="enabled"
           :columns="sysUserStatusDict"
         ></h-select>
-      </a-col>
-      <a-col :span="4">
-        <h-select-ssxq
-          label="所在单位"
-          name="deptCode"
-          data-type="ga"
-          v-model:value="searchForm.deptCode"
-        ></h-select-ssxq>
       </a-col>
     </h-form-search>
     <a-space class="h-btn-space">
@@ -78,16 +60,6 @@
       @selection-change="selectionChange"
     >
       <a-table-column title="用户名" data-index="username"></a-table-column>
-      <a-table-column title="姓名" data-index="name"></a-table-column>
-      <a-table-column title="联系电话" data-index="mobile"></a-table-column>
-      <a-table-column
-        title="所属辖区"
-        data-index="deptCodeLabel"
-      ></a-table-column>
-      <a-table-column
-        title="查询范围"
-        data-index="filterCodeLabel"
-      ></a-table-column>
       <a-table-column title="角色" data-index="sysRoleList">
         <template #="{ text: sysRoleList }">
           {{ showRoleName(sysRoleList) }}

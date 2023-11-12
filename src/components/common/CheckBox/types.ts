@@ -23,7 +23,7 @@ export const checkboxProps = {
     type: Array,
     default: [],
   },
-  value: String,
+  value: null,
   dictType: String,
   columns: {
     type: Array as any,

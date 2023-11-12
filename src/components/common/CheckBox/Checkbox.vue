@@ -7,7 +7,7 @@
 -->
 <template>
   <a-form-item :label="label" :name="name" :rules="innerRules">
-    <a-checkbox-group>
+    <a-checkbox-group v-model:value="checkboxVal">
       <a-checkbox
         v-for="item in columnData"
         :key="item[fieldNames.value]"
@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted, inject } from "vue";
-import { FormItem, CheckboxGroup, Checkbox } from "ant-design-vue";
+import { FormItem, CheckboxGroup, Checkbox, Form } from "ant-design-vue";
 import { checkboxProps } from "./types";
 
 export default defineComponent({
@@ -33,7 +33,14 @@ export default defineComponent({
   props: checkboxProps,
   emits: ["update:value", "change", "listDictByType"],
   setup(props, { emit }) {
-    let checkboxVal = ref<string>(props.value || "");
+    const formItemContext = Form.useInjectFormItemContext();
+    let checkboxVal = computed({
+      get: () => props.value || [],
+      set: (val) => {
+        emit("update:value", val);
+        formItemContext.onFieldChange();
+      },
+    });
 
     let innerRules: any = computed(() => {
       let rules = [...props.rules];

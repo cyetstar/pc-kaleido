@@ -47,3 +47,10 @@ export const sysRoleExportApi = (data: any) => {
     responseType: ResponseTypeEnum.BLOB,
   });
 };
+
+export const apiSysRoleAuthorize = (data: any) => {
+  return useFetch.post({
+    url: "/sysRole/authorize",
+    data,
+  });
+};

@@ -43,7 +43,7 @@ import {
 } from "vue";
 import { FormItem, Select, SelectOption } from "ant-design-vue";
 import { selectProps } from "./types";
-import { sysDictListByTypeApi } from "@/api/sysadmin/sysDictApi";
+import { apiSysDictListByDictType } from "@/api/sysadmin/sysDictApi";
 
 export default defineComponent({
   name: "HSelect",
@@ -88,7 +88,7 @@ export default defineComponent({
 
     const initData = () => {
       if (columnData.value.length > 0 || !props.dictType) return;
-      sysDictListByTypeApi(props.dictType).then((data) => {
+      apiSysDictListByDictType(props.dictType).then((data) => {
         if (props.filterColumns) {
           columnData.value = data.filter(props.filterColumns);
         } else {

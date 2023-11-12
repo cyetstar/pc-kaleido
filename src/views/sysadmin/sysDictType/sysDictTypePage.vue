@@ -12,10 +12,10 @@
       @search="onSearch"
       @reset="onReset"
     >
-      <a-col :span="4">
+      <a-col :span="5">
         <h-input v-model:value="searchForm.name" label="字典名称" name="name" />
       </a-col>
-      <a-col :span="4">
+      <a-col :span="5">
         <h-input v-model:value="searchForm.type" label="字典类型" name="type" />
       </a-col>
     </h-form-search>
