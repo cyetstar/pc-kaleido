@@ -9,16 +9,16 @@ import type { AppRouteConfig } from "@/router/types";
 import { ErrorCodeEnum } from "@/enums/httpEnum";
 import { defineStore } from "pinia";
 import { menuRoute } from "@/router/routes";
-import { sysMenuTreeApi } from "@/api/sysadmin/sysMenuApi"
+import { sysMenuTreeApi } from "@/api/sysadmin/sysMenuApi";
 interface MenuState {
-  menus: any[],
+  menus: any[];
   activeMenu: string;
   subMenu: AppRouteConfig[];
 }
-export const useMenuStore = defineStore("app", {
+export const useMenuStore = defineStore("menu", {
   state: (): MenuState => ({
     menus: [],
-    activeMenu: menuRoute[0]?.name as string || "",
+    activeMenu: (menuRoute[0]?.name as string) || "",
     subMenu: menuRoute[0]?.children || [],
   }),
   getters: {
@@ -26,17 +26,17 @@ export const useMenuStore = defineStore("app", {
   },
   actions: {
     setMenu(active: string, subs: AppRouteConfig[]) {
-      this.activeMenu = active
-      this.subMenu = subs
+      this.activeMenu = active;
+      this.subMenu = subs;
     },
     getSysMenus(app: string) {
       return new Map(Object.entries(this.menus)).get(app);
     },
     async generateRoutes() {
       const serverRoutes = await sysMenuTreeApi();
-      this.menus = serverRoutes
-      const activedItem = serverRoutes[0]
-      this.setMenu(activedItem.name, activedItem.children)
+      this.menus = serverRoutes;
+      const activedItem = serverRoutes[0];
+      this.setMenu(activedItem.name, activedItem.children);
     },
     clearRoutes() {
       this.$reset();

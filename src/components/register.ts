@@ -59,17 +59,21 @@ import HCheckbox from "@/components/common/CheckBox";
 import HCol from "@/components/common/Col";
 import HFormModal from "@/components/common/FormModal";
 import HFormSearch from "@/components/common/FormSearch";
+import HGlobalConfig from "@/components/common/GlobalConfig";
 import HInput from "@/components/common/Input";
 import HInputGmsfhm from "@/components/common/InputGmsfhm";
 import HInputPassword from "@/components/common/InputPassword";
 import HInputTel from "@/components/common/InputTel";
 import HModalExport from "@/components/common/ModalExport";
+import HPlexImage from "@/components/common/PlexImage";
 import HRadio from "@/components/common/Radio";
 import HSelect from "@/components/common/Select";
 import HSelectSsxq from "@/components/common/SelectSsxq";
 import HTableData from "@/components/common/TableData";
+import HTitleModule from "@/components/common/TitleModule";
 import HUploadImage from "@/components/common/UploadImage";
 import HDatePicker from "@/components/common/DatePicker";
+
 export const registerGlobComp = (app: App) => {
   app
     // .component("svg-icon", svgIcon)
@@ -80,15 +84,18 @@ export const registerGlobComp = (app: App) => {
     .component("h-col", HCol)
     .component("h-form-modal", HFormModal)
     .component("h-form-search", HFormSearch)
+    .component("h-global-config", HGlobalConfig)
     .component("h-input", HInput)
     .component("h-input-gmsfhm", HInputGmsfhm)
     .component("h-input-password", HInputPassword)
     .component("h-input-tel", HInputTel)
     .component("h-modal-export", HModalExport)
+    .component("h-plex-image", HPlexImage)
     .component("h-radio", HRadio)
     .component("h-select", HSelect)
     .component("h-select-ssxq", HSelectSsxq)
     .component("h-table-data", HTableData)
+    .component("h-title-module", HTitleModule)
     .component("h-upload-image", HUploadImage)
     .component("h-date-picker", HDatePicker)
     .use(Layout)

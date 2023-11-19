@@ -55,3 +55,28 @@ export const musicReleaseExportApi = (params: any) => {
     params,
   });
 };
+
+export const apiMusicReleaseSyncPlex = () => {
+  return useFetch.post<any>({
+    url: "/musicRelease/syncPlex",
+  });
+};
+
+export const apiMusicReleaseSearchNetease = (params: any) => {
+  return useFetch.get<any>({
+    url: "/musicRelease/searchNetease",
+    params,
+  });
+};
+export const apiMusicReleaseMatchNetease = (data: any) => {
+  return useFetch.post<any>({
+    url: "/musicRelease/matchNetease",
+    data,
+  });
+};
+export const apiMusicReleaseDownloadLyric = (data: any) => {
+  return useFetch.post<any>({
+    url: "/musicRelease/downloadLyric",
+    data,
+  });
+};

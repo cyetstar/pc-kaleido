@@ -13,9 +13,9 @@ import { createCookie, removeCookies } from "@/hooks/web/useCookie";
 import { TokenTypeEnum } from "@/enums/authEnum";
 import { defineStore } from "pinia";
 import { getAccountInfo } from "@/api/_system/user";
-import { getUserPermissions } from "@/api/_system/role";
 import { usePermissionStore } from "@/store/modules/permission";
 import { useMenuStore } from "@/store/modules/menu";
+import { useAppStore } from "@/store/modules/app";
 import { router } from "@/router";
 
 interface UserState extends UserInfoModel {
@@ -62,6 +62,7 @@ export const useUserStore = defineStore("user", {
       await this.setUserInfo();
       await useMenuStore().generateRoutes();
       // await this.setUserPermission();
+      await useAppStore().initAppConfig();
       return data;
     },
 

@@ -4,43 +4,50 @@
  * @Description: 艺术家详情页面
 -->
 <template>
-  <section class="page-section">
-    <div class="view-box">
-      <div class="view-item">
-        <span class="view-item-label">主键: </span>
-        <span class="view-item-value">{{ viewData.id }}</span>
-      </div>
-      <div class="view-item">
-        <span class="view-item-label">MusicBrainzId: </span>
-        <span class="view-item-value">{{ viewData.musicbrainzId }}</span>
-      </div>
-      <div class="view-item">
-        <span class="view-item-label">Plex编号: </span>
-        <span class="view-item-value">{{ viewData.plexId }}</span>
-      </div>
-      <div class="view-item">
-        <span class="view-item-label">名称: </span>
-        <span class="view-item-value">{{ viewData.mc }}</span>
-      </div>
-      <div class="view-item">
-        <span class="view-item-label">艺术家类型: </span>
-        <span class="view-item-value">{{ viewData.ysjlx }}</span>
-      </div>
-      <div class="view-item">
-        <span class="view-item-label">国家地区: </span>
-        <span class="view-item-value">{{ viewData.gjdq }}</span>
-      </div>
-      <div class="view-item">
-        <span class="view-item-label">简介: </span>
-        <span class="view-item-value">{{ viewData.jj }}</span>
-      </div>
-      <div class="view-item">
-        <span class="view-item-label">创建时间: </span>
-        <span class="view-item-value">{{ viewData.cjsj }}</span>
-      </div>
-      <div class="view-item">
-        <span class="view-item-label">修改时间: </span>
-        <span class="view-item-value">{{ viewData.xgsj }}</span>
+  <section class="h-page-section">
+    <div class="relative">
+      <h-title-module title="艺人信息" />
+      <a-row :gutter="16" class="mt-6">
+        <h-col :span="8">
+          <div class="flex justify-center">
+            <div class="w-xs">
+              <h-plex-image :plex-thumb="record.plexThumb" />
+            </div>
+          </div>
+        </h-col>
+        <h-col :span="16">
+          <h1>{{ record.mc }}</h1>
+          <p>
+            <a-tag v-if="record.gjdq">{{ record.gjdq }}</a-tag>
+            <a-tag v-if="record.ysjlx">{{ record.ysjlx }}</a-tag>
+          </p>
+          <p>{{ record.plexId }}</p>
+          <p>{{ record.jj }}</p>
+          <p>
+            <a
+              v-if="record.musicbrainzId"
+              target="_blank"
+              :href="'https://musicbrainz.org/release/' + record.musicbrainzId"
+              class="pr-15px"
+              ><img width="30" :src="musicbrainz" class="inline" />
+            </a>
+            <a target="_blank" href="" class="pr-15px"
+              ><img width="30" :src="plex" class="inline"
+            /></a>
+            <a
+              v-if="record.neteaseId"
+              target="_blank"
+              :href="'https://music.163.com/#/artist?id=' + record.neteaseId"
+              class="pr-15px"
+              ><img width="30" :src="netease" class="inline" />
+            </a>
+          </p>
+        </h-col>
+      </a-row>
+      <div class="absolute right-0 top-0">
+        <a-space>
+          <h-button @click="onSearchNetease">匹配网易云</h-button>
+        </a-space>
       </div>
     </div>
   </section>
@@ -49,41 +56,24 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import {musicArtistViewApi} from "@/api/music/musicArtistApi.ts";
+import { musicArtistViewApi } from "@/api/music/musicArtistApi.ts";
+import musicbrainz from "@/assets/images/musicbrainz.png";
+import plex from "@/assets/images/plex.png";
+import netease from "@/assets/images/netease.png";
+import HPlexImage from "@c/common/PlexImage/PlexImage.vue";
 
-const route = useRoute()
-const id = route.query.id
+const route = useRoute();
+const id = route.query.id;
 
-const viewData = ref({})
-const getView = async () => {
-  const res = await musicArtistViewApi({ id })
-  viewData.value = res
-}
+const record = ref({});
+const initData = () => {
+  musicArtistViewApi({ id }).then((res) => {
+    record.value = res;
+  });
+};
 onMounted(() => {
-  getView()
-})
+  initData();
+});
 </script>
 
-<style lang='less' scoped>
-  .view-box {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20;
-  }
-
-  .view-item {
-    width: 50%;
-    display: flex;
-    align-items: center;
-    margin-bottom: 16px;
-    font-size: 14px;
-
-  &-label {
-     min-width: 90px;
-   }
-
-  &-value {
-     flex: 1;
-   }
-  }
-</style>
+<style lang="less" scoped></style>

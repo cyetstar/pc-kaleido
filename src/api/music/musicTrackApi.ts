@@ -55,3 +55,10 @@ export const musicTrackListByReleaseIdApi = (params: any) => {
     params,
   });
 };
+
+export const apiMusicTrackViewLyrics = (params: any) => {
+  return useFetch.get<any>({
+    url: "/musicTrack/viewLyrics",
+    params,
+  });
+};

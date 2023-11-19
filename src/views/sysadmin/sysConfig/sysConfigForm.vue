@@ -73,6 +73,15 @@
             />
           </h-col>
         </a-tab-pane>
+        <a-tab-pane key="netease" tab="网易云音乐">
+          <h-col :span="12">
+            <h-input
+              label="网易云音乐API地址"
+              name="neteaseUrl"
+              v-model:value="form.neteaseUrl"
+            />
+          </h-col>
+        </a-tab-pane>
       </a-tabs>
       <h-col :span="12" :offset="3">
         <h-button type="primary" @click="onClick">保存</h-button>
@@ -105,6 +114,7 @@ let form = ref({
   movieExcludePath: "",
   musicLibraryPath: "",
   musicExcludePath: "",
+  neteaseUrl: "",
 });
 
 onMounted(() => {

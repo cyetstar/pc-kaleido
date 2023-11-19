@@ -33,6 +33,11 @@ export const getDefaultBaseURL = () => {
   return VITE_BASE_API;
 };
 
+export const getFilePath = () => {
+  const { VITE_FILE_PATH } = envParse(import.meta.env);
+  return VITE_FILE_PATH;
+};
+
 // 请求数据转换
 export const transformRequest = (config: RequestConfig): RequestConfig => {
   const { data, params, method, headers, SM2Encrypt } = config;

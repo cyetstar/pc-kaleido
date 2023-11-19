@@ -20,8 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from "vue";
-
+import "./style/index.less";
 type Title = {
   title: string;
 };
