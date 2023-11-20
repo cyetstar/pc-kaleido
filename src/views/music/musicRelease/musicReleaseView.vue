@@ -6,8 +6,8 @@
 <template>
   <section class="h-page-section">
     <div class="relative">
-      <h-title-module title="专辑信息" />
-      <a-row :gutter="16" class="mt-6">
+      <h-title-module title="专辑信息" class="mb-6" />
+      <a-row :gutter="16">
         <h-col :span="8">
           <div class="flex justify-center">
             <div class="w-xs">
@@ -65,13 +65,8 @@
     </div>
 
     <div class="mt-8">
-      <h-title-module title="歌曲列表" />
-      <a-table
-        class="mt-6"
-        :pagination="false"
-        size="small"
-        :data-source="trackRecords"
-      >
+      <h-title-module title="歌曲列表" class="mb-6" />
+      <a-table :pagination="false" size="small" :data-source="trackRecords">
         <a-table-column
           title="曲号"
           width="10%"

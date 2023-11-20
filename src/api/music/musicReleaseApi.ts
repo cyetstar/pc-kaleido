@@ -80,3 +80,10 @@ export const apiMusicReleaseDownloadLyric = (data: any) => {
     data,
   });
 };
+
+export const apiMusicReleaseListByArtistId = (data: any) => {
+  return useFetch.get<any>({
+    url: "/musicRelease/listByArtistId",
+    data,
+  });
+};
