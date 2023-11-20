@@ -12,10 +12,14 @@
       @reset="onReset"
     >
       <h-col :span="6">
-        <h-input label="标题" v-model:value="searchForm.bt" name="bt" />
+        <h-input label="标题" v-model:value="searchForm.title" name="title" />
       </h-col>
       <h-col :span="6">
-        <h-input label="艺术家" v-model:value="searchForm.ysj" name="ysj" />
+        <h-input
+          label="艺术家"
+          v-model:value="searchForm.artists"
+          name="artists"
+        />
       </h-col>
     </h-form-search>
 
@@ -31,7 +35,7 @@
     <div>
       <a-row :gutter="16">
         <template :key="record.id" v-for="record in pageResult.records">
-          <a-col :span="4" class="mb-16px">
+          <a-col :md="4" :xxl="3" class="mb-16px">
             <a-card>
               <template #cover>
                 <h-plex-image
@@ -42,9 +46,10 @@
                 />
               </template>
               <a-card-meta
-                :title="record.bt"
+                :title="record.title"
                 :description="
-                  record.ysj || '--' + ' (' + (record.rq || '?') + ')'
+                  record.artists ||
+                  '--' + ' (' + (record.releaseDate || '?') + ')'
                 "
               >
               </a-card-meta>
@@ -76,16 +81,13 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import {
-  musicReleasePageApi,
-  musicReleaseDeleteApi,
-  apiMusicReleaseSyncPlex,
-} from "@/api/music/musicReleaseApi.ts";
+  apiMusicAlbumDelete,
+  apiMusicAlbumPage,
+  apiMusicAlbumSyncPlex,
+} from "@/api/music/musicAlbumApi.ts";
 
 import { Empty, message } from "ant-design-vue";
 import { useRouter } from "vue-router";
-import { getFilePath } from "@/utils/http/helper";
-import musicDefault from "@/assets/images/music-default.png";
-import HPlexImage from "@c/common/PlexImage/PlexImage.vue";
 
 const searchForm = ref({
   bt: "",
@@ -105,7 +107,7 @@ onMounted(() => {
 });
 
 const onSyncPlex = () => {
-  apiMusicReleaseSyncPlex().then((res) => {
+  apiMusicAlbumSyncPlex().then((res) => {
     message.success("同步完成");
   });
 };
@@ -125,27 +127,19 @@ const onChange = (pageNumber) => {
 const loadData = (data) => {
   data.searchCount = true;
   data.pageSize = pageResult.value.pageSize;
-  musicReleasePageApi(data).then((res) => {
+  apiMusicAlbumPage(data).then((res) => {
     pageResult.value = res;
   });
 };
 
-const getCover = (id) => {
-  return getFilePath() + "musicRelease/cover/" + id;
-};
-
-const getErrorCover = (e) => {
-  e.target.src = musicDefault;
-};
-
 const router = useRouter();
 const onViewRecord = (id) => {
-  router.push({ path: "/musicRelease/view", query: { id } });
+  router.push({ path: "/music/musicAlbum/view", query: { id } });
 };
 
 const onDeleteRecord = (recordId) => {
   const id = Array.isArray(recordId) ? recordId : [recordId];
-  musicReleaseDeleteApi(id).then((res) => {
+  apiMusicAlbumDelete(id).then((res) => {
     if (res) {
       message.success("删除成功！");
     }

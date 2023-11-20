@@ -26,7 +26,7 @@
         <template #="{ record }">
           <check-circle-two-tone
             two-tone-color="#52c41a"
-            v-if="record.neteaseId === releaseRecord.neteaseId"
+            v-if="record.neteaseId === albumRecord.neteaseId"
           />
         </template>
       </a-table-column>
@@ -37,17 +37,17 @@
       </a-table-column>
       <a-table-column
         title="专辑名"
-        data-index="bt"
+        data-index="title"
         align="center"
       ></a-table-column>
       <a-table-column
         title="艺术家"
-        data-index="ysj"
+        data-index="artist"
         align="center"
       ></a-table-column>
       <a-table-column
         title="发行日期"
-        data-index="fxrq"
+        data-index="publishTime"
         align="center"
       ></a-table-column>
       <a-table-column title="操作" align="center">
@@ -68,13 +68,13 @@ import { ref } from "vue";
 import { CheckCircleTwoTone } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
 import {
-  apiMusicReleaseSearchNetease,
-  apiMusicReleaseMatchNetease,
-} from "@/api/music/musicReleaseApi.ts";
+  apiMusicAlbumSearchNetease,
+  apiMusicAlbumMatchNetease,
+} from "@/api/music/musicAlbumApi.ts";
 
 const emits = defineEmits(["match-success"]);
 
-let releaseRecord = {};
+let albumRecord = {};
 let visible = ref();
 let dataSource = ref([]);
 let form = ref({
@@ -83,19 +83,19 @@ let form = ref({
 
 const show = (record) => {
   visible.value = true;
-  releaseRecord = record;
-  form.value.keywords = releaseRecord.bt + " " + releaseRecord.ysj;
+  albumRecord = record;
+  form.value.keywords = albumRecord.title + " " + albumRecord.artists;
   onSearch();
 };
 
 const onSearch = () => {
-  apiMusicReleaseSearchNetease(form.value).then((res) => {
+  apiMusicAlbumSearchNetease(form.value).then((res) => {
     dataSource.value = res;
   });
 };
 
 const onMatch = (record) => {
-  apiMusicReleaseMatchNetease({ id: releaseRecord.id, ...record }).then(() => {
+  apiMusicAlbumMatchNetease({ id: albumRecord.id, ...record }).then(() => {
     message.success("匹配成功");
     visible.value = false;
     emits("match-success", record);

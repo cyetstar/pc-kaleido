@@ -1,48 +1,48 @@
 import { useFetch } from "@/utils/http";
 
-export const musicArtistPageApi = (params: any) => {
+export const apiMusicArtistPage = (params: any) => {
 return useFetch.get<any>({
   url: "/musicArtist/page",
   params,
   });
 };
 
-export const musicArtistViewApi = (params: any) => {
+export const apiMusicArtistView = (params: any) => {
   return useFetch.get<any>({
     url: "/musicArtist/view",
     params,
   });
 };
 
-export const musicArtistCreateApi = (data: any) => {
+export const apiMusicArtistCreate = (data: any) => {
   return useFetch.post<any>({
     url: "/musicArtist/create",
     data,
   });
 };
 
-export const musicArtistUpdateApi = (data: any) => {
+export const apiMusicArtistUpdate = (data: any) => {
   return useFetch.post<any>({
     url: "/musicArtist/update",
     data,
   });
 };
 
-export const musicArtistDeleteApi = (data: any) => {
+export const apiMusicArtistDelete = (data: any) => {
   return useFetch.delete<any>({
     url: "/musicArtist/delete",
     data,
   });
 };
 
-export const musicArtistColumnApi = (params: any) => {
+export const apiMusicArtistColumn = (params: any) => {
   return useFetch.get<any>({
     url: "/musicArtist/column",
     params,
   });
 };
 
-export const musicArtistExportApi = (params: any) => {
+export const apiMusicArtistExport = (params: any) => {
   return useFetch.get<any>({
     url: "/musicArtist/export",
     params,

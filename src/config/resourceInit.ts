@@ -67,18 +67,13 @@ export const SYSADMIN_RESOURCE: resourceItem[] = [
 
 export const MUSIC_RESOURCE: resourceItem[] = [
   {
-    type: "musicRelease",
-    name: "发行品",
+    type: "musicAlbum",
+    name: "专辑",
     action: ["page", "view", "create", "update", "delete", "export", "other"],
   },
   {
     type: "musicArtist",
     name: "艺术家",
-    action: ["page", "view", "create", "update", "delete", "export", "other"],
-  },
-  {
-    type: "musicTrack",
-    name: "曲目",
     action: ["page", "view", "create", "update", "delete", "export", "other"],
   },
 ];

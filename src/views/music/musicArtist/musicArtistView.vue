@@ -53,21 +53,18 @@
     <div class="mt-8">
       <h-title-module title="专辑列表" class="mb-6" />
       <a-row :gutter="16">
-        <template
-          :key="releaseRecord.id"
-          v-for="releaseRecord in releaseRecords"
-        >
+        <template :key="albumRecord.id" v-for="albumRecord in albumRecords">
           <a-col :span="4" class="mb-16px">
             <a-card>
               <template #cover>
                 <h-plex-image
                   class="cover"
                   :preview="false"
-                  :plex-thumb="releaseRecord.plexThumb"
-                  @click="onViewRecord(releaseRecord.id)"
+                  :plex-thumb="albumRecord.plexThumb"
+                  @click="onViewRecord(albumRecord.id)"
                 />
               </template>
-              <a-card-meta :title="releaseRecord.bt"> </a-card-meta>
+              <a-card-meta :title="albumRecord.title"> </a-card-meta>
             </a-card>
           </a-col>
         </template>
@@ -77,36 +74,32 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { musicArtistViewApi } from "@/api/music/musicArtistApi.ts";
+import { apiMusicArtistView } from "@/api/music/musicArtistApi.ts";
 import musicbrainz from "@/assets/images/musicbrainz.png";
 import plex from "@/assets/images/plex.png";
 import netease from "@/assets/images/netease.png";
 import HPlexImage from "@c/common/PlexImage/PlexImage.vue";
-import {
-  apiMusicReleaseListByArtistId,
-  musicReleaseViewApi,
-} from "@/api/music/musicReleaseApi";
-import { musicTrackListByReleaseIdApi } from "@/api/music/musicTrackApi";
+import { apiMusicAlbumListByArtistId } from "@/api/music/musicAlbumApi";
 
 const id = useRoute().query.id;
 
 const record = ref({});
-const releaseRecords = ref([]);
+const albumRecords = ref([]);
 const initData = () => {
   Promise.all([
-    musicArtistViewApi({ id }),
-    apiMusicReleaseListByArtistId({ artistId: id }),
+    apiMusicArtistView({ id }),
+    apiMusicAlbumListByArtistId({ artistId: id }),
   ]).then(([res1, res2]) => {
     record.value = res1;
-    releaseRecords.value = res2;
+    albumRecords.value = res2;
   });
 };
 
 const router = useRouter();
 const onViewRecord = (id) => {
-  router.push({ path: "/musicRelease/view", query: { id } });
+  router.push({ path: "/music/musicRelease/view", query: { id } });
 };
 
 onMounted(() => {

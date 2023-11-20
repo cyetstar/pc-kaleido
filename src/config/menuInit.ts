@@ -24,14 +24,14 @@ export const MENUS = [
     children: [
       {
         title: "专辑管理",
-        name: "MusicReleasePage",
-        path: "/musicRelease/page",
-        permission: "musicRelease:page",
+        name: "musicAlbumPage",
+        path: "/music/musicAlbum/page",
+        permission: "musicAlbum:page",
       },
       {
         title: "艺术家",
-        name: "MusicArtistPage",
-        path: "/musicArtist/page",
+        name: "musicArtistPage",
+        path: "/music/musicArtist/page",
         permission: "musicArtist:page",
       },
     ],

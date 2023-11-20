@@ -20,7 +20,7 @@ import fwtDmWgRoutes from "@/router/routes/sysadmin/fwtDmWgRoutes";
 import webLogRoutes from "@/router/routes/sysadmin/webLogRoutes";
 import sysDictTypeRoutes from "@/router/routes/sysadmin/sysDictTypeRoutes";
 import sysLogRoutes from "@/router/routes/sysadmin/sysLogRoutes";
-import musicReleaseRoutes from "@/router/routes/music/musicReleaseRoutes";
+import musicAlbumRoutes from "@/router/routes/music/musicAlbumRoutes";
 import musicArtistRoutes from "@/router/routes/music/musicArtistRoutes";
 import sysConfigRoutes from "@/router/routes/sysadmin/sysConfigRoutes";
 
@@ -63,7 +63,7 @@ const BackstageRoute: AppRouteConfig = {
     ...webLogRoutes,
     ...sysLogRoutes,
     ...sysConfigRoutes,
-    ...musicReleaseRoutes,
+    ...musicAlbumRoutes,
     ...musicArtistRoutes,
   ],
 };

@@ -16,22 +16,22 @@
           </div>
         </h-col>
         <h-col :span="16">
-          <h1>{{ record.bt }}</h1>
+          <h1>{{ record.title }}</h1>
           <h1>
             <a
               v-for="artist in record.musicArtistDTOList"
               @click="onViewArtist(artist.id)"
-              >{{ artist.mc }}</a
+              >{{ artist.name }}</a
             >
           </h1>
-          <p>{{ record.rq }}</p>
-          <p>{{ record.cpgs }}</p>
+          <p>{{ record.date }}</p>
+          <p>{{ record.label }}</p>
           <p>
-            <a-tag v-if="record.zjlx">{{ record.zjlx }}</a-tag>
-            <a-tag v-if="record.yylp">{{ record.yylp }}</a-tag>
-            <a-tag v-if="record.mt">{{ record.mt }}</a-tag>
+            <a-tag v-if="record.type">{{ record.type }}</a-tag>
+            <a-tag v-if="record.genre">{{ record.genre }}</a-tag>
+            <a-tag v-if="record.media">{{ record.media }}</a-tag>
           </p>
-          <p>{{ record.jj }}</p>
+          <p>{{ record.summary }}</p>
           <p>
             <a
               v-if="record.musicbrainzId"
@@ -70,13 +70,13 @@
         <a-table-column
           title="曲号"
           width="10%"
-          data-index="qh"
+          data-index="trackNumber"
           align="center"
         ></a-table-column>
         <a-table-column
           title="歌名"
           width="75%"
-          data-index="bt"
+          data-index="title"
         ></a-table-column>
         <a-table-column title="歌词" width="5%" align="center">
           <template #="{ record }">
@@ -89,7 +89,7 @@
         <a-table-column
           title="曲长"
           width="10%"
-          data-index="qcLabel"
+          data-index="lengthLabel"
           align="center"
         >
         </a-table-column>
@@ -103,8 +103,8 @@
       </template>
     </a-modal>
 
-    <music-release-search-netease
-      ref="refMusicReleaseSearchNetease"
+    <music-album-search-netease
+      ref="refMusicAlbumSearchNetease"
       @match-success="onMatchSuccess"
     />
   </section>
@@ -114,23 +114,20 @@
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import {
-  apiMusicReleaseDownloadLyric,
-  apiMusicReleaseUpdateAudioTag,
-  musicReleaseViewApi,
-} from "@/api/music/musicReleaseApi.ts";
+  apiMusicAlbumDownloadLyric,
+  apiMusicAlbumUpdateAudioTag,
+  apiMusicAlbumView,
+} from "@/api/music/musicAlbumApi.ts";
 import {
   apiMusicTrackViewLyrics,
-  musicTrackListByReleaseIdApi,
+  apiMusicTrackListByAlbumId,
 } from "@/api/music/musicTrackApi";
 import { message } from "ant-design-vue";
 import { FileTextOutlined } from "@ant-design/icons-vue";
-import { getFilePath } from "@/utils/http/helper";
-import musicDefault from "@/assets/images/music-default.png";
 import musicbrainz from "@/assets/images/musicbrainz.png";
 import plex from "@/assets/images/plex.png";
 import netease from "@/assets/images/netease.png";
-import MusicReleaseSearchNetease from "@/views/music/musicRelease/musicReleaseSearchNetease.vue";
-import HPlexImage from "@c/common/PlexImage/PlexImage.vue";
+import MusicAlbumSearchNetease from "@/views/music/musicAlbum/musicAlbumSearchNetease.vue";
 
 const route = useRoute();
 const id = route.query.id;
@@ -141,13 +138,12 @@ const modalLyricsVisible = ref(false);
 const modalLyricsTitle = ref();
 const lyrics = ref();
 
-const refMusicReleaseSearchNetease = ref();
+const refMusicAlbumSearchNetease = ref();
 
-const cover = ref(getFilePath() + "musicRelease/cover/" + id);
 const initData = () => {
   Promise.all([
-    musicReleaseViewApi({ id }),
-    musicTrackListByReleaseIdApi({ releaseId: id }),
+    apiMusicAlbumView({ id }),
+    apiMusicTrackListByAlbumId({ albumId: id }),
   ]).then(([res1, res2]) => {
     record.value = res1;
     trackRecords.value = res2;
@@ -156,18 +152,18 @@ const initData = () => {
 
 const router = useRouter();
 const onViewArtist = (id) => {
-  router.push({ path: "/musicArtist/view", query: { id } });
+  router.push({ path: "/music/musicArtist/view", query: { id } });
 };
 
 const onUpdateAudioTag = () => {
-  apiMusicReleaseUpdateAudioTag({ id }).then((res) => {
+  apiMusicAlbumUpdateAudioTag({ id }).then((res) => {
     message.success("读取成功");
     initData();
   });
 };
 
 const onSearchNetease = () => {
-  refMusicReleaseSearchNetease.value.show(record.value);
+  refMusicAlbumSearchNetease.value.show(record.value);
 };
 
 const onMatchSuccess = ({ neteaseId }) => {
@@ -175,7 +171,7 @@ const onMatchSuccess = ({ neteaseId }) => {
 };
 
 const onDownloadLyric = () => {
-  apiMusicReleaseDownloadLyric({ id: record.value.id }).then(() => {
+  apiMusicAlbumDownloadLyric({ id: record.value.id }).then(() => {
     message.success("下载成功");
     initData();
   });
@@ -187,14 +183,6 @@ const onViewLyrics = (record) => {
     modalLyricsTitle.value = record.bt;
     modalLyricsVisible.value = true;
   });
-};
-
-const getCover = (id) => {
-  return getFilePath() + "musicRelease/cover/" + id;
-};
-
-const getErrorCover = (e) => {
-  e.target.src = musicDefault;
 };
 
 onMounted(() => {
