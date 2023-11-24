@@ -49,9 +49,17 @@ export const apiMusicAlbumExport = (params: any) => {
   });
 };
 
-export const apiMusicAlbumSyncPlex = () => {
+export const apiMusicAlbumSyncPlex = (data: any) => {
   return useFetch.post<any>({
     url: "/musicAlbum/syncPlex",
+    data,
+  });
+};
+
+export const apiMusicAlbumSyncPlexById = (data: any) => {
+  return useFetch.post<any>({
+    url: "/musicAlbum/syncPlexById",
+    data,
   });
 };
 

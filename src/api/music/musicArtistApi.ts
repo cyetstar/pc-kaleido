@@ -1,9 +1,9 @@
 import { useFetch } from "@/utils/http";
 
 export const apiMusicArtistPage = (params: any) => {
-return useFetch.get<any>({
-  url: "/musicArtist/page",
-  params,
+  return useFetch.get<any>({
+    url: "/musicArtist/page",
+    params,
   });
 };
 
@@ -46,5 +46,26 @@ export const apiMusicArtistExport = (params: any) => {
   return useFetch.get<any>({
     url: "/musicArtist/export",
     params,
+  });
+};
+
+export const apiMusicArtistSyncPlexById = (data: any) => {
+  return useFetch.get<any>({
+    url: "/musicArtist/syncPlexById",
+    data,
+  });
+};
+
+export const apiMusicArtistSearchNetease = (data: any) => {
+  return useFetch.get<any>({
+    url: "/musicArtist/searchNetease",
+    data,
+  });
+};
+
+export const apiMusicArtistMatchNetease = (data: any) => {
+  return useFetch.post<any>({
+    url: "/musicArtist/matchNetease",
+    data,
   });
 };

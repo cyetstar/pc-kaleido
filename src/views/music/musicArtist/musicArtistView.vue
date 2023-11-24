@@ -16,12 +16,9 @@
           </div>
         </h-col>
         <h-col :span="16">
-          <h1>{{ record.mc }}</h1>
-          <p>
-            <a-tag v-if="record.gjdq">{{ record.gjdq }}</a-tag>
-            <a-tag v-if="record.ysjlx">{{ record.ysjlx }}</a-tag>
-          </p>
-          <p>{{ record.jj }}</p>
+          <h1>{{ record.name }}</h1>
+          <p>{{ record.area }}</p>
+          <p>{{ record.summary }}</p>
           <p>
             <a
               v-if="record.musicbrainzId"
@@ -45,6 +42,7 @@
       </a-row>
       <div class="absolute right-0 top-0">
         <a-space>
+          <h-button @click="onSyncPlexById">同步Plex</h-button>
           <h-button @click="onSearchNetease">匹配网易云</h-button>
         </a-space>
       </div>
@@ -64,42 +62,64 @@
                   @click="onViewRecord(albumRecord.id)"
                 />
               </template>
-              <a-card-meta :title="albumRecord.title"> </a-card-meta>
+              <a-card-meta :title="albumRecord.title"></a-card-meta>
             </a-card>
           </a-col>
         </template>
       </a-row>
     </div>
   </section>
+
+  <music-artist-search-netease
+    ref="refMusicArtistSearchNetease"
+    @match-success="onMatchSuccess"
+  />
 </template>
 
 <script setup>
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { apiMusicArtistView } from "@/api/music/musicArtistApi.ts";
+import {
+  apiMusicArtistSyncPlexById,
+  apiMusicArtistView,
+} from "@/api/music/musicArtistApi.ts";
 import musicbrainz from "@/assets/images/musicbrainz.png";
 import plex from "@/assets/images/plex.png";
 import netease from "@/assets/images/netease.png";
-import HPlexImage from "@c/common/PlexImage/PlexImage.vue";
 import { apiMusicAlbumListByArtistId } from "@/api/music/musicAlbumApi";
+import { message } from "ant-design-vue";
+import MusicArtistSearchNetease from "@/views/music/musicArtist/musicArtistSearchNetease.vue";
 
-const id = useRoute().query.id;
+const route = useRoute();
+const router = useRouter();
+const id = route.query.id;
 
 const record = ref({});
 const albumRecords = ref([]);
+const refMusicArtistSearchNetease = ref();
 const initData = () => {
-  Promise.all([
-    apiMusicArtistView({ id }),
-    apiMusicAlbumListByArtistId({ artistId: id }),
-  ]).then(([res1, res2]) => {
-    record.value = res1;
-    albumRecords.value = res2;
+  apiMusicArtistView({ id }).then((res) => (record.value = res));
+  apiMusicAlbumListByArtistId({ artistId: id }).then(
+    (res) => (albumRecords.value = res)
+  );
+};
+
+const onViewRecord = (id) => {
+  router.push({ path: "/music/musicAlbum/view", query: { id } });
+};
+
+const onSyncPlexById = () => {
+  apiMusicArtistSyncPlexById({ id }).then(() => {
+    message.success("同步成功");
   });
 };
 
-const router = useRouter();
-const onViewRecord = (id) => {
-  router.push({ path: "/music/musicRelease/view", query: { id } });
+const onSearchNetease = () => {
+  refMusicArtistSearchNetease.value.show(record.value);
+};
+
+const onMatchSuccess = ({ neteaseId }) => {
+  record.value.neteaseId = neteaseId;
 };
 
 onMounted(() => {

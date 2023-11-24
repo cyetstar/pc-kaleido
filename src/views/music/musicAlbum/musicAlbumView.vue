@@ -56,6 +56,7 @@
       <div class="absolute right-0 top-0">
         <a-space>
           <h-button @click="onUpdateAudioTag">读取Tag</h-button>
+          <h-button @click="onSyncPlexById">同步Plex</h-button>
           <h-button @click="onSearchNetease">匹配网易云</h-button>
           <h-button :disabled="!record.neteaseId" @click="onDownloadLyric"
             >下载歌词
@@ -115,6 +116,8 @@ import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import {
   apiMusicAlbumDownloadLyric,
+  apiMusicAlbumSyncPlex,
+  apiMusicAlbumSyncPlexById,
   apiMusicAlbumUpdateAudioTag,
   apiMusicAlbumView,
 } from "@/api/music/musicAlbumApi.ts";
@@ -141,13 +144,10 @@ const lyrics = ref();
 const refMusicAlbumSearchNetease = ref();
 
 const initData = () => {
-  Promise.all([
-    apiMusicAlbumView({ id }),
-    apiMusicTrackListByAlbumId({ albumId: id }),
-  ]).then(([res1, res2]) => {
-    record.value = res1;
-    trackRecords.value = res2;
-  });
+  apiMusicAlbumView({ id }).then((res) => (record.value = res));
+  apiMusicTrackListByAlbumId({ albumId: id }).then(
+    (res) => (trackRecords.value = res)
+  );
 };
 
 const router = useRouter();
@@ -157,8 +157,23 @@ const onViewArtist = (id) => {
 
 const onUpdateAudioTag = () => {
   apiMusicAlbumUpdateAudioTag({ id }).then((res) => {
-    message.success("读取成功");
-    initData();
+    if (res) {
+      message.success("读取成功");
+      initData();
+    } else {
+      message.error("读取失败");
+    }
+  });
+};
+
+const onSyncPlexById = () => {
+  apiMusicAlbumSyncPlexById({ id }).then((res) => {
+    if (res) {
+      message.success("同步成功");
+      initData();
+    } else {
+      message.error("同步失败");
+    }
   });
 };
 

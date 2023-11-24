@@ -26,28 +26,23 @@
         <template #="{ record }">
           <check-circle-two-tone
             two-tone-color="#52c41a"
-            v-if="record.neteaseId === albumRecord.neteaseId"
+            v-if="record.neteaseId === artistRecord.neteaseId"
           />
         </template>
       </a-table-column>
-      <a-table-column title="封面" align="center">
+      <a-table-column title="照片" align="center">
         <template #="{ record }">
           <a-image :src="record.picUrl" :width="100" />
         </template>
       </a-table-column>
       <a-table-column
-        title="专辑名"
-        data-index="title"
+        title="名称"
+        data-index="name"
         align="center"
       ></a-table-column>
       <a-table-column
-        title="艺术家"
-        data-index="artist"
-        align="center"
-      ></a-table-column>
-      <a-table-column
-        title="发行日期"
-        data-index="publishTime"
+        title="中文名"
+        data-index="trans"
         align="center"
       ></a-table-column>
       <a-table-column title="操作" align="center">
@@ -68,13 +63,13 @@ import { ref } from "vue";
 import { CheckCircleTwoTone } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
 import {
-  apiMusicAlbumSearchNetease,
-  apiMusicAlbumMatchNetease,
-} from "@/api/music/musicAlbumApi.ts";
+  apiMusicArtistSearchNetease,
+  apiMusicArtistMatchNetease,
+} from "@/api/music/musicArtistApi";
 
 const emits = defineEmits(["match-success"]);
 
-let albumRecord = {};
+let artistRecord = ref({});
 let visible = ref();
 let dataSource = ref([]);
 let form = ref({
@@ -83,19 +78,22 @@ let form = ref({
 
 const show = (record) => {
   visible.value = true;
-  albumRecord = record;
-  form.value.keywords = albumRecord.title + " " + albumRecord.artists;
+  artistRecord.value = record;
+  form.value.keywords = record.name;
   onSearch();
 };
 
 const onSearch = () => {
-  apiMusicAlbumSearchNetease(form.value).then((res) => {
+  apiMusicArtistSearchNetease(form.value).then((res) => {
     dataSource.value = res;
   });
 };
 
 const onMatch = (record) => {
-  apiMusicAlbumMatchNetease({ ...albumRecord.value, ...record }).then(() => {
+  apiMusicArtistMatchNetease({
+    ...artistRecord.value,
+    ...record,
+  }).then(() => {
     message.success("匹配成功");
     visible.value = false;
     emits("match-success", record);
