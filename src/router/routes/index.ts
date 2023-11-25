@@ -23,6 +23,8 @@ import sysLogRoutes from "@/router/routes/sysadmin/sysLogRoutes";
 import musicAlbumRoutes from "@/router/routes/music/musicAlbumRoutes";
 import musicArtistRoutes from "@/router/routes/music/musicArtistRoutes";
 import sysConfigRoutes from "@/router/routes/sysadmin/sysConfigRoutes";
+import movieBasicRoutes from "@/router/routes/movie/movieBasicRoutes";
+import movieCollectionRoutes from "@/router/routes/movie/movieCollectionRoutes";
 
 const LoginRoute: AppRouteConfig = {
   path: "/login",
@@ -65,6 +67,8 @@ const BackstageRoute: AppRouteConfig = {
     ...sysConfigRoutes,
     ...musicAlbumRoutes,
     ...musicArtistRoutes,
+    ...movieBasicRoutes,
+    ...movieCollectionRoutes,
   ],
 };
 export const allRoutes = [LoginRoute, BackstageRoute];

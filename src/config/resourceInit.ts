@@ -76,6 +76,16 @@ export const MUSIC_RESOURCE: resourceItem[] = [
     name: "艺术家",
     action: ["page", "view", "create", "update", "delete", "export", "other"],
   },
+  {
+    type: "movieBasic",
+    name: "电影",
+    action: ["page", "view", "create", "update", "delete", "export", "other"],
+  },
+  {
+    type: "movieCollection",
+    name: "电影集合",
+    action: ["page", "view", "create", "update", "delete", "export", "other"],
+  },
 ];
 
 export const ALL_RESOURCE: resourceItem[] = [

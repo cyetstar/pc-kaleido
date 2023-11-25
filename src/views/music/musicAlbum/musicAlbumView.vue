@@ -11,7 +11,7 @@
         <h-col :span="8">
           <div class="flex justify-center">
             <div class="w-xs">
-              <h-plex-image :plex-thumb="record.plexThumb" />
+              <h-plex-image :plex-thumb="record.thumb" />
             </div>
           </div>
         </h-col>
@@ -21,10 +21,10 @@
             <a
               v-for="artist in record.musicArtistDTOList"
               @click="onViewArtist(artist.id)"
-              >{{ artist.name }}</a
+              >{{ artist.title }}</a
             >
           </h1>
-          <p>{{ record.date }}</p>
+          <p>{{ record.originallyAvailableAt }}</p>
           <p>{{ record.label }}</p>
           <p>
             <a-tag v-if="record.type">{{ record.type }}</a-tag>
@@ -71,7 +71,7 @@
         <a-table-column
           title="曲号"
           width="10%"
-          data-index="trackNumber"
+          data-index="trackIndex"
           align="center"
         ></a-table-column>
         <a-table-column
@@ -90,7 +90,7 @@
         <a-table-column
           title="曲长"
           width="10%"
-          data-index="lengthLabel"
+          data-index="durationLabel"
           align="center"
         >
         </a-table-column>
@@ -116,7 +116,6 @@ import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import {
   apiMusicAlbumDownloadLyric,
-  apiMusicAlbumSyncPlex,
   apiMusicAlbumSyncPlexById,
   apiMusicAlbumUpdateAudioTag,
   apiMusicAlbumView,

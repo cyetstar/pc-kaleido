@@ -79,7 +79,7 @@ let form = ref({
 const show = (record) => {
   visible.value = true;
   artistRecord.value = record;
-  form.value.keywords = record.name;
+  form.value.keywords = record.title;
   onSearch();
 };
 

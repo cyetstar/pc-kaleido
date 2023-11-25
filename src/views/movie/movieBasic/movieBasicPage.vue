@@ -1,24 +1,23 @@
 <!--
- * @Author: xiadawei
- * @Date: 2023-11-11 21:13:09
- * @Description: 发行品列表页面
+ * @Author: cyetstar
+ * @Date: 2023-11-26 01:20:15
+ * @Description: 电影列表页面
 -->
 <template>
-  <section class="h-page-section">
+  <section class="h-page-section" ref="appManagePage">
     <h-form-search
-      ref="refFormSearch"
       v-model:form="searchForm"
       @search="onSearch"
       @reset="onReset"
     >
       <h-col :span="6">
-        <h-input label="标题" v-model:value="searchForm.title" name="title" />
+        <h-input label="电影名" v-model:value="searchForm.title" name="title" />
       </h-col>
       <h-col :span="6">
         <h-input
-          label="艺术家"
-          v-model:value="searchForm.artists"
-          name="artists"
+          label="原片名"
+          v-model:value="searchForm.originalTitle"
+          name="originalTitle"
         />
       </h-col>
     </h-form-search>
@@ -26,6 +25,7 @@
     <a-space class="h-btn-space">
       <h-button type="primary" @click="onSyncPlex">同步Plex</h-button>
       <h-button-delete
+        v-permissKey="'movieBasic:delete'"
         plain
         :disabled="selectedRowKeys.length === 0"
         @delete="onDeleteRecord(selectedRowKeys)"
@@ -45,14 +45,7 @@
                   @click="onViewRecord(record.id)"
                 />
               </template>
-              <a-card-meta
-                :title="record.title"
-                :description="
-                  record.artists ||
-                  '--' + ' (' + (record.originallyAvailableAt || '?') + ')'
-                "
-              >
-              </a-card-meta>
+              <a-card-meta :title="record.title"></a-card-meta>
             </a-card>
           </a-col>
         </template>
@@ -79,16 +72,17 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, getCurrentInstance, onMounted } from "vue";
 import {
-  apiMusicAlbumDelete,
-  apiMusicAlbumPage,
-  apiMusicAlbumSyncPlex,
-} from "@/api/music/musicAlbumApi.ts";
+  apiMovieBasicPage,
+  apiMovieBasicDelete,
+  apiMovieBasicSyncPlex,
+} from "@/api/movie/movieBasicApi.ts";
 
 import { Empty, message } from "ant-design-vue";
 import { useRouter } from "vue-router";
 
+const tableRef = ref();
 const searchForm = ref({});
 const pageResult = ref({
   records: [],
@@ -96,59 +90,57 @@ const pageResult = ref({
   total: 0,
   pageSize: 36,
 });
-const selectedRowKeys = ref([]);
-
-onMounted(() => {
-  // console.log("init");
-  loadData({ ...searchForm.value });
-});
-
-const onSyncPlex = () => {
-  apiMusicAlbumSyncPlex().then((res) => {
-    message.success("同步完成");
-  });
-};
-
 const onSearch = () => {
-  loadData({ ...searchForm.value });
+  tableRef.value.load(1);
 };
 
 const onReset = () => {
-  loadData({ ...searchForm.value });
-};
-
-const onChange = (pageNumber) => {
-  loadData({ pageNumber, ...searchForm.value });
+  tableRef.value.load(1);
 };
 
 const loadData = (data) => {
   data.searchCount = true;
   data.pageSize = pageResult.value.pageSize;
-  apiMusicAlbumPage(data).then((res) => {
+  apiMovieBasicPage(data).then((res) => {
     pageResult.value = res;
   });
 };
 
+const onSelectionChange = () => {};
+
+const formRef = ref();
+const onCreateRecord = () => {
+  formRef.value.create();
+};
 const router = useRouter();
 const onViewRecord = (id) => {
-  router.push({ path: "/music/musicAlbum/view", query: { id } });
+  router.push({ path: "/movie/movieBasic/view", query: { id } });
+};
+const onUpdateRecord = (id) => {
+  formRef.value.update(id);
 };
 
+const selectedRowKeys = ref([]);
 const onDeleteRecord = (recordId) => {
   const id = Array.isArray(recordId) ? recordId : [recordId];
-  apiMusicAlbumDelete(id).then((res) => {
+  apiMovieBasicDelete(id).then((res) => {
     if (res) {
+      tableRef.value.load();
       message.success("删除成功！");
     }
   });
 };
+
+const onSyncPlex = () => {
+  apiMovieBasicSyncPlex().then((res) => {
+    message.success("同步完成");
+  });
+};
+
+onMounted(() => {
+  // console.log("init");
+  loadData({ ...searchForm.value });
+});
 </script>
 
-<style lang="less">
-.cover {
-  object-fit: cover;
-  width: 100%;
-  flex: 1;
-  height: 190px;
-}
-</style>
+<style lang="less" scoped></style>

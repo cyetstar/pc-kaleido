@@ -11,12 +11,12 @@
         <h-col :span="8">
           <div class="flex justify-center">
             <div class="w-xs">
-              <h-plex-image :plex-thumb="record.plexThumb" />
+              <h-plex-image :plex-thumb="record.thumb" />
             </div>
           </div>
         </h-col>
         <h-col :span="16">
-          <h1>{{ record.name }}</h1>
+          <h1>{{ record.title }}</h1>
           <p>{{ record.area }}</p>
           <p>{{ record.summary }}</p>
           <p>
@@ -58,7 +58,7 @@
                 <h-plex-image
                   class="cover"
                   :preview="false"
-                  :plex-thumb="albumRecord.plexThumb"
+                  :plex-thumb="albumRecord.thumb"
                   @click="onViewRecord(albumRecord.id)"
                 />
               </template>

@@ -11,10 +11,16 @@ export const MENUS = [
     name: "movie",
     children: [
       {
-        title: "电影管理",
-        name: "moviePage",
-        path: "/movie/movie/page",
-        permission: "movie:page",
+        title: "电影",
+        name: "movieBasicPage",
+        path: "/movie/movieBasic/page",
+        permission: "movieBasic:page",
+      },
+      {
+        title: "电影集合",
+        name: "movieCollectionPage",
+        path: "/movie/movieCollection/page",
+        permission: "movieCollection:page",
       },
     ],
   },
@@ -23,7 +29,7 @@ export const MENUS = [
     name: "music",
     children: [
       {
-        title: "专辑管理",
+        title: "专辑",
         name: "musicAlbumPage",
         path: "/music/musicAlbum/page",
         permission: "musicAlbum:page",
