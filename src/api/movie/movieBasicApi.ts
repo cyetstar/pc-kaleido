@@ -54,3 +54,17 @@ export const apiMovieBasicSyncPlex = () => {
     url: "/movieBasic/syncPlex",
   });
 };
+
+export const apiMovieBasicSyncPlexById = (data: any) => {
+  return useFetch.post<any>({
+    url: "/movieBasic/syncPlexById",
+    data,
+  });
+};
+
+export const apiMovieReadNFO = (data: any) => {
+  return useFetch.post<any>({
+    url: "/movie/readNFO",
+    data,
+  });
+};

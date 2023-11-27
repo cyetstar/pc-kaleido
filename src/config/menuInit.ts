@@ -25,6 +25,18 @@ export const MENUS = [
     ],
   },
   {
+    title: "剧集",
+    name: "tvshow",
+    children: [
+      {
+        title: "剧集",
+        name: "tvshowShowPage",
+        path: "/tvshow/tvshowShow/page",
+        permission: "tvshowShow:page",
+      },
+    ],
+  },
+  {
     title: "音乐",
     name: "music",
     children: [

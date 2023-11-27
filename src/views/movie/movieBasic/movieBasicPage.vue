@@ -32,29 +32,27 @@
       />
     </a-space>
 
-    <div>
-      <a-row :gutter="16">
+    <div v-if="pageResult.records.length === 0">
+      <a-empty :image="Empty.PRESENTED_IMAGE_SIMPLE" />
+    </div>
+    <div v-else>
+      <div class="grid grid-cols-24 gap-x-3 gap-y-3">
         <template :key="record.id" v-for="record in pageResult.records">
-          <a-col :md="4" :xxl="3" class="mb-16px">
-            <a-card>
-              <template #cover>
-                <h-plex-image
-                  class="cover"
-                  :preview="false"
-                  :plex-thumb="record.thumb"
-                  @click="onViewRecord(record.id)"
-                />
-              </template>
-              <a-card-meta :title="record.title"></a-card-meta>
-            </a-card>
-          </a-col>
+          <a-card class="col-span-3">
+            <template #cover>
+              <h-plex-image
+                class="h-poster"
+                :preview="false"
+                :plex-thumb="record.thumb"
+                @click="onViewRecord(record.id)"
+              />
+            </template>
+            <a-card-meta
+              :title="record.title"
+              :description="record.year"
+            ></a-card-meta>
+          </a-card>
         </template>
-      </a-row>
-      <div>
-        <a-empty
-          v-if="pageResult.records.length === 0"
-          :image="Empty.PRESENTED_IMAGE_SIMPLE"
-        />
       </div>
       <div class="flex justify-end">
         <a-pagination

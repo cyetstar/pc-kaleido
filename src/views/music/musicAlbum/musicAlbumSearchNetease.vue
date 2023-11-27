@@ -95,7 +95,7 @@ const onSearch = () => {
 };
 
 const onMatch = (record) => {
-  apiMusicAlbumMatchNetease({ ...albumRecord.value, ...record }).then(() => {
+  apiMusicAlbumMatchNetease({ ...albumRecord, ...record }).then(() => {
     message.success("匹配成功");
     visible.value = false;
     emits("match-success", record);

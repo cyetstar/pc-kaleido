@@ -12,7 +12,7 @@ export interface resourceItem {
   children?: resourceItem[];
 }
 
-export const SYSADMIN_RESOURCE: resourceItem[] = [
+export const ALL_RESOURCE: resourceItem[] = [
   {
     type: "sysUser",
     name: "用户管理",
@@ -63,9 +63,6 @@ export const SYSADMIN_RESOURCE: resourceItem[] = [
     name: "系统日志",
     action: ["page", "view", "create", "update", "delete", "export", "other"],
   },
-];
-
-export const MUSIC_RESOURCE: resourceItem[] = [
   {
     type: "musicAlbum",
     name: "专辑",
@@ -86,9 +83,9 @@ export const MUSIC_RESOURCE: resourceItem[] = [
     name: "电影集合",
     action: ["page", "view", "create", "update", "delete", "export", "other"],
   },
-];
-
-export const ALL_RESOURCE: resourceItem[] = [
-  ...SYSADMIN_RESOURCE,
-  ...MUSIC_RESOURCE,
+  {
+    type: "tvshowShow",
+    name: "剧集",
+    action: ["page", "view", "create", "update", "delete", "export", "other"],
+  },
 ];

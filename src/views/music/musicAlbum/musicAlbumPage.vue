@@ -32,36 +32,31 @@
       />
     </a-space>
 
-    <div>
-      <a-row :gutter="16">
+    <div v-if="pageResult.records.length === 0">
+      <a-empty :image="Empty.PRESENTED_IMAGE_SIMPLE" />
+    </div>
+    <div v-else>
+      <div class="grid grid-cols-24 gap-x-3 gap-y-3">
         <template :key="record.id" v-for="record in pageResult.records">
-          <a-col :md="4" :xxl="3" class="mb-16px">
-            <a-card>
-              <template #cover>
-                <h-plex-image
-                  class="cover"
-                  :preview="false"
-                  :plex-thumb="record.thumb"
-                  @click="onViewRecord(record.id)"
-                />
-              </template>
-              <a-card-meta
-                :title="record.title"
-                :description="
-                  record.artists ||
-                  '--' + ' (' + (record.originallyAvailableAt || '?') + ')'
-                "
-              >
-              </a-card-meta>
-            </a-card>
-          </a-col>
+          <a-card class="col-span-3">
+            <template #cover>
+              <h-plex-image
+                class="h-cover"
+                :preview="false"
+                :plex-thumb="record.thumb"
+                @click="onViewRecord(record.id)"
+              />
+            </template>
+            <a-card-meta
+              :title="record.title"
+              :description="
+                record.artists ||
+                '--' + ' (' + (record.originallyAvailableAt || '?') + ')'
+              "
+            >
+            </a-card-meta>
+          </a-card>
         </template>
-      </a-row>
-      <div>
-        <a-empty
-          v-if="pageResult.records.length === 0"
-          :image="Empty.PRESENTED_IMAGE_SIMPLE"
-        />
       </div>
       <div class="flex justify-end">
         <a-pagination
@@ -144,11 +139,4 @@ const onDeleteRecord = (recordId) => {
 };
 </script>
 
-<style lang="less">
-.cover {
-  object-fit: cover;
-  width: 100%;
-  flex: 1;
-  height: 190px;
-}
-</style>
+<style lang="less" scoped></style>

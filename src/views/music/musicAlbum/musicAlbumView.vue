@@ -11,7 +11,7 @@
         <h-col :span="8">
           <div class="flex justify-center">
             <div class="w-xs">
-              <h-plex-image :plex-thumb="record.thumb" />
+              <h-plex-image class="h-cover" :plex-thumb="record.thumb" />
             </div>
           </div>
         </h-col>
@@ -82,7 +82,7 @@
         <a-table-column title="歌词" width="5%" align="center">
           <template #="{ record }">
             <file-text-outlined
-              v-if="record.sfygc === '1'"
+              v-if="record.hasLyric === '1'"
               @click="onViewLyrics(record)"
             />
           </template>
@@ -194,7 +194,7 @@ const onDownloadLyric = () => {
 const onViewLyrics = (record) => {
   apiMusicTrackViewLyrics({ id: record.id }).then((res) => {
     lyrics.value = res;
-    modalLyricsTitle.value = record.bt;
+    modalLyricsTitle.value = record.title;
     modalLyricsVisible.value = true;
   });
 };

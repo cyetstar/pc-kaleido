@@ -32,6 +32,14 @@
           </h-col>
           <h-col :span="12">
             <h-select
+              label="Plex剧集资料库"
+              :columns="columns"
+              name="plexTvshowLibraryId"
+              v-model:value="form.plexTvshowLibraryId"
+            />
+          </h-col>
+          <h-col :span="12">
+            <h-select
               label="Plex音乐资料库"
               :columns="columns"
               name="plexMusicLibraryId"
@@ -109,6 +117,7 @@ let form = ref({
   plexUrl: "",
   plexToken: "",
   plexMovieLibraryId: "",
+  plexTvshowLibraryId: "",
   plexMusicLibraryId: "",
   movieLibraryPath: "",
   movieExcludePath: "",
