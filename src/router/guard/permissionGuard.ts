@@ -21,6 +21,7 @@ import { ConsoleTypeEnum } from "@/enums/consoleEnum";
 export const createPermissionGuard = (router: Router) => {
   iconsole.SUCCESS(ConsoleTypeEnum.ROUTER, "create permission guard");
   router.beforeEach(async (to, from, next) => {
+    console.log("to:", to.meta.keepAlive);
     const userStore = useUserStore();
     const permissionStore = usePermissionStore();
     if (isRequiresAuthRoute(to)) {
@@ -36,8 +37,6 @@ export const createPermissionGuard = (router: Router) => {
           next(to.fullPath);
         } else {
           const permissionKeys = permissionStore.permissionKeys;
-          console.log("permissionKeys", permissionKeys);
-          console.log("to", to);
           if (to.meta.permissionKey) {
             if (permissionKeys.includes(to.meta.permissionKey)) {
               next();

@@ -66,6 +66,7 @@ import HInputPassword from "@/components/common/InputPassword";
 import HInputTel from "@/components/common/InputTel";
 import HModalExport from "@/components/common/ModalExport";
 import HPlexImage from "@/components/common/PlexImage";
+import HPlexLink from "@/components/common/PlexLink";
 import HRadio from "@/components/common/Radio";
 import HSelect from "@/components/common/Select";
 import HSelectSsxq from "@/components/common/SelectSsxq";
@@ -91,6 +92,7 @@ export const registerGlobComp = (app: App) => {
     .component("h-input-tel", HInputTel)
     .component("h-modal-export", HModalExport)
     .component("h-plex-image", HPlexImage)
+    .component("h-plex-link", HPlexLink)
     .component("h-radio", HRadio)
     .component("h-select", HSelect)
     .component("h-select-ssxq", HSelectSsxq)

@@ -1,15 +1,15 @@
 <script setup lang="ts" name="Login">
-import {reactive} from "vue";
-import {LoginParams} from "@/api/_auth/model";
-import {useMessage, MessageKey} from "@/hooks/web/useMessage";
-import {useUserStore} from "@/store/modules/user";
-import {useRouter} from "vue-router";
+import { reactive } from "vue";
+import { LoginParams } from "@/api/_auth/model";
+import { useMessage, MessageKey } from "@/hooks/web/useMessage";
+import { useUserStore } from "@/store/modules/user";
+import { useRouter } from "vue-router";
 import config from "@/config";
-import {useMenuStore} from "@/store/modules/menu";
+import { useMenuStore } from "@/store/modules/menu";
 
 const menuStore = useMenuStore();
 const router = useRouter();
-const {createMessage} = useMessage();
+const { createMessage } = useMessage();
 
 const loginForm = reactive<LoginParams>({
   username: "",
@@ -17,8 +17,8 @@ const loginForm = reactive<LoginParams>({
   rememberMe: false,
 });
 const loginRules = {
-  username: [{required: true, message: "请输入登录账号", trigger: "blur"}],
-  password: [{required: true, message: "请输入登录密码", trigger: "blur"}],
+  username: [{ required: true, message: "请输入登录账号", trigger: "blur" }],
+  password: [{ required: true, message: "请输入登录密码", trigger: "blur" }],
 };
 let loginStatus = $ref<boolean>(false);
 
@@ -64,53 +64,52 @@ function getSucessPath(subMenu: any) {
       <div class="load_look"></div>
       <div style="margin: 100px 60px; flex: 1">
         <h1
-            class="text-42px font-500 font-bold text-[#103059] m-0 mt-3 -2xl:text-36px text-center"
-            style="color: #0071ff"
+          class="text-42px font-500 font-bold text-[#103059] m-0 mt-3 -2xl:text-36px text-center"
+          style="color: #0071ff"
         >
           {{ config.APP.title }}
         </h1>
         <div class="mt-16 flex flex-col -2xl:mt-11">
           <a-form
-              layout="vertical"
-              :model="loginForm"
-              :rules="loginRules"
-              @finish="doLogin"
+            layout="vertical"
+            :model="loginForm"
+            :rules="loginRules"
+            @finish="doLogin"
           >
             <a-form-item name="username">
               <a-input
-                  v-model:value="loginForm.username"
-                  placeholder="请输入账号"
+                v-model:value="loginForm.username"
+                placeholder="请输入账号"
               />
             </a-form-item>
             <a-form-item name="password" :style="{ marginTop: '38px' }">
               <a-input-password
-                  v-model:value="loginForm.password"
-                  autocomplete="new-password"
-                  placeholder="请输入密码"
+                v-model:value="loginForm.password"
+                autocomplete="new-password"
+                placeholder="请输入密码"
               />
             </a-form-item>
             <a-form-item>
               <div
-                  class="flex justify-between items-center text-[#a5adc7] text-18px mt-20px"
+                class="flex justify-between items-center text-[#a5adc7] text-18px mt-20px"
               >
                 <a-checkbox v-model="loginForm.rememberMe">记住密码</a-checkbox>
                 <span
-                    class="cursor-pointer"
-                    @click="() => createMessage.warn('敬请期待!')"
-                    style="color: #0071ff"
-                >忘记密码？</span
+                  class="cursor-pointer"
+                  @click="() => createMessage.warn('敬请期待!')"
+                  style="color: #0071ff"
+                  >忘记密码？</span
                 >
               </div>
             </a-form-item>
             <a-form-item :style="{ marginTop: '50px' }">
               <a-button
-                  block
-                  type="primary"
-                  :loading="loginStatus"
-                  html-type="submit"
-              >登录
-              </a-button
-              >
+                block
+                type="primary"
+                :loading="loginStatus"
+                html-type="submit"
+                >登录
+              </a-button>
             </a-form-item>
           </a-form>
         </div>
@@ -120,12 +119,6 @@ function getSucessPath(subMenu: any) {
 </template>
 
 <style lang="less" scoped>
-.login-bg {
-  animation: fade-in 0.8s ease-in-out;
-  .bg-img-full("@/assets/images/laod_bg_n.png");
-@apply fixed left-0 right-0 top-0 bottom-0;
-}
-
 .bg {
   display: flex;
   width: 1376px;
@@ -140,7 +133,6 @@ function getSucessPath(subMenu: any) {
 .load_look {
   width: 670px;
   height: 592px;
-  .bg-img-full("@/assets/images/load_look_n.png");
 }
 
 @text-color: #a5adc7;
@@ -151,31 +143,31 @@ input:-webkit-autofill {
 
 :deep(.ant-form) {
   .ant-form-item {
-  @apply mb-0;
+    @apply mb-0;
   }
 
   .ant-checkbox-wrapper {
-  @apply text-18px font-normal text- [ @text-color ];
+    @apply text-18px font-normal text- [ @text-color ];
 
     .ant-checkbox-inner {
-    @apply border border-solid border- [ @text-color ] w-18px h-18px;
+      @apply border border-solid border- [ @text-color ] w-18px h-18px;
     }
 
     .ant-checkbox-checked::after {
-    @apply rounded-1 / 2;
+      @apply rounded-1 / 2;
     }
   }
 
   label {
-  @apply text-base font-semibold;
+    @apply text-base font-semibold;
   }
 
   .ant-form-item-label > label {
-  @apply text- [ #7289a7 ];
+    @apply text- [ #7289a7 ];
   }
 
   .login-input-style {
-  @apply w-360px bg-transparent text-base text-black border-none rounded-none outline-none focus:(shadow-none)!important;
+    @apply w-360px bg-transparent text-base text-black border-none rounded-none outline-none focus:(shadow-none)!important;
   }
 
   .ant-input {
@@ -201,7 +193,7 @@ input:-webkit-autofill {
   }
 
   .ant-btn {
-  @apply h-11 text-base rounded-2l;
+    @apply h-11 text-base rounded-2l;
   }
 }
 </style>

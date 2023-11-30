@@ -58,10 +58,8 @@ export const useUserStore = defineStore("user", {
     }: LoginParams): Promise<LoginResultModel> {
       const data = await loginApi({ username, password });
       setTokenHelper(data);
-      this.security = checkPassword(password);
       await this.setUserInfo();
       await useMenuStore().generateRoutes();
-      // await this.setUserPermission();
       await useAppStore().initAppConfig();
       return data;
     },

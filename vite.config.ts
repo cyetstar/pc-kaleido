@@ -57,7 +57,7 @@ export default ({ mode }: ConfigEnv) => {
             hack: 'true; @import "@/styles/theme.less"',
           },
           javascriptEnabled: true,
-          additionalData: '@import "./src/styles/index.less";',
+          // additionalData: '@import "./src/styles/index.less";',
         },
       },
     },

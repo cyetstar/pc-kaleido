@@ -10,7 +10,7 @@
     <div class="flex items-center">
       <div
         class="text-[var(--theme-color)] tracking-2px font-350 cursor-pointer title"
-        @click="router.replace('/business')"
+        @click="router.replace('/')"
       >
         {{ title }}
       </div>
@@ -71,7 +71,6 @@ const getPath = (route: any): string => {
     return getPath(children[0]);
   }
 };
-
 </script>
 
 <style lang="less" scoped>
@@ -93,10 +92,10 @@ const getPath = (route: any): string => {
 .menu-box {
   display: flex;
   align-items: center;
-  gap: 36px;
+  gap: 18px;
   font-size: 16px;
   color: #333;
-  font-weight: 700;
+  font-weight: 500;
   margin-left: 70px;
   height: 48px;
 

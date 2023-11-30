@@ -4,44 +4,40 @@
  * @Description: 发行品列表页面
 -->
 <template>
-  <section class="h-page-section">
-    <h-form-search
-      ref="refFormSearch"
-      v-model:form="searchForm"
-      @search="onSearch"
-      @reset="onReset"
-    >
-      <h-col :span="6">
-        <h-input label="标题" v-model:value="searchForm.title" name="title" />
-      </h-col>
-      <h-col :span="6">
-        <h-input
-          label="艺术家"
-          v-model:value="searchForm.artists"
-          name="artists"
-        />
-      </h-col>
-    </h-form-search>
-
-    <a-space class="h-btn-space">
-      <h-button type="primary" @click="onSyncPlex">同步Plex</h-button>
-      <h-button-delete
-        plain
-        :disabled="selectedRowKeys.length === 0"
-        @delete="onDeleteRecord(selectedRowKeys)"
-      />
-    </a-space>
-
-    <div v-if="pageResult.records.length === 0">
-      <a-empty :image="Empty.PRESENTED_IMAGE_SIMPLE" />
+  <section class="h-form-wrapper">
+    <div class="h-page-header">
+      <!--    <h-form-search-->
+      <!--      ref="refFormSearch"-->
+      <!--      v-model:form="searchForm"-->
+      <!--      @search="onSearch"-->
+      <!--      @reset="onReset"-->
+      <!--    >-->
+      <!--      <h-col :span="6">-->
+      <!--        <h-input label="标题" v-model:value="searchForm.title" name="title" />-->
+      <!--      </h-col>-->
+      <!--      <h-col :span="6">-->
+      <!--        <h-input-->
+      <!--          label="艺术家"-->
+      <!--          v-model:value="searchForm.artists"-->
+      <!--          name="artists"-->
+      <!--        />-->
+      <!--      </h-col>-->
+      <!--    </h-form-search>-->
+      <a-space class="h-btn-space">
+        <h-button type="primary" @click="onSyncPlex">同步Plex</h-button>
+      </a-space>
     </div>
-    <div v-else>
-      <div class="grid grid-cols-24 gap-x-3 gap-y-3">
+    <div class="h-form-body" ref="refScrollGrid" @scroll="onScrollGrid">
+      <div v-if="pageResult.records.length === 0">
+        <a-empty :image="Empty.PRESENTED_IMAGE_SIMPLE" />
+      </div>
+      <div v-else class="grid grid-cols-24 gap-x-3 gap-y-3">
         <template :key="record.id" v-for="record in pageResult.records">
           <a-card class="col-span-3">
             <template #cover>
               <h-plex-image
                 class="h-cover"
+                type="music"
                 :preview="false"
                 :plex-thumb="record.thumb"
                 @click="onViewRecord(record.id)"
@@ -58,44 +54,42 @@
           </a-card>
         </template>
       </div>
-      <div class="flex justify-end">
-        <a-pagination
-          v-model:current="pageResult.pageNumber"
-          :show-total="(total) => `共 ${total} 张`"
-          :total="pageResult.total"
-          :page-size="pageResult.pageSize"
-          :show-size-changer="false"
-          @change="onChange"
-          show-less-items
-        />
-      </div>
     </div>
   </section>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onActivated } from "vue";
 import {
-  apiMusicAlbumDelete,
   apiMusicAlbumPage,
   apiMusicAlbumSyncPlex,
 } from "@/api/music/musicAlbumApi.ts";
 
 import { Empty, message } from "ant-design-vue";
-import { useRouter } from "vue-router";
+import { onBeforeRouteLeave, useRoute, useRouter } from "vue-router";
+import { useAppStore } from "@/store/modules/app";
 
+const refScrollGrid = ref();
 const searchForm = ref({});
 const pageResult = ref({
   records: [],
   pageNumber: 0,
-  total: 0,
   pageSize: 36,
 });
-const selectedRowKeys = ref([]);
+let route = useRoute();
 
 onMounted(() => {
-  // console.log("init");
   loadData({ ...searchForm.value });
+});
+
+onActivated(() => {
+  refScrollGrid.value.scrollTop = appStore.$state.scrollTop;
+});
+
+const appStore = useAppStore();
+onBeforeRouteLeave((to, from, next) => {
+  appStore.setScrollTop(refScrollGrid.value.scrollTop);
+  next();
 });
 
 const onSyncPlex = () => {
@@ -104,23 +98,18 @@ const onSyncPlex = () => {
   });
 };
 
-const onSearch = () => {
-  loadData({ ...searchForm.value });
-};
-
-const onReset = () => {
-  loadData({ ...searchForm.value });
-};
-
-const onChange = (pageNumber) => {
-  loadData({ pageNumber, ...searchForm.value });
-};
-
-const loadData = (data) => {
-  data.searchCount = true;
-  data.pageSize = pageResult.value.pageSize;
+const loadData = () => {
+  loading.value = true;
+  const data = {
+    pageNumber: pageResult.value.pageNumber + 1,
+    pageSize: pageResult.value.pageSize,
+    searchCount: true,
+  };
   apiMusicAlbumPage(data).then((res) => {
-    pageResult.value = res;
+    loading.value = false;
+    pageResult.value.records.push(...res.records);
+    pageResult.value.pageNumber = res.pageNumber;
+    pageResult.value.pageSize = res.pageSize;
   });
 };
 
@@ -128,14 +117,20 @@ const router = useRouter();
 const onViewRecord = (id) => {
   router.push({ path: "/music/musicAlbum/view", query: { id } });
 };
-
-const onDeleteRecord = (recordId) => {
-  const id = Array.isArray(recordId) ? recordId : [recordId];
-  apiMusicAlbumDelete(id).then((res) => {
-    if (res) {
-      message.success("删除成功！");
-    }
-  });
+const loading = ref(false);
+const onScrollGrid = () => {
+  const containerHeight = refScrollGrid.value.clientHeight;
+  // 获取滚动容器滚动的高度
+  const scrollHeight = refScrollGrid.value.scrollHeight;
+  // 获取滚动容器滚动的距离
+  const scrollTop = refScrollGrid.value.scrollTop;
+  // 判断是否滑倒底部
+  if (
+    containerHeight + scrollTop >= scrollHeight - 50 &&
+    loading.value !== true
+  ) {
+    loadData();
+  }
 };
 </script>
 

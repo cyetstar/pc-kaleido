@@ -7,23 +7,31 @@
 -->
 <template>
   <section id="main-section">
-    <router-view v-slot="{ Component }" :key="route.fullPath">
-      <transition name="fade-transform" mode="out-in">
-        <h-global-config
-          :plex-url="appStore.$state.plexUrl"
-          :plex-token="appStore.$state.plexToken"
-        >
-          <component :is="Component"></component>
-        </h-global-config>
-      </transition>
-    </router-view>
+    <h-global-config
+      :plex-url="appStore.$state.plexUrl"
+      :plex-token="appStore.$state.plexToken"
+    >
+      <router-view v-slot="{ Component, route }">
+        <keep-alive>
+          <component
+            v-if="route.meta.keepAlive"
+            :is="Component"
+            :key="route.name"
+          />
+        </keep-alive>
+        <component
+          v-if="!route.meta.keepAlive"
+          :is="Component"
+          :key="route.name"
+        />
+      </router-view>
+    </h-global-config>
   </section>
 </template>
 
 <script setup>
-import { useRoute } from "vue-router";
 import { useAppStore } from "@/store/modules/app";
-const route = useRoute();
+
 const appStore = useAppStore();
 </script>
 

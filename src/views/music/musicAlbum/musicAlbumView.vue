@@ -5,55 +5,11 @@
 -->
 <template>
   <section class="h-page-section">
-    <div class="relative">
-      <h-title-module title="专辑信息" class="mb-6" />
-      <a-row :gutter="16">
-        <h-col :span="8">
-          <div class="flex justify-center">
-            <div class="w-xs">
-              <h-plex-image class="h-cover" :plex-thumb="record.thumb" />
-            </div>
-          </div>
-        </h-col>
-        <h-col :span="16">
-          <h1>{{ record.title }}</h1>
-          <h1>
-            <a
-              v-for="artist in record.musicArtistDTOList"
-              @click="onViewArtist(artist.id)"
-              >{{ artist.title }}</a
-            >
-          </h1>
-          <p>{{ record.originallyAvailableAt }}</p>
-          <p>{{ record.label }}</p>
-          <p>
-            <a-tag v-if="record.type">{{ record.type }}</a-tag>
-            <a-tag v-if="record.genre">{{ record.genre }}</a-tag>
-            <a-tag v-if="record.media">{{ record.media }}</a-tag>
-          </p>
-          <p>{{ record.summary }}</p>
-          <p>
-            <a
-              v-if="record.musicbrainzId"
-              target="_blank"
-              :href="'https://musicbrainz.org/release/' + record.musicbrainzId"
-              class="pr-15px"
-              ><img width="30" :src="musicbrainz" class="inline" />
-            </a>
-            <a target="_blank" href="" class="pr-15px"
-              ><img width="30" :src="plex" class="inline"
-            /></a>
-            <a
-              v-if="record.neteaseId"
-              target="_blank"
-              :href="'https://music.163.com/#/album?id=' + record.neteaseId"
-              class="pr-15px"
-              ><img width="30" :src="netease" class="inline" />
-            </a>
-          </p>
-        </h-col>
-      </a-row>
-      <div class="absolute right-0 top-0">
+    <a-page-header :title="record.title" @back="() => $router.go(-1)">
+      <template #backIcon>
+        <LeftOutlined />
+      </template>
+      <template #extra>
         <a-space>
           <h-button @click="onUpdateAudioTag">读取Tag</h-button>
           <h-button @click="onSyncPlexById">同步Plex</h-button>
@@ -62,10 +18,58 @@
             >下载歌词
           </h-button>
         </a-space>
-      </div>
-    </div>
+      </template>
+    </a-page-header>
+    <a-row>
+      <h-col :span="8">
+        <div class="flex justify-center">
+          <div class="w-xs">
+            <h-plex-image
+              class="h-cover"
+              :plex-thumb="record.thumb"
+              type="music"
+            />
+          </div>
+        </div>
+      </h-col>
+      <h-col :span="16">
+        <h1>
+          <a
+            v-for="artist in record.musicArtistDTOList"
+            @click="onViewArtist(artist.id)"
+            >{{ artist.title }}</a
+          >
+        </h1>
+        <p>{{ record.originallyAvailableAt }}</p>
+        <p>{{ record.label }}</p>
+        <p>
+          <a-tag v-if="record.type">{{ record.type }}</a-tag>
+          <a-tag v-if="record.genre">{{ record.genre }}</a-tag>
+          <a-tag v-if="record.media">{{ record.media }}</a-tag>
+        </p>
+        <p>{{ record.summary }}</p>
+        <p>
+          <h-plex-link class="pr-15px" :rating-key="id" />
+          <a
+            v-if="record.musicbrainzId"
+            target="_blank"
+            :href="'https://musicbrainz.org/release/' + record.musicbrainzId"
+            class="pr-15px"
+            ><img width="30" :src="musicbrainz" class="inline" />
+          </a>
 
-    <div class="mt-8">
+          <a
+            v-if="record.neteaseId"
+            target="_blank"
+            :href="'https://music.163.com/#/album?id=' + record.neteaseId"
+            class="pr-15px"
+            ><img width="30" :src="netease" class="inline" />
+          </a>
+        </p>
+      </h-col>
+    </a-row>
+
+    <div class="mt-8 p-20px">
       <h-title-module title="歌曲列表" class="mb-6" />
       <a-table :pagination="false" size="small" :data-source="trackRecords">
         <a-table-column
@@ -125,11 +129,13 @@ import {
   apiMusicTrackListByAlbumId,
 } from "@/api/music/musicTrackApi";
 import { message } from "ant-design-vue";
-import { FileTextOutlined } from "@ant-design/icons-vue";
+import { FileTextOutlined, LeftOutlined } from "@ant-design/icons-vue";
 import musicbrainz from "@/assets/images/musicbrainz.png";
 import plex from "@/assets/images/plex.png";
 import netease from "@/assets/images/netease.png";
 import MusicAlbumSearchNetease from "@/views/music/musicAlbum/musicAlbumSearchNetease.vue";
+import HButton from "@c/common/Button/Button.vue";
+import HPlexLink from "@c/common/PlexLink/PlexLink.vue";
 
 const route = useRoute();
 const id = route.query.id;
@@ -150,6 +156,10 @@ const initData = () => {
 };
 
 const router = useRouter();
+
+const onBack = () => {
+  router.back();
+};
 const onViewArtist = (id) => {
   router.push({ path: "/music/musicArtist/view", query: { id } });
 };

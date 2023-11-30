@@ -11,7 +11,7 @@
         <h-col :span="8">
           <div class="flex justify-center">
             <div class="w-xs">
-              <h-plex-image :plex-thumb="record.thumb" />
+              <h-plex-image :plex-thumb="record.thumb" type="music" />
             </div>
           </div>
         </h-col>

@@ -34,6 +34,7 @@ export const useMenuStore = defineStore("menu", {
     },
     async generateRoutes() {
       const serverRoutes = await sysMenuTreeApi();
+      console.log(serverRoutes);
       this.menus = serverRoutes;
       const activedItem = serverRoutes[0];
       this.setMenu(activedItem.name, activedItem.children);
