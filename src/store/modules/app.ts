@@ -4,14 +4,22 @@ import { apiSysConfigFindByKeys } from "@/api/sysadmin/sysConfigApi";
 interface AppState {
   plexUrl: string;
   plexToken: string;
-  scrollTop: number;
+  scrollTop: {
+    movie: number;
+    music: number;
+    tvshow: number;
+  };
 }
 
 export const useAppStore = defineStore("app", {
   state: (): AppState => ({
     plexUrl: "",
     plexToken: "",
-    scrollTop: 0,
+    scrollTop: {
+      movie: 0,
+      music: 0,
+      tvshow: 0,
+    },
   }),
   actions: {
     async initAppConfig() {
@@ -21,8 +29,11 @@ export const useAppStore = defineStore("app", {
       });
     },
 
-    setScrollTop(scrollTop: number) {
-      this.scrollTop = scrollTop;
+    setScrollTop(scrollTop: number, type: "movie" | "music" | "tvshow") {
+      this.scrollTop[type] = scrollTop;
+    },
+    getScrollTop(type: "movie" | "music" | "tvshow") {
+      return this.scrollTop[type];
     },
 
     clearAppState() {

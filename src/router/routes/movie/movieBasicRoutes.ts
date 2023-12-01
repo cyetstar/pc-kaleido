@@ -7,8 +7,7 @@ const movieBasicRoute: AppRouteConfig[] = [
     component: () => import("@/views/movie/movieBasic/movieBasicPage.vue"),
     meta: {
       title: "电影",
-      requiresAuth: false,
-      icon: ["i-home.png", "i-home-active.png"],
+      keepAlive: true,
     },
   },
   {
@@ -17,7 +16,6 @@ const movieBasicRoute: AppRouteConfig[] = [
     component: () => import("@/views/movie/movieBasic/movieBasicView.vue"),
     meta: {
       title: "电影详情",
-      requiresAuth: false,
     },
   },
 ];

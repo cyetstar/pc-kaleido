@@ -66,29 +66,30 @@ import {
 } from "@/api/music/musicAlbumApi.ts";
 
 import { Empty, message } from "ant-design-vue";
-import { onBeforeRouteLeave, useRoute, useRouter } from "vue-router";
+import { onBeforeRouteLeave, useRouter } from "vue-router";
 import { useAppStore } from "@/store/modules/app";
 
+const router = useRouter();
+const appStore = useAppStore();
 const refScrollGrid = ref();
 const searchForm = ref({});
+const loading = ref(false);
 const pageResult = ref({
   records: [],
   pageNumber: 0,
   pageSize: 36,
 });
-let route = useRoute();
 
 onMounted(() => {
   loadData({ ...searchForm.value });
 });
 
 onActivated(() => {
-  refScrollGrid.value.scrollTop = appStore.$state.scrollTop;
+  refScrollGrid.value.scrollTop = appStore.getScrollTop("music");
 });
 
-const appStore = useAppStore();
 onBeforeRouteLeave((to, from, next) => {
-  appStore.setScrollTop(refScrollGrid.value.scrollTop);
+  appStore.setScrollTop(refScrollGrid.value.scrollTop, "music");
   next();
 });
 
@@ -113,11 +114,10 @@ const loadData = () => {
   });
 };
 
-const router = useRouter();
 const onViewRecord = (id) => {
   router.push({ path: "/music/musicAlbum/view", query: { id } });
 };
-const loading = ref(false);
+
 const onScrollGrid = () => {
   const containerHeight = refScrollGrid.value.clientHeight;
   // 获取滚动容器滚动的高度
@@ -134,4 +134,4 @@ const onScrollGrid = () => {
 };
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less"></style>

@@ -7,7 +7,6 @@
  */
 import "virtual:windi-base.css";
 import "virtual:windi-components.css";
-import "@/styles/index.less";
 import "virtual:windi-utilities.css";
 import "virtual:svg-icons-register";
 import "echarts";
@@ -20,6 +19,7 @@ import { router, setupRouter } from "@/router";
 import { setupRouterGuard } from "@/router/guard";
 import { mountFunction } from "@/utils/index";
 import "ant-design-vue/dist/antd.less";
+import "@/styles/index.less";
 import directives from "./utils/directives";
 import directive from "./directives";
 const app = createApp(App);

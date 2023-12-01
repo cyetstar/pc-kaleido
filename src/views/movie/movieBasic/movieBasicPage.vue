@@ -4,39 +4,34 @@
  * @Description: 电影列表页面
 -->
 <template>
-  <section class="h-page-section" ref="appManagePage">
-    <h-form-search
-      v-model:form="searchForm"
-      @search="onSearch"
-      @reset="onReset"
-    >
-      <h-col :span="6">
-        <h-input label="电影名" v-model:value="searchForm.title" name="title" />
-      </h-col>
-      <h-col :span="6">
-        <h-input
-          label="原片名"
-          v-model:value="searchForm.originalTitle"
-          name="originalTitle"
-        />
-      </h-col>
-    </h-form-search>
+  <section class="h-form-wrapper">
+    <div class="h-page-header">
+      <!--    <h-form-search-->
+      <!--      v-model:form="searchForm"-->
+      <!--      @search="onSearch"-->
+      <!--      @reset="onReset"-->
+      <!--    >-->
+      <!--      <h-col :span="6">-->
+      <!--        <h-input label="电影名" v-model:value="searchForm.title" name="title" />-->
+      <!--      </h-col>-->
+      <!--      <h-col :span="6">-->
+      <!--        <h-input-->
+      <!--          label="原片名"-->
+      <!--          v-model:value="searchForm.originalTitle"-->
+      <!--          name="originalTitle"-->
+      <!--        />-->
+      <!--      </h-col>-->
+      <!--    </h-form-search>-->
 
-    <a-space class="h-btn-space">
-      <h-button type="primary" @click="onSyncPlex">同步Plex</h-button>
-      <h-button-delete
-        v-permissKey="'movieBasic:delete'"
-        plain
-        :disabled="selectedRowKeys.length === 0"
-        @delete="onDeleteRecord(selectedRowKeys)"
-      />
-    </a-space>
-
-    <div v-if="pageResult.records.length === 0">
-      <a-empty :image="Empty.PRESENTED_IMAGE_SIMPLE" />
+      <a-space class="h-btn-space">
+        <h-button type="primary" @click="onSyncPlex">同步Plex</h-button>
+      </a-space>
     </div>
-    <div v-else>
-      <div class="grid grid-cols-24 gap-x-3 gap-y-3">
+    <div class="h-form-body" ref="refScrollGrid" @scroll="onScrollGrid">
+      <div v-if="pageResult.records.length === 0">
+        <a-empty :image="Empty.PRESENTED_IMAGE_SIMPLE" />
+      </div>
+      <div v-else class="grid grid-cols-24 gap-x-3 gap-y-3">
         <template :key="record.id" v-for="record in pageResult.records">
           <a-card class="col-span-3">
             <template #cover>
@@ -54,79 +49,62 @@
           </a-card>
         </template>
       </div>
-      <div class="flex justify-end">
-        <a-pagination
-          v-model:current="pageResult.pageNumber"
-          :show-total="(total) => `共 ${total} 张`"
-          :total="pageResult.total"
-          :page-size="pageResult.pageSize"
-          :show-size-changer="false"
-          @change="onChange"
-          show-less-items
-        />
-      </div>
     </div>
   </section>
 </template>
 
 <script setup>
-import { ref, getCurrentInstance, onMounted } from "vue";
+import { ref, onMounted, onActivated } from "vue";
 import {
   apiMovieBasicPage,
-  apiMovieBasicDelete,
   apiMovieBasicSyncPlex,
 } from "@/api/movie/movieBasicApi.ts";
 
 import { Empty, message } from "ant-design-vue";
-import { useRouter } from "vue-router";
+import { onBeforeRouteLeave, useRouter } from "vue-router";
+import { useAppStore } from "@/store/modules/app";
 
-const tableRef = ref();
+const router = useRouter();
+const appStore = useAppStore();
+const refScrollGrid = ref();
+const loading = ref(true);
 const searchForm = ref({});
 const pageResult = ref({
   records: [],
   pageNumber: 0,
-  total: 0,
   pageSize: 36,
 });
-const onSearch = () => {
-  tableRef.value.load(1);
-};
 
-const onReset = () => {
-  tableRef.value.load(1);
-};
+onMounted(() => {
+  loadData({ ...searchForm.value });
+});
 
-const loadData = (data) => {
-  data.searchCount = true;
-  data.pageSize = pageResult.value.pageSize;
+onActivated(() => {
+  refScrollGrid.value.scrollTop = appStore.getScrollTop("movie");
+});
+
+onBeforeRouteLeave((to, from, next) => {
+  appStore.setScrollTop(refScrollGrid.value.scrollTop, "movie");
+  next();
+});
+
+const loadData = () => {
+  loading.value = true;
+  const data = {
+    pageNumber: pageResult.value.pageNumber + 1,
+    pageSize: pageResult.value.pageSize,
+    searchCount: true,
+  };
   apiMovieBasicPage(data).then((res) => {
-    pageResult.value = res;
+    loading.value = false;
+    pageResult.value.records.push(...res.records);
+    pageResult.value.pageNumber = res.pageNumber;
+    pageResult.value.pageSize = res.pageSize;
   });
 };
 
-const onSelectionChange = () => {};
-
-const formRef = ref();
-const onCreateRecord = () => {
-  formRef.value.create();
-};
-const router = useRouter();
 const onViewRecord = (id) => {
   router.push({ path: "/movie/movieBasic/view", query: { id } });
-};
-const onUpdateRecord = (id) => {
-  formRef.value.update(id);
-};
-
-const selectedRowKeys = ref([]);
-const onDeleteRecord = (recordId) => {
-  const id = Array.isArray(recordId) ? recordId : [recordId];
-  apiMovieBasicDelete(id).then((res) => {
-    if (res) {
-      tableRef.value.load();
-      message.success("删除成功！");
-    }
-  });
 };
 
 const onSyncPlex = () => {
@@ -135,10 +113,20 @@ const onSyncPlex = () => {
   });
 };
 
-onMounted(() => {
-  // console.log("init");
-  loadData({ ...searchForm.value });
-});
+const onScrollGrid = () => {
+  const containerHeight = refScrollGrid.value.clientHeight;
+  // 获取滚动容器滚动的高度
+  const scrollHeight = refScrollGrid.value.scrollHeight;
+  // 获取滚动容器滚动的距离
+  const scrollTop = refScrollGrid.value.scrollTop;
+  // 判断是否滑倒底部
+  if (
+    containerHeight + scrollTop >= scrollHeight - 50 &&
+    loading.value !== true
+  ) {
+    loadData();
+  }
+};
 </script>
 
 <style lang="less" scoped></style>
