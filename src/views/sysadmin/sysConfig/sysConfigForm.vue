@@ -27,6 +27,7 @@
               label="Plex电影资料库"
               :columns="columns"
               name="plexMovieLibraryId"
+              @change="onChange($event, 'movie')"
               v-model:value="form.plexMovieLibraryId"
             />
           </h-col>
@@ -35,6 +36,7 @@
               label="Plex剧集资料库"
               :columns="columns"
               name="plexTvshowLibraryId"
+              @change="onChange($event, 'tvshow')"
               v-model:value="form.plexTvshowLibraryId"
             />
           </h-col>
@@ -43,6 +45,7 @@
               label="Plex音乐资料库"
               :columns="columns"
               name="plexMusicLibraryId"
+              @change="onChange($event, 'music')"
               v-model:value="form.plexMusicLibraryId"
             />
           </h-col>
@@ -139,6 +142,16 @@ const initData = () => {
       });
     }
   });
+};
+
+const onChange = (e, type) => {
+  if (type === "movie") {
+    form.value.plexMovieLibraryPath = e.path;
+  } else if (type === "tvshow") {
+    form.value.plexTvshowLibraryPath = e.path;
+  } else if (type === "music") {
+    form.value.plexMusicLibraryPath = e.path;
+  }
 };
 
 const onClick = async () => {

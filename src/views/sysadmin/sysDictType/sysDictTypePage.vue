@@ -93,14 +93,10 @@ import sysDictTypeForm from "./sysDictTypeForm.vue";
 import {
   sysDictTypePageApi,
   sysDictTypeDeleteApi,
-  sysDictTypeCreateApi,
-  sysDictTypeUpdateApi,
-  sysDictTypeViewApi,
   sysDictTypeReloadApi,
 } from "@/api/sysadmin/sysDictTypeApi";
 import { message } from "ant-design-vue";
 import { useRouter } from "vue-router";
-import HButton from "@c/common/Button/Button.vue";
 
 const router = useRouter();
 let searchForm = ref<{ name: string; type: string }>({

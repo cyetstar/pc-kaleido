@@ -156,7 +156,6 @@
 
 <script setup lang="ts">
 import { ref, getCurrentInstance } from "vue";
-import ModuleTitle from "@/components/common/ModuleTitle.vue";
 import {
   sysMenuPageApi,
   sysMenuColumnApi,
@@ -169,8 +168,6 @@ import {
 import { isHideDict } from "@/config/dict";
 import { MENUS } from "@/config/menuInit";
 import { message } from "ant-design-vue";
-import HButtonDelete from "@c/common/ButtonDelete/ButtonDelete.vue";
-import HButton from "@c/common/Button/Button.vue";
 import { sysMenuUpdateHiddenApi } from "@/api/sysadmin/sysMenuApi";
 
 const { proxy } = getCurrentInstance() as any;

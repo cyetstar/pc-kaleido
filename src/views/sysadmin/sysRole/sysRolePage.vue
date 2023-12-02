@@ -89,7 +89,6 @@
       v-model:visible="roleModalData.visible"
       :title="roleModalData.type === '0' ? '新增角色' : '编辑角色'"
       width="800px"
-      @cancel="onCancelRoleModal"
       @ok="onSubmitRoleModal"
     >
       <a-form
@@ -174,7 +173,6 @@
 
 <script setup lang="ts">
 import { ref, getCurrentInstance } from "vue";
-import ModuleTitle from "@/components/common/ModuleTitle.vue";
 import {
   sysRolePageApi,
   sysRoleDeleteApi,
@@ -186,8 +184,6 @@ import {
 } from "@/api/sysadmin/sysRoleApi";
 import { ALL_RESOURCE } from "@/config/resourceInit";
 import { message } from "ant-design-vue";
-import HButtonDelete from "@c/common/ButtonDelete/ButtonDelete.vue";
-import HButton from "@c/common/Button/Button.vue";
 import SysRoleFormAuthorize from "@/views/sysadmin/sysRole/sysRoleFormAuthorize.vue";
 
 const { proxy } = getCurrentInstance() as any;

@@ -46,7 +46,6 @@
 
 <script setup lang="ts">
 import { ref, getCurrentInstance } from "vue";
-import ModuleTitle from "@/components/common/ModuleTitle.vue";
 import {
   sysResourcePageApi,
   sysResourceColumnApi,

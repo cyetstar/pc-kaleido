@@ -230,7 +230,6 @@ import {
 } from "@/api/sysadmin/sysUserApi";
 import { message } from "ant-design-vue";
 import { sysRolePageApi } from "@/api/sysadmin/sysRoleApi";
-import HButtonDelete from "@c/common/ButtonDelete/ButtonDelete.vue";
 
 const { proxy } = getCurrentInstance() as any;
 

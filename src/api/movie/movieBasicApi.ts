@@ -62,9 +62,9 @@ export const apiMovieBasicSyncPlexById = (data: any) => {
   });
 };
 
-export const apiMovieReadNFO = (data: any) => {
+export const apiMovieBasicReadNFO = (data: any) => {
   return useFetch.post<any>({
-    url: "/movie/readNFO",
+    url: "/movieBasic/readNFO",
     data,
   });
 };

@@ -15,6 +15,26 @@ import { provide, defineComponent } from "vue";
 export default defineComponent({
   name: "HGlobalConfig",
   props: {
+    listDictByType: {
+      type: Function,
+      default: (type: string) => {
+        return Promise.resolve([]);
+      },
+    },
+    listSsxq: {
+      type: Function,
+      default: (type: string) => {
+        return Promise.resolve([]);
+      },
+    },
+    thumbSize: {
+      type: String,
+      default: "medium",
+    },
+    fileUrl: {
+      type: String,
+      default: "/file/",
+    },
     plexUrl: {
       type: String,
       default: "http://127.0.0.1:32400",
@@ -22,6 +42,10 @@ export default defineComponent({
     plexToken: String,
   },
   setup(props, context) {
+    provide("listDictByType", props.listDictByType);
+    provide("listSsxq", props.listSsxq);
+    provide("fileUrl", props.fileUrl);
+    provide("thumbSize", props.thumbSize);
     provide("plexUrl", props.plexUrl);
     provide("plexToken", props.plexToken);
   },

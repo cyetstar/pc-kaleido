@@ -28,10 +28,11 @@ export function isEmpty<T = unknown>(val: T): val is T {
   if (isObject(val)) {
     return Object.keys(val).length === 0;
   }
-  if (isUnDef(val)) {
-    return true;
+  if (isString(val)) {
+    return val === "";
   }
-  return false;
+
+  return !!isNullOrUnDef(val);
 }
 
 export function isNotEmpty<T = unknown>(val: T): val is T {
