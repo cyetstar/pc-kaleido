@@ -5,57 +5,87 @@
 -->
 <template>
   <section class="h-page-section">
-    <div class="relative">
-      <h-title-module title="电影信息" class="mb-6" />
-      <a-row :gutter="16">
-        <h-col :span="8">
-          <div class="flex justify-center">
-            <div class="w-xs">
-              <h-plex-image class="h-poster" :plex-thumb="record.thumb" />
-            </div>
-          </div>
-        </h-col>
-        <h-col :span="16">
-          <h1 class="text-18px">{{ record.title }}</h1>
-          <p>{{ record.originalTitle }} ({{ record.year }})</p>
-          <p>{{ record.studio }}</p>
-          <p class="flex">
-            <span class="mr-2">{{ record.rating }} 分</span>
-            <a-rate v-model:value="rating" disabled allow-half />
-          </p>
-          <p>
-            <a-tag v-if="record.contentRating"
-              >{{ record.contentRating }}
-            </a-tag>
-            <a-tag v-for="item in record.countryList" :key="item.id"
-              >{{ item.idLabel }}
-            </a-tag>
-            <a-tag v-for="item in record.genreList" :key="item.id"
-              >{{ item.idLabel }}
-            </a-tag>
-          </p>
-          <p>{{ record.summary }}</p>
-          <p>
-            <a
-              v-if="record.imdb"
-              target="_blank"
-              :href="'https://musicbrainz.org/release/' + record.imdb"
-              class="pr-15px"
-              ><img width="30" :src="musicbrainz" class="inline" />
-            </a>
-            <a target="_blank" href="" class="pr-15px"
-              ><img width="30" :src="plex" class="inline"
-            /></a>
-          </p>
-        </h-col>
-      </a-row>
-      <div class="absolute right-0 top-0">
+    <a-page-header :title="record.title" @back="() => $router.go(-1)">
+      <template #backIcon>
+        <LeftOutlined />
+      </template>
+      <template #extra>
         <a-space>
           <h-button @click="onReadNFO">读取NFO</h-button>
           <h-button @click="onSyncPlexById">同步Plex</h-button>
         </a-space>
-      </div>
-    </div>
+      </template>
+    </a-page-header>
+    <a-row>
+      <h-col :span="8">
+        <div class="flex justify-center">
+          <k-plex-image
+            class="h-poster"
+            style="width: 250px"
+            :plex-thumb="record.thumb"
+          />
+        </div>
+      </h-col>
+      <h-col :span="16" class="pr-20px">
+        <p>{{ record.originalTitle }} ({{ record.year }})</p>
+        <p>{{ record.studio }}</p>
+        <p class="flex">
+          <span class="mr-2">{{ record.rating }} 分</span>
+          <a-rate v-model:value="rating" disabled allow-half />
+        </p>
+        <p>
+          <a-tag v-if="record.contentRating">{{ record.contentRating }}</a-tag>
+          <a-tag v-for="item in record.countryList" :key="item.id"
+            >{{ item.idLabel }}
+          </a-tag>
+          <a-tag v-for="item in record.genreList" :key="item.id"
+            >{{ item.idLabel }}
+          </a-tag>
+        </p>
+        <p>{{ record.summary }}</p>
+        <p class="flex">
+          <span class="mr-2">导演:</span>
+          <span class="flex-1">
+            <template v-for="(item, index) in record.directorList">
+              <span v-if="index !== 0" class="px-2">/</span>
+              <a @click="onViewArtist(item.id)">{{ item.name }}</a>
+            </template>
+          </span>
+        </p>
+        <p class="flex">
+          <span class="mr-2">编剧:</span>
+          <span class="flex-1">
+            <template v-for="(item, index) in record.writerList">
+              <span v-if="index !== 0" class="px-2">/</span>
+              <a @click="onViewArtist(item.id)">{{ item.name }}</a>
+            </template>
+          </span>
+        </p>
+        <p class="flex">
+          <span class="mr-2">主演:</span>
+          <span class="flex-1">
+            <template v-for="(item, index) in record.actorList">
+              <span v-if="index !== 0" class="px-2">/</span>
+              <a @click="onViewArtist(item.id)">{{ item.name }}</a>
+            </template>
+          </span>
+        </p>
+        <p class="flex" v-if="isNotEmpty(record.akaList)">
+          <span class="mr-2">又名:</span>
+          <span class="flex-1">
+            <template v-for="(item, index) in record.akaList">
+              <span v-if="index !== 0" class="px-2">/</span>
+              {{ item.title }}
+            </template>
+          </span>
+        </p>
+        <p>
+          <k-logo-link type="plex" :id="record.id" class="mr-3" />
+          <k-logo-link type="imdb" :id="record.imdb" class="mr-3" />
+          <k-logo-link type="douban" :id="record.doubanId" class="mr-3" />
+        </p>
+      </h-col>
+    </a-row>
   </section>
 </template>
 
@@ -66,9 +96,11 @@ import {
   apiMovieBasicView,
   apiMovieReadNFO,
 } from "@/api/movie/movieBasicApi.ts";
-import musicbrainz from "@/assets/images/musicbrainz.png";
-import plex from "@/assets/images/plex.png";
 import { message } from "ant-design-vue";
+import { LeftOutlined } from "@ant-design/icons-vue";
+import imdb from "@/assets/images/imdb.png";
+import KLogoLink from "@c/LogoLink/LogoLink.vue";
+import { isEmpty, isNotEmpty } from "@/utils/is";
 
 const route = useRoute();
 const id = route.query.id;

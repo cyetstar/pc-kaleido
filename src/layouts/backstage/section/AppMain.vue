@@ -7,7 +7,7 @@
 -->
 <template>
   <section id="main-section">
-    <h-global-config
+    <k-global-config
       :plex-url="appStore.$state.plexUrl"
       :plex-token="appStore.$state.plexToken"
     >
@@ -25,7 +25,7 @@
           :key="route.name"
         />
       </router-view>
-    </h-global-config>
+    </k-global-config>
   </section>
 </template>
 

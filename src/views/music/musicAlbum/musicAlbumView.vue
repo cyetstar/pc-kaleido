@@ -24,7 +24,7 @@
       <h-col :span="8">
         <div class="flex justify-center">
           <div class="w-xs">
-            <h-plex-image
+            <k-plex-image
               class="h-cover"
               :plex-thumb="record.thumb"
               type="music"
@@ -49,22 +49,13 @@
         </p>
         <p>{{ record.summary }}</p>
         <p>
-          <h-plex-link class="pr-15px" :rating-key="id" />
-          <a
-            v-if="record.musicbrainzId"
-            target="_blank"
-            :href="'https://musicbrainz.org/release/' + record.musicbrainzId"
-            class="pr-15px"
-            ><img width="30" :src="musicbrainz" class="inline" />
-          </a>
-
-          <a
-            v-if="record.neteaseId"
-            target="_blank"
-            :href="'https://music.163.com/#/album?id=' + record.neteaseId"
-            class="pr-15px"
-            ><img width="30" :src="netease" class="inline" />
-          </a>
+          <k-logo-link class="mr-3" :id="id" />
+          <k-logo-link
+            class="mr-3"
+            type="musicbrianz"
+            :id="record.musicbrainzId"
+          />
+          <k-logo-link class="mr-3" type="netease" :id="record.neteaseId" />
         </p>
       </h-col>
     </a-row>
@@ -130,12 +121,7 @@ import {
 } from "@/api/music/musicTrackApi";
 import { message } from "ant-design-vue";
 import { FileTextOutlined, LeftOutlined } from "@ant-design/icons-vue";
-import musicbrainz from "@/assets/images/musicbrainz.png";
-import plex from "@/assets/images/plex.png";
-import netease from "@/assets/images/netease.png";
 import MusicAlbumSearchNetease from "@/views/music/musicAlbum/musicAlbumSearchNetease.vue";
-import HButton from "@c/common/Button/Button.vue";
-import HPlexLink from "@c/common/PlexLink/PlexLink.vue";
 
 const route = useRoute();
 const id = route.query.id;

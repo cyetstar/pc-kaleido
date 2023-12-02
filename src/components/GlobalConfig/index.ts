@@ -5,5 +5,5 @@
  * @LastEditTime: 2023-01-08 15:47:23
  * @Description:
  */
-import clobalConfig from "./GlobalConfig.vue";
-export default clobalConfig;
+import GlobalConfig from "./GlobalConfig.vue";
+export default GlobalConfig;

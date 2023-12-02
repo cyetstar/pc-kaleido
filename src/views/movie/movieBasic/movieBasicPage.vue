@@ -35,7 +35,7 @@
         <template :key="record.id" v-for="record in pageResult.records">
           <a-card class="col-span-3">
             <template #cover>
-              <h-plex-image
+              <k-plex-image
                 class="h-poster"
                 :preview="false"
                 :plex-thumb="record.thumb"

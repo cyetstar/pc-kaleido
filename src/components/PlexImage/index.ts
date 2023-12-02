@@ -5,5 +5,5 @@
  * @LastEditTime: 2023-01-10 09:16:13
  * @Description:
  */
-import plexLink from "./PlexLink.vue";
-export default plexLink;
+import PlexImage from "./PlexImage.vue";
+export default PlexImage;

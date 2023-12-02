@@ -5,5 +5,5 @@
  * @LastEditTime: 2023-01-10 09:17:54
  * @Description:
  */
-import hFormModal from "./FormModal.vue";
-export default hFormModal;
+import LogoLink from "./LogoLink.vue";
+export default LogoLink;

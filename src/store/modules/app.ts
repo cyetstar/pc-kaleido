@@ -24,6 +24,7 @@ export const useAppStore = defineStore("app", {
   actions: {
     async initAppConfig() {
       return apiSysConfigFindByKeys(["plexUrl", "plexToken"]).then((res) => {
+        console.log(res);
         this.plexUrl = res.plexUrl;
         this.plexToken = res.plexToken;
       });
