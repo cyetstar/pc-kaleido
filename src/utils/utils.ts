@@ -7,6 +7,7 @@
  */
 import { yypbInfo } from "@/types/tycjSjbBpApi";
 import dayjs from "dayjs";
+
 /**
  * @description: 格式化数据项
  * @param { 源数据列表 } sourceList
@@ -70,6 +71,25 @@ export const dowloadExcel = (data: any, fileName: string) => {
   link.click();
   window.URL.revokeObjectURL(url);
   document.body.removeChild(link);
+};
+
+export const downloadFile = (data: any, fileName: any) => {
+  const url = window.URL.createObjectURL(new Blob([data]));
+  const link = document.createElement("a");
+  link.href = url;
+  link.target = "_blank";
+  link.style.display = "none";
+  let regFileName = fileName.match(/=(.*)$/)[1];
+  link.setAttribute("download", decodeURI(regFileName));
+  document.body.appendChild(link);
+  link.click();
+  window.URL.revokeObjectURL(url);
+  document.body.removeChild(link);
+};
+
+export const openFile = (data: any, type: string) => {
+  const url = window.URL.createObjectURL(new Blob([data], { type }));
+  window.open(url);
 };
 
 // 深clone

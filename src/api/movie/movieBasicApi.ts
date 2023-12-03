@@ -1,4 +1,5 @@
 import { useFetch } from "@/utils/http";
+import { HttpMethodEnum } from "@/enums/httpEnum";
 
 export const apiMovieBasicPage = (params: any) => {
   return useFetch.get<any>({
@@ -80,5 +81,12 @@ export const apiMovieBasicMatchDouban = (data: any) => {
   return useFetch.post<any>({
     url: "/movieBasic/matchDouban",
     data,
+  });
+};
+
+export const apiMovieBasicViewNFO = (params: any) => {
+  return useFetch.open<any>({
+    url: "/movieBasic/viewNFO",
+    params,
   });
 };

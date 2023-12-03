@@ -17,6 +17,7 @@ import { alertErrMsg } from "@/utils/message";
 import { isDevMode } from "@/utils/env";
 import { envParse } from "../../../build/utils";
 import appConfig from "@/config";
+import { downloadFile, openFile } from "@/utils/utils";
 
 // 生成token
 export const generateBaseToken = (token: Nullable<string>) => `bearer ${token}`;
@@ -61,16 +62,7 @@ export const transformRequest = (config: RequestConfig): RequestConfig => {
   return config;
 };
 
-let whitelist: string[] = [
-  "/oauth/token",
-  // "/sysadmin/fwtQxQxzCd/build",
-  // "/tycjBzJk/getDataByChooseId",
-  // "/tycjGzzlPz/page",
-  // "/tycjGzzlPz/detailGzzlPz",
-  // "/tycjDept/page",
-  // "/tycjBzJk/page",
-  // "/tycjBzJk/detail",
-];
+let whitelist: string[] = ["/oauth/token"];
 let directRes: string[] = ["/tyYyJb/getXmAndSfzhByBm"];
 // 响应数据转换
 export const transformResponse = (
@@ -78,8 +70,13 @@ export const transformResponse = (
   config: RequestConfig
 ) => {
   const { transformResponse, SM2Encrypt } = config;
-  if (res.config?.responseType === "blob") {
-    return res.data;
+  if (res.request?.responseType === "blob") {
+    if (config.download) {
+      downloadFile(res.data, res.headers["content-disposition"]);
+    } else {
+      openFile(res.data, res.headers["content-type"]);
+    }
+    return;
   }
   if (!transformResponse) {
     const { resultCode, message: msg } = res.data;

@@ -1,6 +1,15 @@
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
-import type { RequestConfig, ResponseError, Result } from "#/http";
-import { ContentTypeEnum, HttpMethodEnum } from "@/enums/httpEnum";
+import type {
+  RequestConfig,
+  RequestHeaders,
+  ResponseError,
+  Result,
+} from "#/http";
+import {
+  ContentTypeEnum,
+  HttpMethodEnum,
+  ResponseTypeEnum,
+} from "@/enums/httpEnum";
 import { TokenTypeEnum } from "@/enums/authEnum";
 import { useCookie } from "@/hooks/web/useCookie";
 import { AxiosCanceler } from "@/utils/http/axiosCancel";
@@ -21,6 +30,7 @@ import qs from "qs";
  */
 export class CustomAxios {
   private axiosInstance: AxiosInstance;
+
   // 初始化 axios实例默认配置时，无需设置 url
   constructor(private readonly options?: Omit<RequestConfig, "url">) {
     this.axiosInstance = axios.create(options);
@@ -126,10 +136,6 @@ export class CustomAxios {
     };
   };
 
-  uploadFile() { }
-
-  downloadFile() { }
-
   get<T = any>(config: RequestConfig): Promise<T> {
     return this.request({ ...config, method: HttpMethodEnum.GET });
   }
@@ -144,6 +150,35 @@ export class CustomAxios {
 
   delete<T = any>(config: RequestConfig): Promise<T> {
     return this.request({ ...config, method: HttpMethodEnum.DELETE });
+  }
+
+  download<T = any>(config: RequestConfig): Promise<T> {
+    return this.request({
+      ...config,
+      responseType: ResponseTypeEnum.BLOB,
+      download: true,
+    });
+  }
+
+  open<T = any>(config: RequestConfig): Promise<T> {
+    return this.request({
+      ...config,
+      responseType: ResponseTypeEnum.BLOB,
+    });
+  }
+
+  upload<T = any>(config: RequestConfig): Promise<T> {
+    const headers: RequestHeaders = merge(
+      { contentType: ContentTypeEnum.FORM_DATA },
+      config.headers
+    );
+    const formData: FormData = new FormData();
+    for (let key in config.data) {
+      if (config.data.hasOwnProperty(key)) {
+        formData.append(key, config.data[key]);
+      }
+    }
+    return this.request({ ...config, data: formData, headers });
   }
 
   request<T = any>(config: RequestConfig): Promise<T> {

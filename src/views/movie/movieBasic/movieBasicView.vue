@@ -11,6 +11,7 @@
       </template>
       <template #extra>
         <a-space>
+          <h-button @click="onViewNFO">查看NFO</h-button>
           <h-button @click="onReadNFO">读取NFO</h-button>
           <h-button @click="onSearchDouban">匹配豆瓣</h-button>
           <h-button @click="onSyncPlexById">同步Plex</h-button>
@@ -136,7 +137,7 @@ import {useRoute} from "vue-router";
 import {
   apiMovieBasicReadNFO,
   apiMovieBasicSyncPlex,
-  apiMovieBasicView,
+  apiMovieBasicView, apiMovieBasicViewNFO,
 } from "@/api/movie/movieBasicApi.ts";
 import {message} from "ant-design-vue";
 import {LeftOutlined} from "@ant-design/icons-vue";
@@ -176,6 +177,10 @@ const onReadNFO = () => {
       message.error("读取失败");
     }
   });
+};
+
+const onViewNFO = () => {
+  apiMovieBasicViewNFO({id});
 };
 
 const onSearchDouban = () => {
