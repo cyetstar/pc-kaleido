@@ -72,7 +72,7 @@ const searchForm = ref({});
 const pageResult = ref({
   records: [],
   pageNumber: 0,
-  pageSize: 36,
+  pageSize: 100,
 });
 
 onMounted(() => {
@@ -109,7 +109,7 @@ const onViewRecord = (id) => {
 
 const onSyncPlex = () => {
   apiMovieBasicSyncPlex().then((res) => {
-    message.success("同步完成");
+    message.success("开始同步");
   });
 };
 

@@ -93,9 +93,18 @@
             />
           </h-col>
         </a-tab-pane>
+        <a-tab-pane key="douban" tab="豆瓣">
+          <h-col :span="12">
+            <h-input
+              label="Api Key"
+              name="doubanApikey"
+              v-model:value="form.doubanApikey"
+            />
+          </h-col>
+        </a-tab-pane>
       </a-tabs>
       <h-col :span="12" :offset="3">
-        <h-button type="primary" @click="onClick">保存</h-button>
+        <h-button type="primary" @click="onSave">保存</h-button>
       </h-col>
     </a-form>
   </section>
@@ -127,6 +136,7 @@ let form = ref({
   musicLibraryPath: "",
   musicExcludePath: "",
   neteaseUrl: "",
+  doubanApikey: "",
 });
 
 onMounted(() => {
@@ -154,7 +164,7 @@ const onChange = (e, type) => {
   }
 };
 
-const onClick = async () => {
+const onSave = async () => {
   apiSysConfigSave(form.value).then((res) => {
     message.success("操作成功");
   });

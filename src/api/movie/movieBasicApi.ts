@@ -68,3 +68,17 @@ export const apiMovieBasicReadNFO = (data: any) => {
     data,
   });
 };
+
+export const apiMovieBasicSearchDouban = (data: any) => {
+  return useFetch.post<any>({
+    url: "/movieBasic/searchDouban",
+    data,
+  });
+};
+
+export const apiMovieBasicMatchDouban = (data: any) => {
+  return useFetch.post<any>({
+    url: "/movieBasic/matchDouban",
+    data,
+  });
+};

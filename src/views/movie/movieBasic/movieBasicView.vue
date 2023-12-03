@@ -12,11 +12,12 @@
       <template #extra>
         <a-space>
           <h-button @click="onReadNFO">读取NFO</h-button>
+          <h-button @click="onSearchDouban">匹配豆瓣</h-button>
           <h-button @click="onSyncPlexById">同步Plex</h-button>
         </a-space>
       </template>
     </a-page-header>
-    <a-row>
+    <a-row class="mb-20px">
       <h-col :span="8">
         <div class="flex justify-center">
           <k-plex-image
@@ -28,7 +29,6 @@
       </h-col>
       <h-col :span="16" class="pr-20px">
         <p>{{ record.originalTitle }} ({{ record.year }})</p>
-        <p>{{ record.studio }}</p>
         <p class="flex">
           <span class="mr-2">{{ record.rating }} 分</span>
           <a-rate v-model:value="rating" disabled allow-half/>
@@ -69,15 +69,15 @@
             </template>
           </span>
         </p>
-        <p class="flex">
-          <span class="mr-2">主演:</span>
-          <span class="flex-1">
-            <template v-for="(item, index) in record.actorList">
-              <span v-if="index !== 0" class="px-2">/</span>
-              <a @click="onViewArtist(item.id)">{{ item.name }}</a>
-            </template>
-          </span>
-        </p>
+        <!--        <p class="flex">-->
+        <!--          <span class="mr-2">主演:</span>-->
+        <!--          <span class="flex-1">-->
+        <!--            <template v-for="(item, index) in record.actorList">-->
+        <!--              <span v-if="index !== 0" class="px-2">/</span>-->
+        <!--              <a @click="onViewArtist(item.id)">{{ item.name }}</a>-->
+        <!--            </template>-->
+        <!--          </span>-->
+        <!--        </p>-->
         <p class="flex" v-if="isNotEmpty(record.akaList)">
           <span class="mr-2">又名:</span>
           <span class="flex-1">
@@ -86,6 +86,10 @@
               {{ item }}
             </template>
           </span>
+        </p>
+        <p class="flex" v-if="isNotEmpty(record.studio)">
+          <span class="mr-2">制片方:</span>
+          <span class="flex-1">{{ record.studio }}</span>
         </p>
         <p class="flex" v-if="isNotEmpty(record.website)">
           <span class="mr-2">官网:</span>
@@ -98,7 +102,32 @@
         </p>
       </h-col>
     </a-row>
+    <div class="p-20px">
+      <h-module-title title="主演"/>
+      <a-row :gutter="24" class="mt-3">
+        <template :key="item.id" v-for="item in actorList">
+          <h-col :span="3">
+            <a-card>
+              <template #cover>
+                <k-plex-image
+                    class="h-thumb"
+                    :preview="false"
+                    :plex-thumb="item.thumb"
+                    @click="onViewRecord(item.id)"
+                />
+              </template>
+              <a-card-meta
+                  :title="item.name"
+                  :description="item.playRole"
+              ></a-card-meta>
+            </a-card>
+          </h-col>
+        </template>
+      </a-row>
+    </div>
   </section>
+
+  <movie-basic-search-douban ref="refMovieBasicSearchDouban"/>
 </template>
 
 <script setup>
@@ -112,10 +141,17 @@ import {
 import {message} from "ant-design-vue";
 import {LeftOutlined} from "@ant-design/icons-vue";
 import {isEmpty, isNotEmpty} from "@/utils/is";
+import MovieBasicSearchDouban from "@/views/movie/movieBasic/movieBasicSearchDouban.vue";
 
+const refMovieBasicSearchDouban = ref();
 const route = useRoute();
 const id = route.query.id;
 const rating = computed(() => record.value.rating / 2);
+const actorList = computed(() => {
+  if (isNotEmpty(record.value.actorList) && record.value.actorList.length > 8) {
+    return record.value.actorList.slice(0, 8)
+  }
+});
 
 const record = ref({});
 const initData = async () => {
@@ -141,6 +177,10 @@ const onReadNFO = () => {
     }
   });
 };
+
+const onSearchDouban = () => {
+  refMovieBasicSearchDouban.value.show(record.value);
+}
 
 const onSyncPlexById = () => {
   apiMovieBasicSyncPlex({id}).then((res) => {

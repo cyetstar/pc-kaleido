@@ -8,15 +8,10 @@
 import type { AppRouteConfig } from "../types";
 import { PageLayout } from "@/router/constant";
 
-import sysDeptRoutes from "@/router/routes/sysadmin/sysDeptRoutes";
 import sysUserRoutes from "@/router/routes/sysadmin/sysUserRoutes";
 import sysRoleRoutes from "@/router/routes/sysadmin/sysRoleRoutes";
 import sysResourceRoutes from "@/router/routes/sysadmin/sysResourceRoutes";
 import sysMenuRoutes from "@/router/routes/sysadmin/sysMenuRoutes";
-import fwtDmXzqhRoutes from "@/router/routes/sysadmin/fwtDmXzqhRoutes";
-import fwtDmXzjdRoutes from "@/router/routes/sysadmin/fwtDmXzjdRoutes";
-import fwtDmSqjwhRoutes from "@/router/routes/sysadmin/fwtDmSqjwhRoutes";
-import fwtDmWgRoutes from "@/router/routes/sysadmin/fwtDmWgRoutes";
 import webLogRoutes from "@/router/routes/sysadmin/webLogRoutes";
 import sysDictTypeRoutes from "@/router/routes/sysadmin/sysDictTypeRoutes";
 import sysLogRoutes from "@/router/routes/sysadmin/sysLogRoutes";
@@ -55,14 +50,9 @@ const BackstageRoute: AppRouteConfig = {
     },
     ...sysUserRoutes,
     ...sysRoleRoutes,
-    ...sysDeptRoutes,
     ...sysMenuRoutes,
     ...sysResourceRoutes,
     ...sysDictTypeRoutes,
-    ...fwtDmXzqhRoutes,
-    ...fwtDmXzjdRoutes,
-    ...fwtDmSqjwhRoutes,
-    ...fwtDmWgRoutes,
     ...webLogRoutes,
     ...sysLogRoutes,
     ...sysConfigRoutes,

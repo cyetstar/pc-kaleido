@@ -67,13 +67,14 @@ import {
   HModalExport,
   HModuleTitle,
   HRadio,
-  // HSelect,
+  HSelect,
   HSelectSsxq,
   HTableData,
   HUploadImage,
 } from "hta-ui";
 
-import HSelect from "@/components/Select";
+// import HCheckbox from "@/components/Checkbox";
+// import HSelect from "@/components/Select";
 import GlobalConfig from "@/components/GlobalConfig";
 import PlexImage from "@/components/PlexImage";
 import LogoLink from "@/components/LogoLink";

@@ -19,6 +19,7 @@ import { router, setupRouter } from "@/router";
 import { setupRouterGuard } from "@/router/guard";
 import { mountFunction } from "@/utils/index";
 import "ant-design-vue/dist/antd.less";
+import "hta-ui/dist/style/index.less";
 import "@/styles/index.less";
 import directives from "./utils/directives";
 import directive from "./directives";

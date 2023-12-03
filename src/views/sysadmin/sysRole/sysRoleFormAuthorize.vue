@@ -50,6 +50,8 @@ const show = (id) => {
     for (let value in data2) {
       roleResources.value[value] = data2[value].map((s) => s.id);
     }
+    console.log(resources.value);
+    console.log(roleResources.value);
     refFormModal.value.show();
   });
 };
