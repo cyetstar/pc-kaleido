@@ -63,6 +63,13 @@ export const apiMovieBasicSyncPlexById = (data: any) => {
   });
 };
 
+export const apiMovieBasicRefreshPlexById = (data: any) => {
+  return useFetch.post<any>({
+    url: "/movieBasic/refreshPlexById",
+    data,
+  });
+};
+
 export const apiMovieBasicReadNFO = (data: any) => {
   return useFetch.post<any>({
     url: "/movieBasic/readNFO",

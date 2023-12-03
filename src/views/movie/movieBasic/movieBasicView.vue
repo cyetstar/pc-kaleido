@@ -11,9 +11,10 @@
       </template>
       <template #extra>
         <a-space>
+          <h-button @click="onSearchDouban">匹配豆瓣</h-button>
           <h-button @click="onViewNFO">查看NFO</h-button>
           <h-button @click="onReadNFO">读取NFO</h-button>
-          <h-button @click="onSearchDouban">匹配豆瓣</h-button>
+          <h-button @click="onRefreshPlexById">刷新Plex</h-button>
           <h-button @click="onSyncPlexById">同步Plex</h-button>
         </a-space>
       </template>
@@ -135,8 +136,8 @@
 import {ref, onMounted, computed} from "vue";
 import {useRoute} from "vue-router";
 import {
-  apiMovieBasicReadNFO,
-  apiMovieBasicSyncPlex,
+  apiMovieBasicReadNFO, apiMovieBasicRefreshPlexById,
+  apiMovieBasicSyncPlexById,
   apiMovieBasicView, apiMovieBasicViewNFO,
 } from "@/api/movie/movieBasicApi.ts";
 import {message} from "ant-design-vue";
@@ -163,7 +164,6 @@ const initData = async () => {
         && !res.languageList.some(item => item.idLabel === s)
         && !res.genreList.some(item => item.idLabel === s)
     );
-    console.log(res.tagList)
     record.value = res
   });
 };
@@ -188,11 +188,22 @@ const onSearchDouban = () => {
 }
 
 const onSyncPlexById = () => {
-  apiMovieBasicSyncPlex({id}).then((res) => {
+  apiMovieBasicSyncPlexById({id}).then((res) => {
     if (res) {
       message.success("同步成功");
+      initData();
     } else {
       message.error("同步失败");
+    }
+  });
+};
+
+const onRefreshPlexById = () => {
+  apiMovieBasicRefreshPlexById({id}).then((res) => {
+    if (res) {
+      message.success("刷新成功");
+    } else {
+      message.error("刷新失败");
     }
   });
 };
