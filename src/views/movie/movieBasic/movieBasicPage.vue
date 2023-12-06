@@ -25,6 +25,9 @@
 
       <a-space class="h-btn-space">
         <h-button type="primary" @click="onSyncPlex">同步Plex</h-button>
+        <h-button type="primary" @click="onOpenDownloadFolder"
+          >打开下载目录
+        </h-button>
       </a-space>
     </div>
     <div class="h-form-body" ref="refScrollGrid" @scroll="onScrollGrid">
@@ -51,6 +54,7 @@
       </div>
     </div>
   </section>
+  <movie-basic-download-folder ref="refMovieBasicDownloadFolder" />
 </template>
 
 <script setup>
@@ -63,10 +67,12 @@ import {
 import { Empty, message } from "ant-design-vue";
 import { onBeforeRouteLeave, useRouter } from "vue-router";
 import { useAppStore } from "@/store/modules/app";
+import MovieBasicDownloadFolder from "@/views/movie/movieBasic/movieBasicDownloadFolder.vue";
 
 const router = useRouter();
 const appStore = useAppStore();
 const refScrollGrid = ref();
+const refMovieBasicDownloadFolder = ref();
 const loading = ref(true);
 const searchForm = ref({});
 const pageResult = ref({
@@ -111,6 +117,10 @@ const onSyncPlex = () => {
   apiMovieBasicSyncPlex().then((res) => {
     message.success("开始同步");
   });
+};
+
+const onOpenDownloadFolder = () => {
+  refMovieBasicDownloadFolder.value.show();
 };
 
 const onScrollGrid = () => {

@@ -8,7 +8,7 @@
 import "virtual:windi-base.css";
 import "virtual:windi-components.css";
 import "virtual:windi-utilities.css";
-import "virtual:svg-icons-register";
+// import "virtual:svg-icons-register";
 import "echarts";
 import ECharts from "vue-echarts";
 import App from "./App.vue";

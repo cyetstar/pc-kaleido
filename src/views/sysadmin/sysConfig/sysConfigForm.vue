@@ -66,6 +66,13 @@
               v-model:value="form.movieExcludePath"
             />
           </h-col>
+          <h-col :span="12">
+            <h-input
+              label="电影下载目录"
+              name="movieDownloadPath"
+              v-model:value="form.movieDownloadPath"
+            />
+          </h-col>
         </a-tab-pane>
         <a-tab-pane key="music" tab="音乐">
           <h-col :span="12">
@@ -118,12 +125,11 @@ import {
   apiSysConfigFindByKeys,
   apiSysConfigSave,
 } from "@/api/sysadmin/sysConfigApi";
+import { useAppStore } from "@/store/modules/app";
 
-const emits = defineEmits(["save-complete"]);
-
+let appStore = useAppStore();
 let activeKey = ref();
 let columns = ref([]);
-let formRef = ref();
 
 let form = ref({
   plexUrl: "",
@@ -133,6 +139,7 @@ let form = ref({
   plexMusicLibraryId: "",
   movieLibraryPath: "",
   movieExcludePath: "",
+  movieDownloadPath: "",
   musicLibraryPath: "",
   musicExcludePath: "",
   neteaseUrl: "",
@@ -166,7 +173,10 @@ const onChange = (e, type) => {
 
 const onSave = async () => {
   apiSysConfigSave(form.value).then((res) => {
-    message.success("操作成功");
+    if (res) {
+      appStore.initAppConfig();
+      message.success("操作成功");
+    }
   });
 };
 </script>

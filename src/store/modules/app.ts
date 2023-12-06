@@ -2,8 +2,7 @@ import { defineStore } from "pinia";
 import { apiSysConfigFindByKeys } from "@/api/sysadmin/sysConfigApi";
 
 interface AppState {
-  plexUrl: string;
-  plexToken: string;
+  config: any;
   scrollTop: {
     movie: number;
     music: number;
@@ -13,8 +12,7 @@ interface AppState {
 
 export const useAppStore = defineStore("app", {
   state: (): AppState => ({
-    plexUrl: "",
-    plexToken: "",
+    config: {},
     scrollTop: {
       movie: 0,
       music: 0,
@@ -23,10 +21,13 @@ export const useAppStore = defineStore("app", {
   }),
   actions: {
     async initAppConfig() {
-      return apiSysConfigFindByKeys(["plexUrl", "plexToken"]).then((res) => {
-        console.log(res);
-        this.plexUrl = res.plexUrl;
-        this.plexToken = res.plexToken;
+      return apiSysConfigFindByKeys([
+        "plexUrl",
+        "plexToken",
+        "movieLibraryPath",
+        "movieDownloadPath",
+      ]).then((res) => {
+        this.config = { ...res };
       });
     },
 

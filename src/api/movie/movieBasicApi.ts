@@ -97,3 +97,10 @@ export const apiMovieBasicViewNFO = (params: any) => {
     params,
   });
 };
+
+export const apiMovieBasicAutoCopy = (data: any) => {
+  return useFetch.post<any>({
+    url: "/movieBasic/autoCopy",
+    data,
+  });
+};
