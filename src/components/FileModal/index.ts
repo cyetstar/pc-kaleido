@@ -5,5 +5,5 @@
  * @LastEditTime: 2023-01-08 15:43:42
  * @Description:
  */
-import Checkbox from "./Checkbox.vue";
-export default Checkbox;
+import FileModal from "./FileModal.vue";
+export default FileModal;

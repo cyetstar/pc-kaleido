@@ -1,4 +1,5 @@
 import { useFetch } from "@/utils/http";
+import { HttpMethodEnum } from "@/enums/httpEnum";
 
 export const apiMusicAlbumPage = (params: any) => {
   return useFetch.get<any>({
@@ -92,6 +93,21 @@ export const apiMusicAlbumListByArtistId = (data: any) => {
 export const apiMusicAlbumUpdateAudioTag = (data: any) => {
   return useFetch.post<any>({
     url: "/musicAlbum/updateAudioTag",
+    data,
+  });
+};
+
+export const apiMusicAlbumViewPath = (params: any) => {
+  return useFetch.get<any>({
+    url: "/musicAlbum/viewPath",
+    params,
+  });
+};
+
+export const apiMusicAlbumUploadCover = (data: any) => {
+  return useFetch.upload<any>({
+    url: "/musicAlbum/uploadCover",
+    method: HttpMethodEnum.POST,
     data,
   });
 };

@@ -73,11 +73,10 @@ import {
   HUploadImage,
 } from "hta-ui";
 
-// import HCheckbox from "@/components/Checkbox";
-// import HSelect from "@/components/Select";
 import GlobalConfig from "@/components/GlobalConfig";
 import PlexImage from "@/components/PlexImage";
 import LogoLink from "@/components/LogoLink";
+import FileModal from "@/components/FileModal";
 
 export const registerGlobComp = (app: App) => {
   app
@@ -103,6 +102,7 @@ export const registerGlobComp = (app: App) => {
     .component("k-global-config", GlobalConfig)
     .component("k-plex-image", PlexImage)
     .component("k-logo-link", LogoLink)
+    .component("k-file-modal", FileModal)
     .use(Layout)
     .use(Button)
     .use(Input)

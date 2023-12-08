@@ -8,8 +8,8 @@
 <template>
   <section id="main-section">
     <k-global-config
-      :plex-url="appStore.$state.plexUrl"
-      :plex-token="appStore.$state.plexToken"
+      :plex-url="appStore.$state.config.plexUrl"
+      :plex-token="appStore.$state.config.plexToken"
     >
       <router-view v-slot="{ Component, route }">
         <keep-alive>

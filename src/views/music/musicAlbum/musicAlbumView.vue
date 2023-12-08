@@ -11,6 +11,7 @@
       </template>
       <template #extra>
         <a-space>
+          <h-button @click="onFileManage">文件管理</h-button>
           <h-button @click="onUpdateAudioTag">读取Tag</h-button>
           <h-button @click="onSyncPlexById">同步Plex</h-button>
           <h-button @click="onSearchNetease">匹配网易云</h-button>
@@ -98,12 +99,12 @@
         <p>{{ lyrics }}</p>
       </template>
     </a-modal>
-
-    <music-album-search-netease
-      ref="refMusicAlbumSearchNetease"
-      @match-success="onMatchSuccess"
-    />
   </section>
+  <music-album-search-netease
+    ref="refMusicAlbumSearchNetease"
+    @match-success="onMatchSuccess"
+  />
+  <music-album-file-manage ref="refMusicAlbumFileManage" />
 </template>
 
 <script setup>
@@ -122,10 +123,12 @@ import {
 import { message } from "ant-design-vue";
 import { FileTextOutlined, LeftOutlined } from "@ant-design/icons-vue";
 import MusicAlbumSearchNetease from "@/views/music/musicAlbum/musicAlbumSearchNetease.vue";
+import MusicAlbumFileManage from "@/views/music/musicAlbum/musicAlbumFileManage.vue";
 
 const route = useRoute();
-const id = route.query.id;
+const router = useRouter();
 
+const id = route.query.id;
 const record = ref({});
 const trackRecords = ref([]);
 const modalLyricsVisible = ref(false);
@@ -133,6 +136,7 @@ const modalLyricsTitle = ref();
 const lyrics = ref();
 
 const refMusicAlbumSearchNetease = ref();
+const refMusicAlbumFileManage = ref();
 
 const initData = () => {
   apiMusicAlbumView({ id }).then((res) => (record.value = res));
@@ -141,11 +145,10 @@ const initData = () => {
   );
 };
 
-const router = useRouter();
-
-const onBack = () => {
-  router.back();
+const onFileManage = () => {
+  refMusicAlbumFileManage.value.show(id);
 };
+
 const onViewArtist = (id) => {
   router.push({ path: "/music/musicArtist/view", query: { id } });
 };
