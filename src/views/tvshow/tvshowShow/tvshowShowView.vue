@@ -26,7 +26,7 @@
           :plex-thumb="record.thumb"
       />
       <div class="flex-1 ml-8">
-        <p>{{ record.originalTitle }} ({{ record.year }})</p>
+        <p>{{ record.originalTitle }} <span v-if="isNotEmpty(record.year)">({{ record.year }})</span></p>
         <p class="flex items-center">
           <span v-if="isNotEmpty(record.rating)" class="mr-2">{{ record.rating }} 分</span>
           <a-rate v-model:value="rating" disabled allow-half/>
@@ -76,7 +76,7 @@
                   class="h-poster"
                   :preview="false"
                   :plex-thumb="seasonRecord.thumb"
-                  @click="onViewRecord(seasonRecord.id)"
+                  @click="onViewSeason(seasonRecord.id)"
               />
             </template>
             <a-card-meta :title="seasonRecord.title">
@@ -95,7 +95,6 @@
                   class="h-thumb"
                   :preview="false"
                   :plex-thumb="item.thumb"
-                  @click="onViewRecord(item.id)"
               />
             </template>
             <a-card-meta
@@ -106,21 +105,20 @@
         </template>
       </div>
     </section>
-
-
   </section>
 </template>
 
 <script setup>
 import {ref, onMounted, computed} from "vue";
 import {FileTextOutlined, LeftOutlined} from "@ant-design/icons-vue";
-import {useRoute} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import {isNotEmpty} from "@/utils/is";
 import {apiTvshowShowView} from "@/api/tvshow/tvshowShowApi.ts";
 import {apiTvshowEpisodePage} from "@/api/tvshow/tvshowEpisodeApi";
 import {apiTvshowSeasonPage} from "@/api/tvshow/tvshowSeasonApi";
 
 const route = useRoute()
+const router = useRouter()
 const record = ref({})
 const episodeRecords = ref([]);
 const seasonRecords = ref([]);
@@ -153,6 +151,11 @@ const initData = async () => {
     }
   });
 };
+
+const onViewSeason = (id) => {
+  router.push({path: "/tvshow/tvshowSeason/view", query: {id, title: record.value.title}})
+};
+
 onMounted(() => {
   initData()
 })

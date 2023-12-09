@@ -25,7 +25,7 @@
           class="h-poster"
           :plex-thumb="record.thumb" />
       <div class="flex-1 ml-8">
-        <p>{{ record.originalTitle }} ({{ record.year }})</p>
+        <p>{{ record.originalTitle }} <span v-if="isNotEmpty(record.year)">({{ record.year }})</span></p>
         <p class="flex items-center">
           <span v-if="isNotEmpty(record.rating)" class="mr-2">{{ record.rating }} 分</span>
           <a-rate v-model:value="rating" disabled allow-half/>

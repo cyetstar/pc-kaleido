@@ -2,7 +2,7 @@ import type { AppRouteConfig } from "@/router/types";
 
 const tvshowSeasonRoute: AppRouteConfig[] = [
   {
-    path: "/tvshowSeason/page",
+    path: "/tvshow/tvshowSeason/page",
     name: "TvshowSeasonPage",
     component: () => import("@/views/tvshow/tvshowSeason/tvshowSeasonPage.vue"),
     meta: {
@@ -12,7 +12,7 @@ const tvshowSeasonRoute: AppRouteConfig[] = [
     },
   },
   {
-    path: "/tvshowSeason/view",
+    path: "/tvshow/tvshowSeason/view",
     name: "TvshowSeasonView",
     component: () => import("@/views/tvshow/tvshowSeason/tvshowSeasonView.vue"),
     meta: {
@@ -20,6 +20,6 @@ const tvshowSeasonRoute: AppRouteConfig[] = [
       requiresAuth: false,
     },
   },
-]
+];
 
-export default tvshowSeasonRoute
+export default tvshowSeasonRoute;

@@ -21,6 +21,7 @@ import sysConfigRoutes from "@/router/routes/sysadmin/sysConfigRoutes";
 import movieBasicRoutes from "@/router/routes/movie/movieBasicRoutes";
 import movieCollectionRoutes from "@/router/routes/movie/movieCollectionRoutes";
 import tvshowShowRoutes from "@/router/routes/tvshow/tvshowShowRoutes";
+import tvshowSeasonRoutes from "@/router/routes/tvshow/tvshowSeasonRoutes";
 
 const LoginRoute: AppRouteConfig = {
   path: "/login",
@@ -61,6 +62,7 @@ const BackstageRoute: AppRouteConfig = {
     ...movieBasicRoutes,
     ...movieCollectionRoutes,
     ...tvshowShowRoutes,
+    ...tvshowSeasonRoutes,
   ],
 };
 export const allRoutes = [LoginRoute, BackstageRoute];
