@@ -4,25 +4,8 @@
  * @Description: 电影列表页面
 -->
 <template>
-  <section class="h-form-wrapper">
-    <div class="h-page-header">
-      <!--    <h-form-search-->
-      <!--      v-model:form="searchForm"-->
-      <!--      @search="onSearch"-->
-      <!--      @reset="onReset"-->
-      <!--    >-->
-      <!--      <h-col :span="6">-->
-      <!--        <h-input label="电影名" v-model:value="searchForm.title" name="title" />-->
-      <!--      </h-col>-->
-      <!--      <h-col :span="6">-->
-      <!--        <h-input-->
-      <!--          label="原片名"-->
-      <!--          v-model:value="searchForm.originalTitle"-->
-      <!--          name="originalTitle"-->
-      <!--        />-->
-      <!--      </h-col>-->
-      <!--    </h-form-search>-->
-
+  <section class="k-page-section">
+    <div class="px-24px">
       <a-space class="h-btn-space">
         <h-button type="primary" @click="onSyncPlex">同步Plex</h-button>
         <h-button type="primary" @click="onOpenDownloadFolder"
@@ -30,13 +13,13 @@
         </h-button>
       </a-space>
     </div>
-    <div class="h-form-body" ref="refScrollGrid" @scroll="onScrollGrid">
+    <section ref="refScrollGrid" @scroll="onScrollGrid">
       <div v-if="pageResult.records.length === 0">
         <a-empty :image="Empty.PRESENTED_IMAGE_SIMPLE" />
       </div>
-      <div v-else class="grid grid-cols-24 gap-x-3 gap-y-3">
+      <div v-else class="grid grid-cols-24 gap-6">
         <template :key="record.id" v-for="record in pageResult.records">
-          <a-card class="col-span-3">
+          <a-card class="k-card col-span-3">
             <template #cover>
               <k-plex-image
                 class="h-poster"
@@ -52,7 +35,7 @@
           </a-card>
         </template>
       </div>
-    </div>
+    </section>
   </section>
   <movie-basic-download-folder ref="refMovieBasicDownloadFolder" />
 </template>

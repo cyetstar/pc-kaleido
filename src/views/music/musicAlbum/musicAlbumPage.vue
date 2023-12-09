@@ -14,9 +14,9 @@
       <div v-if="pageResult.records.length === 0">
         <a-empty :image="Empty.PRESENTED_IMAGE_SIMPLE" />
       </div>
-      <div v-else class="grid grid-cols-24 gap-x-4 gap-y-6">
+      <div v-else class="grid grid-cols-24 gap-6">
         <template :key="record.id" v-for="record in pageResult.records">
-          <a-card class="col-span-3 k-card">
+          <a-card class="k-card col-span-3">
             <template #cover>
               <k-plex-image
                 class="h-cover"

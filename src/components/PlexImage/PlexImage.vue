@@ -43,9 +43,6 @@ export default defineComponent({
   setup(props, { emit }) {
     let url = props.plexUrl || inject("plexUrl");
     let token = props.plexToken || inject("plexToken");
-
-    console.log(url);
-
     let imageSrc = computed(() => {
       if (props.plexThumb) {
         return (

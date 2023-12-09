@@ -21,43 +21,39 @@
         </a-space>
       </template>
     </a-page-header>
-    <section>
-      <a-row>
-        <h-col :span="6">
-          <k-plex-image
-            style="width: 280px"
-            class="h-cover"
-            :plex-thumb="record.thumb"
-            type="music"
+    <section class="flex">
+      <k-plex-image
+        style="width: 250px"
+        class="h-cover"
+        :plex-thumb="record.thumb"
+        type="music"
+      />
+      <div class="flex-1 ml-8">
+        <h1>
+          <a
+            v-for="artist in record.musicArtistDTOList"
+            @click="onViewArtist(artist.id)"
+            >{{ artist.title }}</a
+          >
+        </h1>
+        <p>{{ record.originallyAvailableAt }}</p>
+        <p>{{ record.label }}</p>
+        <p>
+          <a-tag v-if="record.type">{{ record.type }}</a-tag>
+          <a-tag v-if="record.genre">{{ record.genre }}</a-tag>
+          <a-tag v-if="record.media">{{ record.media }}</a-tag>
+        </p>
+        <p>{{ record.summary }}</p>
+        <p>
+          <k-logo-link class="mr-3" :id="id" />
+          <k-logo-link
+            class="mr-3"
+            type="musicbrianz"
+            :id="record.musicbrainzId"
           />
-        </h-col>
-        <h-col :span="18">
-          <h1>
-            <a
-              v-for="artist in record.musicArtistDTOList"
-              @click="onViewArtist(artist.id)"
-              >{{ artist.title }}</a
-            >
-          </h1>
-          <p>{{ record.originallyAvailableAt }}</p>
-          <p>{{ record.label }}</p>
-          <p>
-            <a-tag v-if="record.type">{{ record.type }}</a-tag>
-            <a-tag v-if="record.genre">{{ record.genre }}</a-tag>
-            <a-tag v-if="record.media">{{ record.media }}</a-tag>
-          </p>
-          <p>{{ record.summary }}</p>
-          <p>
-            <k-logo-link class="mr-3" :id="id" />
-            <k-logo-link
-              class="mr-3"
-              type="musicbrianz"
-              :id="record.musicbrainzId"
-            />
-            <k-logo-link class="mr-3" type="netease" :id="record.neteaseId" />
-          </p>
-        </h-col>
-      </a-row>
+          <k-logo-link class="mr-3" type="netease" :id="record.neteaseId" />
+        </p>
+      </div>
     </section>
     <section>
       <h-module-title title="曲目" />
