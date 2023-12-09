@@ -7,11 +7,6 @@
 -->
 <template>
   <section class="flex items-center py-9px">
-    <a-avatar :size="30">
-      <template #icon>
-        <img class="h-30px h-30px" src="@/assets/icons/user-header.png" />
-      </template>
-    </a-avatar>
     <a-dropdown>
       <span
         class="text-14px text-[var(--font-color)] cursor-pointer flex items-center"
@@ -47,21 +42,6 @@ console.log("name", name);
 
 const menuList = ref([
   {
-    name: "个人中心",
-    value: 1,
-    action: () => {},
-  },
-  {
-    name: "业务中心",
-    value: 2,
-    action: () => {},
-  },
-  {
-    name: "系统管理",
-    value: 3,
-    action: () => {},
-  },
-  {
     name: "退出登录",
     value: 4,
     action: () => {
@@ -71,10 +51,4 @@ const menuList = ref([
 ]);
 </script>
 
-<style lang="less" scoped>
-:deep(.ant-avatar) {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-</style>
+<style lang="less" scoped></style>

@@ -20,14 +20,14 @@
       </template>
     </a-page-header>
     <section class="flex">
-        <k-plex-image
-            style="width: 250px"
-            class="h-poster"
-            :plex-thumb="record.thumb" />
+      <k-plex-image
+          style="width: 250px"
+          class="h-poster"
+          :plex-thumb="record.thumb" />
       <div class="flex-1 ml-8">
         <p>{{ record.originalTitle }} ({{ record.year }})</p>
         <p class="flex items-center">
-          <span class="mr-2">{{ record.rating }} 分</span>
+          <span v-if="isNotEmpty(record.rating)" class="mr-2">{{ record.rating }} 分</span>
           <a-rate v-model:value="rating" disabled allow-half/>
         </p>
         <p>
@@ -137,6 +137,7 @@ const actorList = computed(() => {
   if (isNotEmpty(record.value.actorList) && record.value.actorList.length > 8) {
     return record.value.actorList.slice(0, 8)
   }
+  return record.value.actorList;
 });
 
 const record = ref({});
