@@ -4,36 +4,19 @@
  * @Description: 发行品列表页面
 -->
 <template>
-  <section class="h-form-wrapper">
-    <div class="h-page-header">
-      <!--    <h-form-search-->
-      <!--      ref="refFormSearch"-->
-      <!--      v-model:form="searchForm"-->
-      <!--      @search="onSearch"-->
-      <!--      @reset="onReset"-->
-      <!--    >-->
-      <!--      <h-col :span="6">-->
-      <!--        <h-input label="标题" v-model:value="searchForm.title" name="title" />-->
-      <!--      </h-col>-->
-      <!--      <h-col :span="6">-->
-      <!--        <h-input-->
-      <!--          label="艺术家"-->
-      <!--          v-model:value="searchForm.artists"-->
-      <!--          name="artists"-->
-      <!--        />-->
-      <!--      </h-col>-->
-      <!--    </h-form-search>-->
+  <section class="k-page-section">
+    <div class="px-24px">
       <a-space class="h-btn-space">
         <h-button type="primary" @click="onSyncPlex">同步Plex</h-button>
       </a-space>
     </div>
-    <div class="h-form-body" ref="refScrollGrid" @scroll="onScrollGrid">
+    <section ref="refScrollGrid" @scroll="onScrollGrid">
       <div v-if="pageResult.records.length === 0">
         <a-empty :image="Empty.PRESENTED_IMAGE_SIMPLE" />
       </div>
-      <div v-else class="grid grid-cols-24 gap-x-3 gap-y-3">
+      <div v-else class="grid grid-cols-24 gap-x-4 gap-y-6">
         <template :key="record.id" v-for="record in pageResult.records">
-          <a-card class="col-span-3">
+          <a-card class="col-span-3 k-card">
             <template #cover>
               <k-plex-image
                 class="h-cover"
@@ -54,7 +37,7 @@
           </a-card>
         </template>
       </div>
-    </div>
+    </section>
   </section>
 </template>
 

@@ -4,7 +4,7 @@
  * @Description: 发行品详情页面
 -->
 <template>
-  <section class="h-page-section">
+  <section class="k-view-section">
     <a-page-header :title="record.title" @back="() => $router.go(-1)">
       <template #backIcon>
         <LeftOutlined />
@@ -21,48 +21,46 @@
         </a-space>
       </template>
     </a-page-header>
-    <a-row>
-      <h-col :span="8">
-        <div class="flex justify-center">
-          <div class="w-xs">
-            <k-plex-image
-              class="h-cover"
-              :plex-thumb="record.thumb"
-              type="music"
-            />
-          </div>
-        </div>
-      </h-col>
-      <h-col :span="16">
-        <h1>
-          <a
-            v-for="artist in record.musicArtistDTOList"
-            @click="onViewArtist(artist.id)"
-            >{{ artist.title }}</a
-          >
-        </h1>
-        <p>{{ record.originallyAvailableAt }}</p>
-        <p>{{ record.label }}</p>
-        <p>
-          <a-tag v-if="record.type">{{ record.type }}</a-tag>
-          <a-tag v-if="record.genre">{{ record.genre }}</a-tag>
-          <a-tag v-if="record.media">{{ record.media }}</a-tag>
-        </p>
-        <p>{{ record.summary }}</p>
-        <p>
-          <k-logo-link class="mr-3" :id="id" />
-          <k-logo-link
-            class="mr-3"
-            type="musicbrianz"
-            :id="record.musicbrainzId"
+    <section>
+      <a-row>
+        <h-col :span="6">
+          <k-plex-image
+            style="width: 280px"
+            class="h-cover"
+            :plex-thumb="record.thumb"
+            type="music"
           />
-          <k-logo-link class="mr-3" type="netease" :id="record.neteaseId" />
-        </p>
-      </h-col>
-    </a-row>
-
-    <div class="mt-8 p-20px">
-      <h-title-module title="歌曲列表" class="mb-6" />
+        </h-col>
+        <h-col :span="18">
+          <h1>
+            <a
+              v-for="artist in record.musicArtistDTOList"
+              @click="onViewArtist(artist.id)"
+              >{{ artist.title }}</a
+            >
+          </h1>
+          <p>{{ record.originallyAvailableAt }}</p>
+          <p>{{ record.label }}</p>
+          <p>
+            <a-tag v-if="record.type">{{ record.type }}</a-tag>
+            <a-tag v-if="record.genre">{{ record.genre }}</a-tag>
+            <a-tag v-if="record.media">{{ record.media }}</a-tag>
+          </p>
+          <p>{{ record.summary }}</p>
+          <p>
+            <k-logo-link class="mr-3" :id="id" />
+            <k-logo-link
+              class="mr-3"
+              type="musicbrianz"
+              :id="record.musicbrainzId"
+            />
+            <k-logo-link class="mr-3" type="netease" :id="record.neteaseId" />
+          </p>
+        </h-col>
+      </a-row>
+    </section>
+    <section>
+      <h-module-title title="曲目" />
       <a-table :pagination="false" size="small" :data-source="trackRecords">
         <a-table-column
           title="曲号"
@@ -91,15 +89,14 @@
         >
         </a-table-column>
       </a-table>
-    </div>
-
-    <a-modal v-model:visible="modalLyricsVisible" :footer="null">
-      <template #title>“{{ modalLyricsTitle }}”歌词</template>
-      <template v-for="lyrics in lyrics">
-        <p>{{ lyrics }}</p>
-      </template>
-    </a-modal>
+    </section>
   </section>
+  <a-modal v-model:visible="modalLyricsVisible" :footer="null">
+    <template #title>“{{ modalLyricsTitle }}”歌词</template>
+    <template v-for="lyrics in lyrics">
+      <p>{{ lyrics }}</p>
+    </template>
+  </a-modal>
   <music-album-search-netease
     ref="refMusicAlbumSearchNetease"
     @match-success="onMatchSuccess"
