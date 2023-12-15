@@ -45,7 +45,7 @@
           <a-card class="k-card col-span-3">
             <template #cover>
               <k-plex-image
-                class="h-poster"
+                class="h-poster cursor-pointer"
                 :preview="false"
                 :plex-thumb="record.thumb"
                 @click="onViewRecord(record.id)"

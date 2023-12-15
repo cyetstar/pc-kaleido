@@ -24,7 +24,7 @@
       <k-plex-image
           style="width: 250px"
           class="h-poster"
-          :plex-thumb="record.thumb" />
+          :plex-thumb="record.thumb"/>
       <div class="flex-1 ml-8">
         <p>{{ record.originalTitle }} <span v-if="isNotEmpty(record.year)">({{ record.year }})</span></p>
         <p class="flex items-center">
@@ -112,6 +112,27 @@
         </template>
       </div>
     </section>
+
+    <section v-if="isNotEmpty(collectionRecordList)">
+      <h-module-title title="合集"/>
+      <div class="grid grid-cols-24 gap-6">
+        <template :key="item.id" v-for="item in collectionRecordList">
+          <a-card class="k-card col-span-3">
+            <template #cover>
+              <k-plex-image
+                  class="h-poster cursor-pointer"
+                  :preview="false"
+                  :plex-thumb="item.thumb"
+                  @click="onViewCollectionRecord(item.id)"
+              />
+            </template>
+            <a-card-meta
+                :title="item.title"
+            ></a-card-meta>
+          </a-card>
+        </template>
+      </div>
+    </section>
   </section>
 
   <movie-basic-search-douban ref="refMovieBasicSearchDouban"/>
@@ -120,7 +141,7 @@
 
 <script setup>
 import {ref, onMounted, computed} from "vue";
-import {useRoute} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import {
   apiMovieBasicReadNFOById, apiMovieBasicRefreshPlexById,
   apiMovieBasicSyncPlexById,
@@ -131,7 +152,11 @@ import {LeftOutlined} from "@ant-design/icons-vue";
 import {isNotEmpty} from "@ht/util";
 import MovieBasicSearchDouban from "@/views/movie/movieBasic/movieBasicSearchDouban.vue";
 import MovieBasicFileManage from "@/views/movie/movieBasic/movieBasicFileManage.vue";
+import {apiMovieCollectionListByMovieId} from "@/api/movie/movieCollectionApi";
 
+const router = useRouter();
+const record = ref({});
+const collectionRecordList = ref([]);
 const refMovieBasicSearchDouban = ref();
 const refMovieBasicFileManage = ref();
 const route = useRoute();
@@ -144,7 +169,7 @@ const actorList = computed(() => {
   return record.value.actorList;
 });
 
-const record = ref({});
+
 const initData = async () => {
   apiMovieBasicView({id}).then((res) => {
     res.tagList = res.tagList.filter(s =>
@@ -155,6 +180,9 @@ const initData = async () => {
     );
     record.value = res
   });
+  apiMovieCollectionListByMovieId({movieId: id}).then(res => {
+    collectionRecordList.value = res.splice(0, 8)
+  })
 };
 
 const onFileManage = () => {
@@ -200,6 +228,10 @@ const onRefreshPlexById = () => {
     }
   });
 };
+
+const onViewCollectionRecord = (id) => {
+  router.push({path: "/movie/movieCollection/view", query: {id}});
+}
 onMounted(() => {
   initData();
 });

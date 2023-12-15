@@ -19,7 +19,7 @@
           <a-card class="k-card col-span-3">
             <template #cover>
               <k-plex-image
-                class="h-cover"
+                class="h-cover cursor-pointer"
                 type="music"
                 :preview="false"
                 :plex-thumb="record.thumb"

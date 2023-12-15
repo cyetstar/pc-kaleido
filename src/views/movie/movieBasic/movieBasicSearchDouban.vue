@@ -109,12 +109,11 @@ const onMatch = (record) => {
 };
 
 const onDownloadPoster = (record) => {
-  apiMovieBasicDownloadPoster({ ...movieRecord, url: record.picUrl }).then(
-    (res) => {
-      message.success("下载成功");
-      visible.value = false;
-    }
-  );
+  let url = record.picUrl.replace("s_ratio_poster", "m_ratio_poster");
+  apiMovieBasicDownloadPoster({ id: movieRecord.id, url: url }).then((res) => {
+    message.success("下载成功");
+    visible.value = false;
+  });
 };
 
 defineExpose({

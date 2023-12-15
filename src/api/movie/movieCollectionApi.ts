@@ -54,3 +54,10 @@ export const apiMovieCollectionSyncPlex = () => {
     url: "/movieCollection/syncPlex",
   });
 };
+
+export const apiMovieCollectionListByMovieId = (params: any) => {
+  return useFetch.get<any>({
+    url: "/movieCollection/listByMovieId",
+    params,
+  });
+};

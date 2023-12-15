@@ -132,3 +132,17 @@ export const apiMovieBasicDownloadPoster = (data: any) => {
     data,
   });
 };
+
+export const apiMovieBasicListByCollectionId = (params: any) => {
+  return useFetch.get<any>({
+    url: "/movieBasic/listByCollectionId",
+    params,
+  });
+};
+
+export const apiMovieCollectionSyncPlexById = (data: any) => {
+  return useFetch.post<any>({
+    url: "/movieCollection/syncPlexById",
+    data,
+  });
+};

@@ -47,11 +47,11 @@
           <a-card class="col-span-3 k-card">
             <template #cover>
               <k-plex-image
-                class="h-cover"
+                class="h-cover cursor-pointer"
                 type="music"
                 :preview="false"
                 :plex-thumb="albumRecord.thumb"
-                @click="onViewRecord(albumRecord.id)"
+                @click="onViewAlbumRecord(albumRecord.id)"
               />
             </template>
             <a-card-meta
@@ -97,7 +97,7 @@ const initData = () => {
   );
 };
 
-const onViewRecord = (id) => {
+const onViewAlbumRecord = (id) => {
   router.push({ path: "/music/musicAlbum/view", query: { id } });
 };
 
