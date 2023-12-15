@@ -17,7 +17,7 @@ export const MENUS = [
         permission: "movieBasic:page",
       },
       {
-        title: "电影集合",
+        title: "电影合集",
         name: "movieCollectionPage",
         path: "/movie/movieCollection/page",
         permission: "movieCollection:page",

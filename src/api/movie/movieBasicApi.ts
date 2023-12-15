@@ -125,3 +125,10 @@ export const apiMovieBasicUploadPoster = (data: any) => {
     data,
   });
 };
+
+export const apiMovieBasicDownloadPoster = (data: any) => {
+  return useFetch.post<any>({
+    url: "/movieBasic/downloadPoster",
+    data,
+  });
+};

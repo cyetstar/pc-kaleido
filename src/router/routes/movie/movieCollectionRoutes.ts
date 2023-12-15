@@ -7,7 +7,8 @@ const movieCollectionRoute: AppRouteConfig[] = [
     component: () =>
       import("@/views/movie/movieCollection/movieCollectionPage.vue"),
     meta: {
-      title: "电影集合",
+      title: "电影合集",
+      keepAlive: true,
     },
   },
   {
@@ -16,7 +17,7 @@ const movieCollectionRoute: AppRouteConfig[] = [
     component: () =>
       import("@/views/movie/movieCollection/movieCollectionView.vue"),
     meta: {
-      title: "电影集合详情",
+      title: "电影合集详情",
     },
   },
 ];

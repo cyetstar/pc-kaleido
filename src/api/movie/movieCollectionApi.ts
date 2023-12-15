@@ -1,9 +1,9 @@
 import { useFetch } from "@/utils/http";
 
 export const apiMovieCollectionPage = (params: any) => {
-return useFetch.get<any>({
-  url: "/movieCollection/page",
-  params,
+  return useFetch.get<any>({
+    url: "/movieCollection/page",
+    params,
   });
 };
 
@@ -46,5 +46,11 @@ export const apiMovieCollectionExport = (params: any) => {
   return useFetch.get<any>({
     url: "/movieCollection/export",
     params,
+  });
+};
+
+export const apiMovieCollectionSyncPlex = () => {
+  return useFetch.post<any>({
+    url: "/movieCollection/syncPlex",
   });
 };

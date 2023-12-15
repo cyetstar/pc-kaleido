@@ -8,7 +8,7 @@
     ref="formRef"
     v-model:visible="visible"
     title="匹配豆瓣"
-    width="800px"
+    width="960px"
     :footer="null"
   >
     <a-form layout="inline">
@@ -30,12 +30,12 @@
           />
         </template>
       </a-table-column>
-      <a-table-column title="海报" align="center">
+      <a-table-column title="海报" align="center" width="120px">
         <template #="{ record }">
           <img :src="record.picUrl" :width="80" referrerpolicy="no-referrer" />
         </template>
       </a-table-column>
-      <a-table-column title="影片名" data-index="title" align="center">
+      <a-table-column title="影片名" data-index="title" align="  ">
         <template #="{ record }">
           {{ record.title }}
           <span v-if="isNotEmpty(record.originalTitle)">
@@ -48,11 +48,18 @@
         data-index="year"
         align="center"
       ></a-table-column>
-      <a-table-column title="操作" align="center">
+      <a-table-column title="操作" align="center" width="150px">
         <template #="{ record }">
           <a-space :size="0">
             <h-button type="primary" size="small" link @click="onMatch(record)"
-              >匹配
+              >匹配信息
+            </h-button>
+            <h-button
+              type="primary"
+              size="small"
+              link
+              @click="onDownloadPoster(record)"
+              >下载海报
             </h-button>
           </a-space>
         </template>
@@ -66,6 +73,7 @@ import { ref } from "vue";
 import { CheckCircleTwoTone } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
 import {
+  apiMovieBasicDownloadPoster,
   apiMovieBasicMatchDouban,
   apiMovieBasicSearchDouban,
 } from "@/api/movie/movieBasicApi";
@@ -94,11 +102,19 @@ const onSearch = () => {
 };
 
 const onMatch = (record) => {
-  apiMovieBasicMatchDouban({ ...movieRecord, ...record }).then(() => {
+  apiMovieBasicMatchDouban({ ...movieRecord, ...record }).then((res) => {
     message.success("匹配成功");
     visible.value = false;
-    emits("match-success", record);
   });
+};
+
+const onDownloadPoster = (record) => {
+  apiMovieBasicDownloadPoster({ ...movieRecord, url: record.picUrl }).then(
+    (res) => {
+      message.success("下载成功");
+      visible.value = false;
+    }
+  );
 };
 
 defineExpose({

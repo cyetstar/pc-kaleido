@@ -4,189 +4,131 @@
  * @Description: 电影集合列表页面
 -->
 <template>
-  <section class="h-page-section" ref="appManagePage">
-    <h-form-search v-model:form="searchForm" @search="onSearch" @reset="onReset">
-        <h-col :span="6">
-          <h-input label="标题"
-                     v-model:value="searchForm.title" name="title"/>
-        </h-col>
-        <h-col :span="6">
-          <h-input label="简介"
-                     v-model:value="searchForm.summary" name="summary"/>
-        </h-col>
-    </h-form-search>
-
-    <a-space class="h-btn-space">
-      <h-button v-permissKey="'movieCollection:create'" type="primary" @click="onCreateRecord">新增</h-button>
-      <h-button-delete v-permissKey="'movieCollection:delete'" plain :disabled="selectedRowKeys.length === 0"
-                       @delete="onDeleteRecord(selectedRowKeys)"/>
-      <h-button v-permissKey="'movieCollection:export'" @click="onShowExportRecord">导出</h-button>
-    </a-space>
-
-    <h-table-data ref="tableRef" row-key="id" @loadData="onLoadData" @selection-change="onSelectionChange">
-        <a-table-column title="主键" data-index="id" align="center"></a-table-column>
-        <a-table-column title="标题" data-index="title" align="center"></a-table-column>
-        <a-table-column title="简介" data-index="summary" align="center"></a-table-column>
-      <a-table-column title="操作" align="center" width="300px">
-        <template #="{ record }">
-          <a-space :size="0">
-            <h-button type="primary" size="small" link v-permissKey="'movieCollection:view'"
-                      @click="onViewRecord(record.id)">详情</h-button>
-            <h-button type="primary" size="small" link v-permissKey="'movieCollection:update'"
-                      @click="onUpdateRecord(record.id)">编辑</h-button>
-            <h-button-delete size="small" link v-permissKey="'movieCollection:delete'"
-                             @delete="onDeleteRecord(record.id)">删除</h-button-delete>
-          </a-space>
+  <section class="k-page-section">
+    <div class="k-search-form">
+      <div class="flex justify-between items-center">
+        <a-form :model="searchForm">
+          <h-input
+            v-model:value="searchForm.keyword"
+            placeholder="关键字"
+            search
+            @search="onSearch"
+          />
+        </a-form>
+        <a-space>
+          <h-button @click="onSyncPlex">同步Plex</h-button>
+        </a-space>
+      </div>
+      <div class="flex justify-between items-center mt-4 mb-2">
+        <div>总记录数: {{ pageResult.total }}</div>
+      </div>
+    </div>
+    <section ref="refScrollGrid" @scroll="onScrollGrid">
+      <div v-if="pageResult.records.length === 0">
+        <a-empty :image="Empty.PRESENTED_IMAGE_SIMPLE" />
+      </div>
+      <div v-else class="grid grid-cols-24 gap-6">
+        <template :key="record.id" v-for="record in pageResult.records">
+          <a-card class="k-card col-span-3">
+            <template #cover>
+              <k-plex-image
+                class="h-poster"
+                :preview="false"
+                :plex-thumb="record.thumb"
+                @click="onViewRecord(record.id)"
+              />
+            </template>
+            <a-card-meta :title="record.title"></a-card-meta>
+          </a-card>
         </template>
-      </a-table-column>
-    </h-table-data>
-
-    <movieCollectionForm ref="formRef" @save-complete="onSaveComplete"></movieCollectionForm>
-
-    <h-modal-export ref="exportRef" @loadColumn="onLoadColumn" @export="onExport"></h-modal-export>
+      </div>
+    </section>
   </section>
 </template>
 
 <script setup>
-import movieCollectionForm from './movieCollectionForm.vue';
-import { ref, getCurrentInstance } from 'vue';
-import {apiMovieCollectionPage, apiMovieCollectionDelete, apiMovieCollectionColumn, apiMovieCollectionExport} from "@/api/movie/movieCollectionApi.ts"
+import { ref, onMounted, onActivated } from "vue";
+import {
+  apiMovieCollectionPage,
+  apiMovieCollectionSyncPlex,
+} from "@/api/movie/movieCollectionApi.ts";
 
-import { message } from "ant-design-vue";
-import { useRouter } from 'vue-router';
+import { Empty, message } from "ant-design-vue";
+import { onBeforeRouteLeave, useRouter } from "vue-router";
+import { isEmpty, isNotEmpty } from "@ht/util";
+import { useAppStore } from "@/store/modules/app";
 
-const searchForm = ref({
-  id: "",
-  title: "",
-  summary: "",
+const router = useRouter();
+const appStore = useAppStore();
+const refScrollGrid = ref();
+const loading = ref(true);
+const searchForm = ref({});
+const pageResult = ref({
+  records: [],
+  pageNumber: 0,
+  pageSize: 100,
 });
 
-const tableRef = ref();
-const onSearch = () => {
-  tableRef.value.load(1);
-};
+onMounted(() => {
+  loadData({ ...searchForm.value });
+});
 
-const onReset = () => {
-  tableRef.value.load(1);
-};
+onActivated(() => {
+  refScrollGrid.value.scrollTop = appStore.getScrollTop("movieCollection");
+});
 
-const onLoadData = (params, callbacks) => {
-  callbacks(apiMovieCollectionPage({ ...params, ...searchForm.value, searchCount: true }));
-};
+onBeforeRouteLeave((to, from, next) => {
+  appStore.setScrollTop(refScrollGrid.value.scrollTop, "movieCollection");
+  next();
+});
 
-const onSelectionChange = () => { };
-
-const formRef = ref();
-const onCreateRecord = () => {
-  formRef.value.create();
-}
-const router = useRouter()
-const onViewRecord = (id) => {
-  router.push({ path: "/movieCollection/view", query: { id } })
-}
-const onUpdateRecord = (id) => {
-  formRef.value.update(id);
-};
-const onSaveComplete = () => {
-  tableRef.value.load(1);
-};
-
-const selectedRowKeys = ref([]);
-const onDeleteRecord = (recordId) => {
-  const id = Array.isArray(recordId) ? recordId : [recordId];
-  apiMovieCollectionDelete(id).then(res => {
-    if (res) {
-      tableRef.value.load();
-      message.success("删除成功！");
-    }
-  });
-}
-
-const { proxy } = getCurrentInstance();
-const exportRef = ref();
-const onShowExport = () => {
-  exportRef.value.show();
-};
-
-const onLoadColumn = (callbacks) => {
-  callbacks(apiMovieCollectionColumn);
-};
-
-const onExport = async (params) => {
-  const data = await apiMovieCollectionExport({
-    ...params,
+const loadData = () => {
+  loading.value = true;
+  const data = {
+    pageNumber: pageResult.value.pageNumber + 1,
+    pageSize: pageResult.value.pageSize,
+    searchCount: true,
     ...searchForm.value,
+  };
+  apiMovieCollectionPage(data).then((res) => {
+    loading.value = false;
+    pageResult.value.records.push(...res.records);
+    pageResult.value.pageNumber = res.pageNumber;
+    pageResult.value.pageSize = res.pageSize;
+    pageResult.value.total = res.total;
   });
-  proxy.$dowloadExcel(data, "电影集合");
+};
+
+const onSearch = () => {
+  pageResult.value.pageNumber = 0;
+  pageResult.value.records = [];
+  loadData();
+};
+
+const onViewRecord = (id) => {
+  router.push({ path: "/movie/movieCollection/view", query: { id } });
+};
+
+const onSyncPlex = () => {
+  apiMovieCollectionSyncPlex().then((res) => {
+    message.success("开始同步");
+  });
+};
+
+const onScrollGrid = () => {
+  const containerHeight = refScrollGrid.value.clientHeight;
+  // 获取滚动容器滚动的高度
+  const scrollHeight = refScrollGrid.value.scrollHeight;
+  // 获取滚动容器滚动的距离
+  const scrollTop = refScrollGrid.value.scrollTop;
+  // 判断是否滑倒底部
+  if (
+    containerHeight + scrollTop >= scrollHeight - 50 &&
+    loading.value !== true
+  ) {
+    loadData();
+  }
 };
 </script>
 
-<style lang='less' scoped>
-  :deep(.ant-modal-body) {
-    padding: 0 24px;
-  }
-
-  :deep(.ant-modal-footer) {
-    border-top: none;
-  }
-
-  .table-box {
-    margin-top: 20px;
-  }
-
-  .view-line {
-    display: flex;
-    justify-content: space-between;
-    height: 36px;
-    line-height: 36px;
-
-  &:not(:last-child) {
-     border-bottom: 1px solid #f2f2f2;
-   }
-
-  .line-name {
-    color: #333333;
-    font-size: 14px;
-  }
-
-  .line-value {
-    color: #666666;
-    font-size: 14px;
-  }
-  }
-
-  .table-line {
-    display: flex;
-    justify-content: space-between;
-    height: 36px;
-    line-height: 36px;
-
-  &:not(:last-child) {
-     border-bottom: 1px solid #f2f2f2;
-   }
-
-  .table-item {
-    width: calc(100% / 3);
-    text-align: center;
-
-  &:first-child {
-     text-align: left;
-   }
-
-  &:last-child {
-     text-align: right;
-   }
-  }
-  }
-
-  .table-header {
-    font-weight: 700;
-  }
-
-  .edit-icon {
-    font-size: 16px;
-    margin-left: 12px;
-    color: #666;
-    cursor: pointer;
-  }
-</style>
+<style lang="less" scoped></style>
