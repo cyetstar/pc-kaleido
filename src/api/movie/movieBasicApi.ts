@@ -1,5 +1,5 @@
 import { useFetch } from "@/utils/http";
-import { HttpMethodEnum } from "@/enums/httpEnum";
+import { RequestMethod } from "@ht/http";
 
 export const apiMovieBasicPage = (params: any) => {
   return useFetch.get<any>({
@@ -70,9 +70,15 @@ export const apiMovieBasicRefreshPlexById = (data: any) => {
   });
 };
 
-export const apiMovieBasicReadNFO = (data: any) => {
+export const apiMovieBasicReadNFO = () => {
   return useFetch.post<any>({
     url: "/movieBasic/readNFO",
+  });
+};
+
+export const apiMovieBasicReadNFOById = (data: any) => {
+  return useFetch.post<any>({
+    url: "/movieBasic/readNFOById",
     data,
   });
 };
@@ -101,6 +107,21 @@ export const apiMovieBasicViewNFO = (params: any) => {
 export const apiMovieBasicAutoCopy = (data: any) => {
   return useFetch.post<any>({
     url: "/movieBasic/autoCopy",
+    data,
+  });
+};
+
+export const apiMovieBasicViewPath = (params: any) => {
+  return useFetch.get<any>({
+    url: "/movieBasic/viewPath",
+    params,
+  });
+};
+
+export const apiMovieBasicUploadPoster = (data: any) => {
+  return useFetch.upload<any>({
+    url: "/movieBasic/uploadPoster",
+    method: RequestMethod.POST,
     data,
   });
 };

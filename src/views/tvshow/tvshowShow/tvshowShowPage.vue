@@ -35,11 +35,10 @@
 </template>
 
 <script setup>
-import { onActivated, onMounted, ref } from "vue";
-import { apiTvshowShowPage } from "@/api/tvshow/tvshowShowApi.ts";
-
 import { Empty, message } from "ant-design-vue";
+import { onActivated, onMounted, ref } from "vue";
 import { onBeforeRouteLeave, useRouter } from "vue-router";
+import { apiTvshowShowPage } from "@/api/tvshow/tvshowShowApi";
 import { apiTvshowEpisodeSyncPlex } from "@/api/tvshow/tvshowEpisodeApi";
 import { useAppStore } from "@/store/modules/app";
 

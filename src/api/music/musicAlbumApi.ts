@@ -1,5 +1,5 @@
 import { useFetch } from "@/utils/http";
-import { HttpMethodEnum } from "@/enums/httpEnum";
+import { RequestMethod } from "@ht/http";
 
 export const apiMusicAlbumPage = (params: any) => {
   return useFetch.get<any>({
@@ -107,7 +107,7 @@ export const apiMusicAlbumViewPath = (params: any) => {
 export const apiMusicAlbumUploadCover = (data: any) => {
   return useFetch.upload<any>({
     url: "/musicAlbum/uploadCover",
-    method: HttpMethodEnum.POST,
+    method: RequestMethod.POST,
     data,
   });
 };

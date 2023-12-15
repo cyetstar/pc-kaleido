@@ -38,6 +38,7 @@ const BackstageRoute: AppRouteConfig = {
   path: "/",
   name: "backstage",
   component: PageLayout,
+  redirect: movieBasicRoutes[0].path,
   children: [
     {
       path: "/:path(.*)*",
@@ -54,9 +55,9 @@ const BackstageRoute: AppRouteConfig = {
     ...sysMenuRoutes,
     ...sysResourceRoutes,
     ...sysDictTypeRoutes,
-    ...webLogRoutes,
     ...sysLogRoutes,
     ...sysConfigRoutes,
+    ...webLogRoutes,
     ...musicAlbumRoutes,
     ...musicArtistRoutes,
     ...movieBasicRoutes,

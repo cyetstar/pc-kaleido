@@ -12,7 +12,8 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "isolatedModules": false,
-    "allowJs": true,
+//    "noImplicitAny": false,
+//    "allowJs": true,
     "lib": [
       "esnext",
       "dom"

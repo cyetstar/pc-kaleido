@@ -11,9 +11,10 @@
       </template>
       <template #extra>
         <a-space>
+          <h-button @click="onFileManage">文件管理</h-button>
           <h-button @click="onSearchDouban">匹配豆瓣</h-button>
           <h-button @click="onViewNFO">查看NFO</h-button>
-          <h-button @click="onReadNFO">读取NFO</h-button>
+          <h-button @click="onReadNFOById">读取NFO</h-button>
           <h-button @click="onRefreshPlexById">刷新Plex</h-button>
           <h-button @click="onSyncPlexById">同步Plex</h-button>
         </a-space>
@@ -114,22 +115,25 @@
   </section>
 
   <movie-basic-search-douban ref="refMovieBasicSearchDouban"/>
+  <movie-basic-file-manage ref="refMovieBasicFileManage"/>
 </template>
 
 <script setup>
 import {ref, onMounted, computed} from "vue";
 import {useRoute} from "vue-router";
 import {
-  apiMovieBasicReadNFO, apiMovieBasicRefreshPlexById,
+  apiMovieBasicReadNFOById, apiMovieBasicRefreshPlexById,
   apiMovieBasicSyncPlexById,
   apiMovieBasicView, apiMovieBasicViewNFO,
 } from "@/api/movie/movieBasicApi.ts";
 import {message} from "ant-design-vue";
 import {LeftOutlined} from "@ant-design/icons-vue";
-import {isEmpty, isNotEmpty} from "@/utils/is";
+import {isNotEmpty} from "@ht/util";
 import MovieBasicSearchDouban from "@/views/movie/movieBasic/movieBasicSearchDouban.vue";
+import MovieBasicFileManage from "@/views/movie/movieBasic/movieBasicFileManage.vue";
 
 const refMovieBasicSearchDouban = ref();
+const refMovieBasicFileManage = ref();
 const route = useRoute();
 const id = route.query.id;
 const rating = computed(() => record.value.rating / 2);
@@ -153,8 +157,12 @@ const initData = async () => {
   });
 };
 
-const onReadNFO = () => {
-  apiMovieBasicReadNFO({id}).then((res) => {
+const onFileManage = () => {
+  refMovieBasicFileManage.value.show(id);
+};
+
+const onReadNFOById = () => {
+  apiMovieBasicReadNFOById({id}).then((res) => {
     if (res) {
       message.success("读取成功");
       initData();

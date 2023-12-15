@@ -27,3 +27,10 @@ export const apiFileMove = (data: any) => {
     data,
   });
 };
+
+export const apiFileOpen = (params: any) => {
+  return useFetch.open<any>({
+    url: "/file/open",
+    params,
+  });
+};

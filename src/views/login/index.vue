@@ -3,7 +3,7 @@
     <div class="bg-black">
       <div class="mx-12 my-10">
         <h1 class="text-42px font-bold text-center">Kaleido</h1>
-        <a-form :model="loginForm" :rules="loginRules" @finish="doLogin">
+        <a-form :model="loginForm" @finish="doLogin">
           <h-input
             class="mt-5"
             required
@@ -51,10 +51,6 @@ const loginForm = reactive<LoginParams>({
   password: "",
   rememberMe: false,
 });
-const loginRules = {
-  username: [{ required: true, message: "请输入登录账号", trigger: "blur" }],
-  password: [{ required: true, message: "请输入登录密码", trigger: "blur" }],
-};
 let loginStatus = $ref<boolean>(false);
 
 async function doLogin(value: LoginParams) {
@@ -74,14 +70,6 @@ async function doLogin(value: LoginParams) {
     router.replace("/movie/movieBasic/page");
   } finally {
     loginStatus = false;
-  }
-}
-
-function getSucessPath(subMenu) {
-  if (subMenu.children && subMenu.children.length > 0) {
-    return getSucessPath(subMenu.children[0]);
-  } else {
-    return subMenu.path;
   }
 }
 </script>

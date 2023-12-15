@@ -69,7 +69,7 @@ import {
   apiMovieBasicMatchDouban,
   apiMovieBasicSearchDouban,
 } from "@/api/movie/movieBasicApi";
-import { isNotEmpty } from "@/utils/is";
+import { isNotEmpty } from "@ht/util";
 
 const emits = defineEmits(["match-success"]);
 

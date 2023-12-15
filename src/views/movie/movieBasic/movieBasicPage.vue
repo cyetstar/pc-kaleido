@@ -5,13 +5,36 @@
 -->
 <template>
   <section class="k-page-section">
-    <div class="px-24px">
-      <a-space class="h-btn-space">
-        <h-button type="primary" @click="onSyncPlex">同步Plex</h-button>
-        <h-button type="primary" @click="onOpenDownloadFolder"
-          >打开下载目录
-        </h-button>
-      </a-space>
+    <div class="k-search-form">
+      <div class="flex justify-between items-center">
+        <a-form :model="searchForm">
+          <h-input
+            v-model:value="searchForm.keyword"
+            placeholder="关键字"
+            search
+            @search="onSearch"
+          />
+        </a-form>
+        <a-space>
+          <h-button @click="onReadNFO">读取NFO</h-button>
+          <h-button @click="onSyncPlex">同步Plex</h-button>
+          <h-button @click="onOpenDownloadFolder">打开下载目录</h-button>
+        </a-space>
+      </div>
+      <div class="flex justify-between items-center mt-4 mb-2">
+        <div class="flex items-center">
+          <a-cascader :options="dicts" @change="onChangeFilter">
+            <a href="#" v-if="isEmpty(filterText)">筛选</a>
+            <a href="#" v-else> {{ filterText }} </a>
+          </a-cascader>
+          <close-circle-outlined
+            v-if="isNotEmpty(filterText)"
+            class="ml-2 cursor-pointer"
+            @click="onClearFilter"
+          />
+        </div>
+        <div>总记录数: {{ pageResult.total }}</div>
+      </div>
     </div>
     <section ref="refScrollGrid" @scroll="onScrollGrid">
       <div v-if="pageResult.records.length === 0">
@@ -44,16 +67,42 @@
 import { ref, onMounted, onActivated } from "vue";
 import {
   apiMovieBasicPage,
+  apiMovieBasicReadNFO,
   apiMovieBasicSyncPlex,
 } from "@/api/movie/movieBasicApi.ts";
 
 import { Empty, message } from "ant-design-vue";
+import { DownOutlined, CloseCircleOutlined } from "@ant-design/icons-vue";
 import { onBeforeRouteLeave, useRouter } from "vue-router";
 import { useAppStore } from "@/store/modules/app";
 import MovieBasicDownloadFolder from "@/views/movie/movieBasic/movieBasicDownloadFolder.vue";
+import { apiSysDictListByDictType } from "@/api/sysadmin/sysDictApi";
+import { isEmpty, isNotEmpty } from "@ht/util";
 
 const router = useRouter();
 const appStore = useAppStore();
+const dicts = ref([
+  {
+    label: "类型",
+    value: "genre",
+  },
+  {
+    label: "国家地区",
+    value: "country",
+  },
+  {
+    label: "分级",
+    value: "contentRating",
+  },
+  {
+    label: "年代",
+    value: "decade",
+  },
+  {
+    label: "年份",
+    value: "year",
+  },
+]);
 const refScrollGrid = ref();
 const refMovieBasicDownloadFolder = ref();
 const loading = ref(true);
@@ -64,8 +113,12 @@ const pageResult = ref({
   pageSize: 100,
 });
 
+const filter = ref();
+const filterText = ref();
+
 onMounted(() => {
   loadData({ ...searchForm.value });
+  initFilter();
 });
 
 onActivated(() => {
@@ -83,13 +136,21 @@ const loadData = () => {
     pageNumber: pageResult.value.pageNumber + 1,
     pageSize: pageResult.value.pageSize,
     searchCount: true,
+    ...searchForm.value,
   };
   apiMovieBasicPage(data).then((res) => {
     loading.value = false;
     pageResult.value.records.push(...res.records);
     pageResult.value.pageNumber = res.pageNumber;
     pageResult.value.pageSize = res.pageSize;
+    pageResult.value.total = res.total;
   });
+};
+
+const onSearch = () => {
+  pageResult.value.pageNumber = 0;
+  pageResult.value.records = [];
+  loadData();
 };
 
 const onViewRecord = (id) => {
@@ -102,8 +163,42 @@ const onSyncPlex = () => {
   });
 };
 
+const onReadNFO = () => {
+  apiMovieBasicReadNFO().then((res) => {
+    message.success("开始处理");
+  });
+};
+
 const onOpenDownloadFolder = () => {
   refMovieBasicDownloadFolder.value.show();
+};
+
+const initFilter = () => {
+  dicts.value.forEach((s) => {
+    let type = "movie" + s.value[0].toUpperCase() + s.value.slice(1);
+    apiSysDictListByDictType(type).then((r) => {
+      s.children = r.map((m) => ({ label: m.text, value: m.value }));
+    });
+  });
+};
+
+const clearFilter = () => {
+  filterText.value = null;
+  dicts.value.forEach((s) => {
+    searchForm.value[s.value] = null;
+  });
+};
+
+const onChangeFilter = (value, selectedOptions) => {
+  clearFilter();
+  filterText.value = selectedOptions.map((s) => s.label).join(" : ");
+  searchForm.value[value[0]] = value[1];
+  onSearch();
+};
+
+const onClearFilter = () => {
+  clearFilter();
+  onSearch();
 };
 
 const onScrollGrid = () => {

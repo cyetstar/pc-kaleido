@@ -66,9 +66,6 @@
 </template>
 
 <script setup lang="ts">
-import sysDictForm from "../sysDict/sysDictForm.vue";
-import sysDictCreateBatch from "../sysDict/sysDictCreateBatch.vue";
-import ModuleTitle from "@/components/common/ModuleTitle.vue";
 import { onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { message } from "ant-design-vue";
@@ -77,6 +74,8 @@ import {
   sysDictDeleteApi,
   apiSysDictListByDictType,
 } from "@/api/sysadmin/sysDictApi";
+import sysDictCreateBatch from "../sysDict/sysDictCreateBatch.vue";
+import sysDictForm from "../sysDict/sysDictForm.vue";
 
 let formRef = ref();
 let formBatchRef = ref();

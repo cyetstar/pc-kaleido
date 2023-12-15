@@ -45,7 +45,7 @@
             <check-outlined class="ml-2" @click="onRenameFile(record)" />
           </div>
           <div v-else class="flex justify-between items-center cursor-pointer">
-            <span @click="record.isDir ? onOpenFolder(record) : null">
+            <span @click="onOpen(record)">
               <folder-filled
                 v-if="record.isDir"
                 class="mr-2"
@@ -88,6 +88,7 @@ import { HButton, HButtonDelete, HTableData } from "hta-ui";
 import {
   apiFileDelete,
   apiFileList,
+  apiFileOpen,
   apiFileRename,
 } from "@/api/sysadmin/fileApi";
 
@@ -148,10 +149,14 @@ export default defineComponent({
       selectedRows.value = rows;
     };
 
-    const onOpenFolder = (record) => {
-      history.value.push(searchForm.value.path);
-      searchForm.value.path = record.path;
-      refTableData.value.load(1);
+    const onOpen = (record) => {
+      if (record.isDir) {
+        history.value.push(searchForm.value.path);
+        searchForm.value.path = record.path;
+        refTableData.value.load(1);
+      } else {
+        apiFileOpen({ path: record.path });
+      }
     };
 
     const onBack = () => {
@@ -204,7 +209,7 @@ export default defineComponent({
       onSelectionChange,
       onRefresh,
       onBack,
-      onOpenFolder,
+      onOpen,
       onRenameFile,
       onDeleteFile,
       show,
