@@ -112,12 +112,10 @@ const pageResult = ref({
   pageNumber: 0,
   pageSize: 100,
 });
-
-const filter = ref();
 const filterText = ref();
 
 onMounted(() => {
-  loadData({ ...searchForm.value });
+  loadData();
   initFilter();
 });
 
@@ -175,7 +173,7 @@ const onOpenDownloadFolder = () => {
 
 const initFilter = () => {
   dicts.value.forEach((s) => {
-    let type = "movie" + s.value[0].toUpperCase() + s.value.slice(1);
+    let type = appStore.$state.config["plexMovieLibraryId"] + s.value;
     apiSysDictListByDictType(type).then((r) => {
       s.children = r.map((m) => ({ label: m.text, value: m.value }));
     });

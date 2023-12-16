@@ -24,6 +24,9 @@ export const useAppStore = defineStore("app", {
       return apiSysConfigFindByKeys([
         "plexUrl",
         "plexToken",
+        "plexMovieLibraryId",
+        "plexTvshowLibraryId",
+        "plexMusicLibraryId",
         "movieLibraryPath",
         "movieDownloadPath",
       ]).then((res) => {

@@ -19,7 +19,7 @@
           <h-button @click="onSyncPlex">同步Plex</h-button>
         </a-space>
       </div>
-      <div class="flex justify-between items-center mt-4 mb-2">
+      <div class="flex justify-end items-center mt-4 mb-2">
         <div>总记录数: {{ pageResult.total }}</div>
       </div>
     </div>
@@ -70,7 +70,7 @@ const pageResult = ref({
 });
 
 onMounted(() => {
-  loadData({ ...searchForm.value });
+  loadData();
 });
 
 onActivated(() => {
