@@ -29,6 +29,7 @@
           <p>{{ record.area }}</p>
           <p>{{ record.summary }}</p>
           <p>
+            <k-logo-link type="plex" :id="record.id" class="mr-3" />
             <k-logo-link
               type="musicbrainz"
               :id="record.musicbrainzId"

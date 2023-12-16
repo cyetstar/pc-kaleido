@@ -111,3 +111,10 @@ export const apiMusicAlbumUploadCover = (data: any) => {
     data,
   });
 };
+
+export const apiMusicAlbumDownloadCover = (data: any) => {
+  return useFetch.post<any>({
+    url: "/musicAlbum/downloadCover",
+    data,
+  });
+};

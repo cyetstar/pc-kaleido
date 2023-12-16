@@ -135,7 +135,7 @@
     </section>
   </section>
 
-  <movie-basic-search-douban ref="refMovieBasicSearchDouban"/>
+  <movie-basic-search-douban ref="refMovieBasicSearchDouban" @match-success="initData"/>
   <movie-basic-file-manage ref="refMovieBasicFileManage"/>
 </template>
 

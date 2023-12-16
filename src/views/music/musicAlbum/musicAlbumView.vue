@@ -95,7 +95,7 @@
   </a-modal>
   <music-album-search-netease
     ref="refMusicAlbumSearchNetease"
-    @match-success="onMatchSuccess"
+    @match-success="initData"
   />
   <music-album-file-manage ref="refMusicAlbumFileManage" />
 </template>
@@ -170,10 +170,6 @@ const onSyncPlexById = () => {
 
 const onSearchNetease = () => {
   refMusicAlbumSearchNetease.value.show(record.value);
-};
-
-const onMatchSuccess = ({ neteaseId }) => {
-  record.value.neteaseId = neteaseId;
 };
 
 const onDownloadLyric = () => {

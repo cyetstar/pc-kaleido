@@ -21,7 +21,12 @@
       <h-button @click="onSearch">搜索</h-button>
     </a-form>
 
-    <a-table size="small" :data-source="dataSource" class="mt-3">
+    <a-table
+      size="small"
+      :data-source="dataSource"
+      :loading="loading"
+      class="mt-3"
+    >
       <a-table-column align="center">
         <template #="{ record }">
           <check-circle-two-tone
@@ -80,7 +85,7 @@ import {
 import { isNotEmpty } from "@ht/util";
 
 const emits = defineEmits(["match-success"]);
-
+const loading = ref();
 let movieRecord = {};
 let visible = ref();
 let dataSource = ref([]);
@@ -96,23 +101,30 @@ const show = (record) => {
 };
 
 const onSearch = () => {
+  loading.value = true;
   apiMovieBasicSearchDouban(form.value).then((res) => {
     dataSource.value = res;
+    loading.value = false;
   });
 };
 
 const onMatch = (record) => {
+  loading.value = true;
   apiMovieBasicMatchDouban({ ...movieRecord, ...record }).then((res) => {
     message.success("匹配成功");
     visible.value = false;
+    loading.value = false;
+    emits("match-success");
   });
 };
 
 const onDownloadPoster = (record) => {
+  loading.value = true;
   let url = record.picUrl.replace("s_ratio_poster", "m_ratio_poster");
   apiMovieBasicDownloadPoster({ id: movieRecord.id, url: url }).then((res) => {
     message.success("下载成功");
     visible.value = false;
+    loading.value = false;
   });
 };
 

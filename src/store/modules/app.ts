@@ -3,21 +3,13 @@ import { apiSysConfigFindByKeys } from "@/api/sysadmin/sysConfigApi";
 
 interface AppState {
   config: any;
-  scrollTop: {
-    movie: number;
-    music: number;
-    tvshow: number;
-  };
+  scrollTop: any;
 }
 
 export const useAppStore = defineStore("app", {
   state: (): AppState => ({
     config: {},
-    scrollTop: {
-      movie: 0,
-      music: 0,
-      tvshow: 0,
-    },
+    scrollTop: {},
   }),
   actions: {
     async initAppConfig() {
@@ -34,10 +26,10 @@ export const useAppStore = defineStore("app", {
       });
     },
 
-    setScrollTop(scrollTop: number, type: "movie" | "music" | "tvshow") {
+    setScrollTop(scrollTop: number, type: string) {
       this.scrollTop[type] = scrollTop;
     },
-    getScrollTop(type: "movie" | "music" | "tvshow") {
+    getScrollTop(type: string) {
       return this.scrollTop[type];
     },
 
