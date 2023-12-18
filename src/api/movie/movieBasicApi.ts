@@ -146,3 +146,9 @@ export const apiMovieCollectionSyncPlexById = (data: any) => {
     data,
   });
 };
+
+export const apiMovieBasicUpdateSource = () => {
+  return useFetch.post<any>({
+    url: "/movieBasic/updateSource",
+  });
+};

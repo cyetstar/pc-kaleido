@@ -16,6 +16,7 @@
           />
         </a-form>
         <a-space>
+          <h-button @click="onUpdateSource">更新源</h-button>
           <h-button @click="onReadNFO">读取NFO</h-button>
           <h-button @click="onSyncPlex">同步Plex</h-button>
           <h-button @click="onOpenDownloadFolder">打开下载目录</h-button>
@@ -69,6 +70,7 @@ import {
   apiMovieBasicPage,
   apiMovieBasicReadNFO,
   apiMovieBasicSyncPlex,
+  apiMovieBasicUpdateSource,
 } from "@/api/movie/movieBasicApi.ts";
 
 import { Empty, message } from "ant-design-vue";
@@ -153,6 +155,12 @@ const onSearch = () => {
 
 const onViewRecord = (id) => {
   router.push({ path: "/movie/movieBasic/view", query: { id } });
+};
+
+const onUpdateSource = () => {
+  apiMovieBasicUpdateSource().then((res) => {
+    message.success("开始更新");
+  });
 };
 
 const onSyncPlex = () => {
