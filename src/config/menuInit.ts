@@ -22,6 +22,12 @@ export const MENUS = [
         path: "/movie/movieCollection/page",
         permission: "movieCollection:page",
       },
+      {
+        title: "豆瓣口碑榜",
+        name: "movieDoubanWeeklyPage",
+        path: "/movie/movieDoubanWeekly/page",
+        permission: "movieDoubanWeekly:page",
+      },
     ],
   },
   {

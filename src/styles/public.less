@@ -88,7 +88,6 @@
 }
 
 .k-card {
-  border: none;
 
   .ant-image > img {
     border-radius: 4px;
@@ -110,6 +109,18 @@
       white-space: nowrap;
       text-overflow: ellipsis;
     }
+  }
+}
+
+.k-card-inline {
+  display: flex;
+
+  .ant-card-body {
+    padding: 12px;
+  }
+
+  &.bg-gray{
+    background: #f5f5f5;
   }
 }
 

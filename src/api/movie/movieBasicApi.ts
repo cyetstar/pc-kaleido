@@ -152,3 +152,16 @@ export const apiMovieBasicUpdateSource = () => {
     url: "/movieBasic/updateSource",
   });
 };
+
+export const apiMovieBasicCheckThreadStatus = () => {
+  return useFetch.post<any>({
+    url: "/movieBasic/checkThreadStatus",
+  });
+};
+
+export const apiMovieBasicWriteNFO = (data: any) => {
+  return useFetch.post<any>({
+    url: "/movieBasic/writeNFO",
+    data,
+  });
+};

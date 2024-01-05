@@ -23,6 +23,7 @@ import {
   Modal,
   Pagination,
   PageHeader,
+  Progress,
   Select,
   Radio,
   Upload,
@@ -50,6 +51,7 @@ import {
   Timeline,
   Affix,
   AutoComplete,
+  Badge,
 } from "ant-design-vue";
 
 import {
@@ -119,6 +121,7 @@ export const registerGlobComp = (app: App) => {
     .use(Modal)
     .use(Pagination)
     .use(PageHeader)
+    .use(Progress)
     .use(Select)
     .use(Radio)
     .use(Upload)
@@ -145,5 +148,6 @@ export const registerGlobComp = (app: App) => {
     .use(Tooltip)
     .use(Timeline)
     .use(Affix)
-    .use(AutoComplete);
+    .use(AutoComplete)
+    .use(Badge);
 };

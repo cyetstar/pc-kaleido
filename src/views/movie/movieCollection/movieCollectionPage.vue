@@ -16,7 +16,8 @@
           />
         </a-form>
         <a-space>
-          <h-button @click="onSyncPlex">同步Plex</h-button>
+          <h-button @click="onCreate">新增合集</h-button>
+          <h-button @click="onSyncDouban">同步豆列</h-button>
         </a-space>
       </div>
       <div class="flex justify-end items-center mt-4 mb-2">
@@ -29,10 +30,10 @@
       </div>
       <div v-else class="grid grid-cols-24 gap-6">
         <template :key="record.id" v-for="record in pageResult.records">
-          <a-card class="k-card col-span-3">
+          <a-card class="k-card col-span-4" :bordered="false">
             <template #cover>
               <k-plex-image
-                class="h-poster cursor-pointer"
+                class="cursor-pointer"
                 :preview="false"
                 :plex-thumb="record.thumb"
                 @click="onViewRecord(record.id)"
@@ -44,6 +45,7 @@
       </div>
     </section>
   </section>
+  <movie-collection-form ref="refMovieCollectionForm"></movie-collection-form>
 </template>
 
 <script setup>
@@ -57,7 +59,10 @@ import { Empty, message } from "ant-design-vue";
 import { onBeforeRouteLeave, useRouter } from "vue-router";
 import { isEmpty, isNotEmpty } from "@ht/util";
 import { useAppStore } from "@/store/modules/app";
+import MovieCollectionForm from "@/views/movie/movieCollection/movieCollectionForm.vue";
+import { triggerAction } from "@/utils/action";
 
+const refMovieCollectionForm = ref();
 const router = useRouter();
 const appStore = useAppStore();
 const refScrollGrid = ref();
@@ -109,10 +114,12 @@ const onViewRecord = (id) => {
   router.push({ path: "/movie/movieCollection/view", query: { id } });
 };
 
-const onSyncPlex = () => {
-  apiMovieCollectionSyncPlex().then((res) => {
-    message.success("开始同步");
-  });
+const onCreate = () => {
+  refMovieCollectionForm.value.create();
+};
+
+const onSyncDouban = () => {
+  triggerAction("movieCollectionSyncDoubanAll");
 };
 
 const onScrollGrid = () => {

@@ -16,9 +16,27 @@
           />
         </a-form>
         <a-space>
-          <h-button @click="onUpdateSource">更新源</h-button>
-          <h-button @click="onReadNFO">读取NFO</h-button>
-          <h-button @click="onSyncPlex">同步Plex</h-button>
+          <h-button @click="onMovieUpdateSource"
+            >{{
+              appStore.actions["movieUpdateSource"] ? "取消更新" : "更新文件源"
+            }}
+          </h-button>
+          <h-button @click="onMovieCheckThreadStatus"
+            >{{
+              appStore.actions["movieCheckThreadStatus"]
+                ? "取消检测"
+                : "检测发布"
+            }}
+          </h-button>
+          <h-button @click="onMovieReadNFO"
+            >{{ appStore.actions["movieReadNFO"] ? "取消读取" : "读取NFO" }}
+          </h-button>
+          <h-button @click="onMovieExportNFO"
+            >{{ appStore.actions["movieExportNFO"] ? "取消导出" : "导出NFO" }}
+          </h-button>
+          <h-button @click="onMovieSyncPlex"
+            >{{ appStore.actions["movieSyncPlex"] ? "取消同步" : "同步Plex" }}
+          </h-button>
           <h-button @click="onOpenDownloadFolder">打开下载目录</h-button>
         </a-space>
       </div>
@@ -43,7 +61,7 @@
       </div>
       <div v-else class="grid grid-cols-24 gap-6">
         <template :key="record.id" v-for="record in pageResult.records">
-          <a-card class="k-card col-span-3">
+          <a-card class="k-card col-span-3" :bordered="false">
             <template #cover>
               <k-plex-image
                 class="h-poster cursor-pointer"
@@ -65,24 +83,21 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onActivated } from "vue";
-import {
-  apiMovieBasicPage,
-  apiMovieBasicReadNFO,
-  apiMovieBasicSyncPlex,
-  apiMovieBasicUpdateSource,
-} from "@/api/movie/movieBasicApi.ts";
+import { onActivated, onMounted, ref } from "vue";
+import { apiMovieBasicPage } from "@/api/movie/movieBasicApi.ts";
 
-import { Empty, message } from "ant-design-vue";
-import { DownOutlined, CloseCircleOutlined } from "@ant-design/icons-vue";
+import { Empty } from "ant-design-vue";
+import { CloseCircleOutlined } from "@ant-design/icons-vue";
 import { onBeforeRouteLeave, useRouter } from "vue-router";
 import { useAppStore } from "@/store/modules/app";
 import MovieBasicDownloadFolder from "@/views/movie/movieBasic/movieBasicDownloadFolder.vue";
 import { apiSysDictListByDictType } from "@/api/sysadmin/sysDictApi";
 import { isEmpty, isNotEmpty } from "@ht/util";
+import { triggerAction } from "@/utils/action";
 
 const router = useRouter();
 const appStore = useAppStore();
+const actions = ref(appStore.actions);
 const dicts = ref([
   {
     label: "类型",
@@ -157,22 +172,24 @@ const onViewRecord = (id) => {
   router.push({ path: "/movie/movieBasic/view", query: { id } });
 };
 
-const onUpdateSource = () => {
-  apiMovieBasicUpdateSource().then((res) => {
-    message.success("开始更新");
-  });
+const onMovieUpdateSource = () => {
+  triggerAction("movieUpdateSource");
 };
 
-const onSyncPlex = () => {
-  apiMovieBasicSyncPlex().then((res) => {
-    message.success("开始同步");
-  });
+const onMovieCheckThreadStatus = () => {
+  triggerAction("movieCheckThreadStatus");
 };
 
-const onReadNFO = () => {
-  apiMovieBasicReadNFO().then((res) => {
-    message.success("开始处理");
-  });
+const onMovieReadNFO = () => {
+  triggerAction("movieReadNFO");
+};
+
+const onMovieExportNFO = () => {
+  triggerAction("movieExportNFO");
+};
+
+const onMovieSyncPlex = () => {
+  triggerAction("movieSyncPlex");
 };
 
 const onOpenDownloadFolder = () => {
@@ -181,7 +198,7 @@ const onOpenDownloadFolder = () => {
 
 const initFilter = () => {
   dicts.value.forEach((s) => {
-    let type = appStore.$state.config["plexMovieLibraryId"] + s.value;
+    let type = appStore.config["plexMovieLibraryId"] + s.value;
     apiSysDictListByDictType(type).then((r) => {
       s.children = r.map((m) => ({ label: m.text, value: m.value }));
     });

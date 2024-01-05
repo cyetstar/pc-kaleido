@@ -70,7 +70,7 @@
       <h-module-title title="单季"/>
       <div class="grid grid-cols-24 gap-6">
         <template :key="seasonRecord.id" v-for="seasonRecord in seasonRecords">
-          <a-card class="k-card col-span-3">
+          <a-card class="k-card col-span-3" :bordered="false">
             <template #cover>
               <k-plex-image
                   class="h-poster cursor-pointer"
@@ -89,7 +89,7 @@
       <h-module-title title="主演"/>
       <div class="grid grid-cols-24 gap-6">
         <template :key="item.id" v-for="item in actorList">
-          <a-card class="k-card col-span-3">
+          <a-card class="k-card col-span-3" :bordered="false">
             <template #cover>
               <k-plex-image
                   class="h-thumb"

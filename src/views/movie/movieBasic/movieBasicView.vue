@@ -11,20 +11,22 @@
       </template>
       <template #extra>
         <a-space>
+          <h-button-delete @delete="onDelete"/>
           <h-button @click="onFileManage">文件管理</h-button>
           <h-button @click="onSearchDouban">匹配豆瓣</h-button>
-          <h-button @click="onViewNFO">查看NFO</h-button>
-          <h-button @click="onReadNFOById">读取NFO</h-button>
-          <h-button @click="onRefreshPlexById">刷新Plex</h-button>
-          <h-button @click="onSyncPlexById">同步Plex</h-button>
+          <h-button @click="onExportNFO">导出NFO</h-button>
+          <h-button @click="onReadNFO">读取NFO</h-button>
+          <h-button @click="onSyncPlex">同步Plex</h-button>
         </a-space>
       </template>
     </a-page-header>
     <section class="flex">
-      <k-plex-image
-          style="width: 250px"
-          class="h-poster"
-          :plex-thumb="record.thumb"/>
+      <div>
+        <k-plex-image
+            style="width: 250px"
+            class="h-poster"
+            :plex-thumb="record.thumb"/>
+      </div>
       <div class="flex-1 ml-8">
         <p>{{ record.originalTitle }} <span v-if="isNotEmpty(record.year)">({{ record.year }})</span></p>
         <p class="flex items-center">
@@ -95,7 +97,7 @@
       <h-module-title title="主演"/>
       <div class="grid grid-cols-24 gap-6">
         <template :key="item.id" v-for="item in actorList">
-          <a-card class="k-card col-span-3">
+          <a-card class="k-card col-span-3" :bordered="false">
             <template #cover>
               <k-plex-image
                   class="h-thumb"
@@ -117,10 +119,10 @@
       <h-module-title title="合集"/>
       <div class="grid grid-cols-24 gap-6">
         <template :key="item.id" v-for="item in collectionRecordList">
-          <a-card class="k-card col-span-3">
+          <a-card class="k-card col-span-4" :bordered="false">
             <template #cover>
               <k-plex-image
-                  class="h-poster cursor-pointer"
+                  class="cursor-pointer"
                   :preview="false"
                   :plex-thumb="item.thumb"
                   @click="onViewCollectionRecord(item.id)"
@@ -145,7 +147,7 @@ import {useRoute, useRouter} from "vue-router";
 import {
   apiMovieBasicReadNFOById, apiMovieBasicRefreshPlexById,
   apiMovieBasicSyncPlexById,
-  apiMovieBasicView, apiMovieBasicViewNFO,
+  apiMovieBasicView, apiMovieBasicViewNFO, apiMovieBasicWriteNFO,
 } from "@/api/movie/movieBasicApi.ts";
 import {message} from "ant-design-vue";
 import {LeftOutlined} from "@ant-design/icons-vue";
@@ -189,7 +191,7 @@ const onFileManage = () => {
   refMovieBasicFileManage.value.show(id);
 };
 
-const onReadNFOById = () => {
+const onReadNFO = () => {
   apiMovieBasicReadNFOById({id}).then((res) => {
     if (res) {
       message.success("读取成功");
@@ -204,27 +206,21 @@ const onViewNFO = () => {
   apiMovieBasicViewNFO({id});
 };
 
+const onExportNFO = () => {
+  apiMovieBasicWriteNFO({id});
+}
+
 const onSearchDouban = () => {
   refMovieBasicSearchDouban.value.show(record.value);
 }
 
-const onSyncPlexById = () => {
+const onSyncPlex = () => {
   apiMovieBasicSyncPlexById({id}).then((res) => {
     if (res) {
       message.success("同步成功");
       initData();
     } else {
       message.error("同步失败");
-    }
-  });
-};
-
-const onRefreshPlexById = () => {
-  apiMovieBasicRefreshPlexById({id}).then((res) => {
-    if (res) {
-      message.success("刷新成功");
-    } else {
-      message.error("刷新失败");
     }
   });
 };

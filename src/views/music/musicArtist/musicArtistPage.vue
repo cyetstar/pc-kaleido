@@ -26,7 +26,7 @@
       </div>
       <div v-else class="grid grid-cols-24 gap-6">
         <template :key="record.id" v-for="record in pageResult.records">
-          <a-card class="k-card col-span-3">
+          <a-card class="k-card col-span-3" :bordered="false">
             <template #cover>
               <k-plex-image
                 class="h-cover cursor-pointer"

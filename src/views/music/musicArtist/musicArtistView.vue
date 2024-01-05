@@ -45,7 +45,7 @@
       <h-module-title title="专辑" />
       <div class="grid grid-cols-24 gap-x-4 gap-y-4">
         <template :key="albumRecord.id" v-for="albumRecord in albumRecords">
-          <a-card class="col-span-3 k-card">
+          <a-card class="col-span-3 k-card" :bordered="false">
             <template #cover>
               <k-plex-image
                 class="h-cover cursor-pointer"

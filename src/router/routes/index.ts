@@ -22,6 +22,7 @@ import movieBasicRoutes from "@/router/routes/movie/movieBasicRoutes";
 import movieCollectionRoutes from "@/router/routes/movie/movieCollectionRoutes";
 import tvshowShowRoutes from "@/router/routes/tvshow/tvshowShowRoutes";
 import tvshowSeasonRoutes from "@/router/routes/tvshow/tvshowSeasonRoutes";
+import movieDoubanWeeklyRoutes from "@/router/routes/movie/movieDoubanWeeklyRoutes";
 
 const LoginRoute: AppRouteConfig = {
   path: "/login",
@@ -62,6 +63,7 @@ const BackstageRoute: AppRouteConfig = {
     ...musicArtistRoutes,
     ...movieBasicRoutes,
     ...movieCollectionRoutes,
+    ...movieDoubanWeeklyRoutes,
     ...tvshowShowRoutes,
     ...tvshowSeasonRoutes,
   ],

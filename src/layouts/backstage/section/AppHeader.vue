@@ -27,6 +27,7 @@
     </div>
 
     <aside class="flex items-center">
+      <header-action />
       <header-user class="ml-12px"></header-user>
     </aside>
   </section>
@@ -38,6 +39,7 @@ import { useRouter } from "vue-router";
 import headerNotice from "./HeaderNotice.vue";
 import headerUser from "./HeaderUser.vue";
 import { useMenuStore } from "@/store/modules/menu";
+import HeaderAction from "@/layouts/backstage/section/HeaderAction.vue";
 
 const props = defineProps({
   title: {

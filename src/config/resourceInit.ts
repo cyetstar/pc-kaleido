@@ -84,6 +84,11 @@ export const ALL_RESOURCE: resourceItem[] = [
     action: ["page", "view", "create", "update", "delete", "export", "other"],
   },
   {
+    type: "movieDoubanWeekly",
+    name: "豆瓣电影口碑榜",
+    action: ["page", "view", "create", "update", "delete", "export", "other"],
+  },
+  {
     type: "tvshowShow",
     name: "剧集",
     action: ["page", "view", "create", "update", "delete", "export", "other"],

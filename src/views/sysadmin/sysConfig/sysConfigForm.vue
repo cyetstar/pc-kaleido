@@ -91,7 +91,7 @@
             />
           </h-col>
         </a-tab-pane>
-        <a-tab-pane key="netease" tab="网易云音乐">
+        <a-tab-pane key="third" tab="第三方接口">
           <h-col :span="12">
             <h-input
               label="网易云音乐API地址"
@@ -99,13 +99,18 @@
               v-model:value="form.neteaseUrl"
             />
           </h-col>
-        </a-tab-pane>
-        <a-tab-pane key="douban" tab="豆瓣">
           <h-col :span="12">
             <h-input
-              label="Api Key"
+              label="豆瓣APIKey"
               name="doubanApikey"
               v-model:value="form.doubanApikey"
+            />
+          </h-col>
+          <h-col :span="12">
+            <h-input
+              label="TMM地址"
+              name="tmmUrl"
+              v-model:value="form.tmmUrl"
             />
           </h-col>
         </a-tab-pane>
@@ -144,6 +149,7 @@ let form = ref({
   musicExcludePath: "",
   neteaseUrl: "",
   doubanApikey: "",
+  tmmUrl: "",
 });
 
 onMounted(() => {
