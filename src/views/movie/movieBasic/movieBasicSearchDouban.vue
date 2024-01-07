@@ -37,7 +37,7 @@
       </a-table-column>
       <a-table-column title="海报" align="center" width="120px">
         <template #="{ record }">
-          <img :src="record.picUrl" :width="80" referrerpolicy="no-referrer" />
+          <img :src="record.poster" :width="80" referrerpolicy="no-referrer" />
         </template>
       </a-table-column>
       <a-table-column title="影片名" data-index="title" align="  ">
@@ -60,6 +60,7 @@
               >匹配信息
             </h-button>
             <h-button
+              v-if="type !== 'path'"
               type="primary"
               size="small"
               link
@@ -80,24 +81,35 @@ import { message } from "ant-design-vue";
 import {
   apiMovieBasicDownloadPoster,
   apiMovieBasicMatchDouban,
+  apiMovieBasicMatchPath,
   apiMovieBasicSearchDouban,
 } from "@/api/movie/movieBasicApi";
 import { isNotEmpty } from "@ht/util";
 
 const emits = defineEmits(["match-success"]);
+const type = ref();
 const loading = ref();
 let movieRecord = {};
+let pathRecord = {};
 let visible = ref();
 let dataSource = ref([]);
 let form = ref({
   keywords: "",
 });
 
-const show = (record) => {
+const show = (record, showType) => {
   visible.value = true;
-  movieRecord = record;
-  form.value.keywords = movieRecord.title;
-  onSearch();
+  type.value = showType;
+  if (type.value === "path") {
+    pathRecord = record;
+    form.value.keywords = pathRecord.name.replaceAll("\.", " ");
+    dataSource.value = [];
+  } else {
+    movieRecord = record;
+    form.value.keywords = movieRecord.title;
+    dataSource.value = [];
+    onSearch();
+  }
 };
 
 const onSearch = () => {
@@ -109,18 +121,36 @@ const onSearch = () => {
 };
 
 const onMatch = (record) => {
+  debugger;
   loading.value = true;
-  apiMovieBasicMatchDouban({ ...movieRecord, ...record }).then((res) => {
-    message.success("匹配成功");
-    visible.value = false;
-    loading.value = false;
-    emits("match-success");
-  });
+  if (type.value === "path") {
+    apiMovieBasicMatchPath({ ...pathRecord, ...record })
+      .then((res) => {
+        message.success("匹配成功");
+        visible.value = false;
+        loading.value = false;
+        emits("match-success");
+      })
+      .catch(() => {
+        loading.value = false;
+      });
+  } else {
+    apiMovieBasicMatchDouban({ ...movieRecord, ...record })
+      .then((res) => {
+        message.success("匹配成功");
+        visible.value = false;
+        loading.value = false;
+        emits("match-success");
+      })
+      .catch(() => {
+        loading.value = false;
+      });
+  }
 };
 
 const onDownloadPoster = (record) => {
   loading.value = true;
-  let url = record.picUrl.replace("s_ratio_poster", "m_ratio_poster");
+  let url = record.poster.replace("s_ratio_poster", "m_ratio_poster");
   apiMovieBasicDownloadPoster({ id: movieRecord.id, url: url }).then((res) => {
     message.success("下载成功");
     visible.value = false;

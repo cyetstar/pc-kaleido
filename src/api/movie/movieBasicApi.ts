@@ -97,6 +97,13 @@ export const apiMovieBasicMatchDouban = (data: any) => {
   });
 };
 
+export const apiMovieBasicMatchPath = (data: any) => {
+  return useFetch.post<any>({
+    url: "/movieBasic/matchPath",
+    data,
+  });
+};
+
 export const apiMovieBasicViewNFO = (params: any) => {
   return useFetch.open<any>({
     url: "/movieBasic/viewNFO",
@@ -162,6 +169,13 @@ export const apiMovieBasicCheckThreadStatus = () => {
 export const apiMovieBasicWriteNFO = (data: any) => {
   return useFetch.post<any>({
     url: "/movieBasic/writeNFO",
+    data,
+  });
+};
+
+export const apiMovieBasicUpdateSourceByDoubanId = (data: any) => {
+  return useFetch.post<any>({
+    url: "/movieBasic/updateSourceByDoubanId",
     data,
   });
 };
