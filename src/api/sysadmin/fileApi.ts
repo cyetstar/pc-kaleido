@@ -21,9 +21,16 @@ export const apiFileRename = (data: any) => {
   });
 };
 
-export const apiFileMove = (data: any) => {
+export const apiFileCopyOrCut = (data: any) => {
   return useFetch.post<any>({
-    url: "/file/move",
+    url: "/file/copyOrCut",
+    data,
+  });
+};
+
+export const apiFileNewDirectory = (data: any) => {
+  return useFetch.post<any>({
+    url: "/file/newDirectory",
     data,
   });
 };

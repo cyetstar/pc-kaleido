@@ -37,7 +37,16 @@
       </a-table-column>
       <a-table-column title="海报" align="center" width="120px">
         <template #="{ record }">
-          <img :src="record.poster" :width="80" referrerpolicy="no-referrer" />
+          <a
+            :href="`https://movie.douban.com/subject/${record.doubanId}/`"
+            target="_blank"
+          >
+            <img
+              :src="record.poster"
+              :width="80"
+              referrerpolicy="no-referrer"
+            />
+          </a>
         </template>
       </a-table-column>
       <a-table-column title="影片名" data-index="title" align="  ">

@@ -20,10 +20,24 @@
         <reload-outlined />
       </h-button>
       <a-input v-model:value="searchForm.path" readonly />
-      <div class="ml-2">
+      <div class="ml-2 flex">
+        <h-button @click="onNewDirectory" class="mr-2">新建文件夹</h-button>
+        <h-button @click="onCopy" class="mr-2"
+          >复制
+          <span v-if="copyOrCutPaths.copy === true"
+            >({{ copyOrCutPaths.pathList.length }})</span
+          >
+        </h-button>
+        <h-button @click="onCut" class="mr-2"
+          >移动
+          <span v-if="copyOrCutPaths.copy === false"
+            >({{ copyOrCutPaths.pathList.length }})</span
+          >
+        </h-button>
+        <h-button v-if="canPaste" @click="onPaste" class="mr-2">粘贴</h-button>
         <h-button-delete
           :disabled="selectedRows.length === 0"
-          @delete="onDeleteFile"
+          @delete="onDelete"
           >删除
         </h-button-delete>
       </div>
@@ -42,10 +56,17 @@
         <template #="{ record }">
           <div v-if="record.editable" class="flex items-center">
             <a-input class="flex-1" v-model:value="record.name" />
-            <check-outlined class="ml-2" @click="onRenameFile(record)" />
+            <check-outlined class="ml-2" @click="onRename(record)" />
           </div>
-          <div v-else class="flex justify-between items-center cursor-pointer">
-            <span @click="onOpen(record)">
+          <div
+            v-else
+            class="flex justify-between items-center"
+            :class="canOpen(record) ? 'cursor-pointer' : 'cursor-not-allowed'"
+          >
+            <span
+              class="break-all"
+              @click="canOpen(record) ? onOpen(record) : null"
+            >
               <folder-filled
                 v-if="record.isDir"
                 class="mr-2"
@@ -75,7 +96,7 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import { message, Modal, Input, Table } from "ant-design-vue";
 import {
   CheckOutlined,
@@ -86,14 +107,18 @@ import {
 } from "@ant-design/icons-vue";
 import { HButton, HButtonDelete, HTableData } from "hta-ui";
 import {
+  apiFileCopyOrCut,
   apiFileDelete,
   apiFileList,
+  apiFileNewDirectory,
   apiFileOpen,
   apiFileRename,
 } from "@/api/sysadmin/fileApi";
+import { isNotEmpty } from "@ht/util";
 
 export default defineComponent({
   name: "KFileModal",
+  methods: { isNotEmpty },
   components: {
     AModal: Modal,
     AInput: Input,
@@ -124,6 +149,34 @@ export default defineComponent({
     const history = ref([]);
     const selectedRows = ref([]);
     const refTableData = ref();
+    const copyOrCutPaths = ref([]);
+
+    const canPaste = computed(() => {
+      const pathList = copyOrCutPaths.value.pathList;
+      if (isNotEmpty(pathList)) {
+        let pathStrArr = pathList[0].split("/");
+        pathStrArr.pop();
+        if (pathStrArr.join("/") !== searchForm.value.path) {
+          return true;
+        }
+        return false;
+      }
+      return false;
+    });
+
+    const canOpen = (record) => {
+      if (record.isDir) {
+        return true;
+      }
+      const mediaType = record.mediaType;
+      if (mediaType && mediaType.indexOf("image") !== -1) {
+        return true;
+      }
+      if (mediaType && mediaType.indexOf("text") !== -1) {
+        return true;
+      }
+      return false;
+    };
 
     const show = (path) => {
       searchForm.value.path = path;
@@ -150,6 +203,9 @@ export default defineComponent({
     };
 
     const onOpen = (record) => {
+      if (!canOpen(record)) {
+        return;
+      }
       if (record.isDir) {
         history.value.push(searchForm.value.path);
         searchForm.value.path = record.path;
@@ -168,7 +224,7 @@ export default defineComponent({
       refTableData.value.load(1);
     };
 
-    const onRenameFile = (record) => {
+    const onRename = (record) => {
       record.editable = false;
       let pathArray = record.path.split("/").slice(0, -1);
       pathArray.push(record.name);
@@ -188,7 +244,44 @@ export default defineComponent({
       });
     };
 
-    const onDeleteFile = () => {
+    const onNewDirectory = () => {
+      apiFileNewDirectory(searchForm.value).then((res) => {
+        if (res) {
+          refTableData.value.load(1);
+        } else {
+          message.error("新增文件夹失败");
+        }
+      });
+    };
+
+    const onCopy = () => {
+      copyOrCutPaths.value = {
+        pathList: selectedRows.value.map((s) => s.path),
+        copy: true,
+      };
+    };
+
+    const onCut = () => {
+      copyOrCutPaths.value = {
+        pathList: selectedRows.value.map((s) => s.path),
+        copy: false,
+      };
+    };
+
+    const onPaste = () => {
+      const data = copyOrCutPaths.value;
+      data.destPath = searchForm.value.path;
+      apiFileCopyOrCut(data).then((res) => {
+        if (res) {
+          copyOrCutPaths.pathList = [];
+          copyOrCutPaths.value.copy = null;
+          refTableData.value.load(1);
+        } else {
+          message.error("粘贴失败");
+        }
+      });
+    };
+    const onDelete = () => {
       let path = selectedRows.value.map((s) => s.path);
       apiFileDelete(path).then((res) => {
         if (res) {
@@ -202,16 +295,23 @@ export default defineComponent({
       visible,
       searchForm,
       history,
+      canPaste,
+      canOpen,
       selectedRows,
       refTableData,
+      copyOrCutPaths,
 
       onLoadData,
       onSelectionChange,
       onRefresh,
       onBack,
       onOpen,
-      onRenameFile,
-      onDeleteFile,
+      onRename,
+      onNewDirectory,
+      onCopy,
+      onCut,
+      onPaste,
+      onDelete,
       show,
       load,
     };
