@@ -11,9 +11,8 @@
       </template>
       <template #extra>
         <a-space>
-          <h-button-delete @delete="onDelete"/>
           <h-button @click="onFileManage">文件管理</h-button>
-          <h-button @click="onSearchDouban">匹配豆瓣</h-button>
+          <h-button @click="onSearchInfo">匹配信息</h-button>
           <h-button @click="onExportNFO">导出NFO</h-button>
           <h-button @click="onReadNFO">读取NFO</h-button>
           <h-button @click="onSyncPlex">同步Plex</h-button>
@@ -51,7 +50,7 @@
             {{ item }}
           </p>
         </p>
-        <p class="flex">
+        <p class="flex" v-if="isNotEmpty(record.directorList)">
           <span class="mr-2">导演:</span>
           <span class="flex-1">
             <template v-for="(item, index) in record.directorList">
@@ -60,7 +59,7 @@
             </template>
           </span>
         </p>
-        <p class="flex">
+        <p class="flex" v-if="isNotEmpty(record.writerList)">
           <span class="mr-2">编剧:</span>
           <span class="flex-1">
             <template v-for="(item, index) in record.writerList">
@@ -88,7 +87,8 @@
         </p>
         <p>
           <k-logo-link type="plex" :id="record.id" class="mr-3"/>
-          <k-logo-link type="imdb" :id="record.imdb" class="mr-3"/>
+          <k-logo-link type="imdb" :id="record.imdbId" class="mr-3"/>
+          <k-logo-link type="tmdb" :id="record.tmdbId" class="mr-3"/>
           <k-logo-link type="douban" :id="record.doubanId" class="mr-3"/>
         </p>
       </div>
@@ -137,7 +137,7 @@
     </section>
   </section>
 
-  <movie-basic-search-douban ref="refMovieBasicSearchDouban" @match-success="initData"/>
+  <movie-basic-search-info ref="refMovieBasicSearchInfo" @match-success="initData"/>
   <movie-basic-file-manage ref="refMovieBasicFileManage"/>
 </template>
 
@@ -145,21 +145,21 @@
 import {ref, onMounted, computed} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {
-  apiMovieBasicReadNFOById, apiMovieBasicRefreshPlexById,
+  apiMovieBasicReadNFOById,
   apiMovieBasicSyncPlexById,
-  apiMovieBasicView, apiMovieBasicViewNFO, apiMovieBasicWriteNFO,
+  apiMovieBasicView, apiMovieBasicWriteNFO,
 } from "@/api/movie/movieBasicApi.ts";
 import {message} from "ant-design-vue";
 import {LeftOutlined} from "@ant-design/icons-vue";
 import {isNotEmpty} from "@ht/util";
-import MovieBasicSearchDouban from "@/views/movie/movieBasic/movieBasicSearchDouban.vue";
+import MovieBasicSearchInfo from "@/views/movie/movieBasic/movieBasicSearchInfo.vue";
 import MovieBasicFileManage from "@/views/movie/movieBasic/movieBasicFileManage.vue";
 import {apiMovieCollectionListByMovieId} from "@/api/movie/movieCollectionApi";
 
 const router = useRouter();
 const record = ref({});
 const collectionRecordList = ref([]);
-const refMovieBasicSearchDouban = ref();
+const refMovieBasicSearchInfo = ref();
 const refMovieBasicFileManage = ref();
 const route = useRoute();
 const id = route.query.id;
@@ -202,16 +202,12 @@ const onReadNFO = () => {
   });
 };
 
-const onViewNFO = () => {
-  apiMovieBasicViewNFO({id});
-};
-
 const onExportNFO = () => {
   apiMovieBasicWriteNFO({id});
 }
 
-const onSearchDouban = () => {
-  refMovieBasicSearchDouban.value.show(record.value);
+const onSearchInfo = () => {
+  refMovieBasicSearchInfo.value.show(record.value);
 }
 
 const onSyncPlex = () => {

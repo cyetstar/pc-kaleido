@@ -32,11 +32,10 @@
   </section>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { computed, h, onMounted } from "vue";
 import { useWebSocketStore } from "@/store/modules/websocket";
 import { Loading3QuartersOutlined } from "@ant-design/icons-vue";
-import { isNotEmpty } from "@ht/util";
 import { useAppStore } from "@/store/modules/app";
 
 const indicator = h(Loading3QuartersOutlined, {
@@ -60,7 +59,7 @@ const actionList = computed(() => {
 });
 
 const running = computed(() => {
-  return actionList.value.filter((s: any) => s.running).length > 0;
+  return actionList.value.filter((s) => s.running).length > 0;
 });
 
 onMounted(() => {

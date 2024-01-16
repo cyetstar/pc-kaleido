@@ -22,13 +22,19 @@
       <a-input v-model:value="searchForm.path" readonly />
       <div class="ml-2 flex">
         <h-button @click="onNewDirectory" class="mr-2">新建文件夹</h-button>
-        <h-button @click="onCopy" class="mr-2"
+        <h-button
+          @click="onCopy"
+          class="mr-2"
+          :disabled="selectedRows.length === 0"
           >复制
           <span v-if="copyOrCutPaths.copy === true"
             >({{ copyOrCutPaths.pathList.length }})</span
           >
         </h-button>
-        <h-button @click="onCut" class="mr-2"
+        <h-button
+          @click="onCut"
+          class="mr-2"
+          :disabled="selectedRows.length === 0"
           >移动
           <span v-if="copyOrCutPaths.copy === false"
             >({{ copyOrCutPaths.pathList.length }})</span
@@ -55,7 +61,11 @@
       <a-table-column title="名称" width="540px">
         <template #="{ record }">
           <div v-if="record.editable" class="flex items-center">
-            <a-input class="flex-1" v-model:value="record.name" />
+            <a-input
+              class="flex-1"
+              v-model:value="record.name"
+              @keyup.enter="onRename(record)"
+            />
             <check-outlined class="ml-2" @click="onRename(record)" />
           </div>
           <div
@@ -156,6 +166,7 @@ export default defineComponent({
       if (isNotEmpty(pathList)) {
         let pathStrArr = pathList[0].split("/");
         pathStrArr.pop();
+        console.log(pathStrArr.join("/"));
         if (pathStrArr.join("/") !== searchForm.value.path) {
           return true;
         }
@@ -273,12 +284,12 @@ export default defineComponent({
       data.destPath = searchForm.value.path;
       apiFileCopyOrCut(data).then((res) => {
         if (res) {
-          copyOrCutPaths.pathList = [];
-          copyOrCutPaths.value.copy = null;
           refTableData.value.load(1);
         } else {
           message.error("粘贴失败");
         }
+        copyOrCutPaths.value.pathList = [];
+        copyOrCutPaths.value.copy = null;
       });
     };
     const onDelete = () => {

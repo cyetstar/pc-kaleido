@@ -7,16 +7,22 @@
   <a-modal
     ref="formRef"
     v-model:visible="visible"
-    title="匹配豆瓣"
+    title="匹配信息"
     width="960px"
     :footer="null"
   >
     <a-form layout="inline">
+      <h-radio
+        v-model:value="searchForm.type"
+        button
+        name="type"
+        :columns="typeColumns"
+      />
       <h-input
-        class="w-300px"
+        class="w-600px"
         placeholder=""
-        v-model:value="form.keywords"
-        name="keywords"
+        v-model:value="searchForm.keyword"
+        name="keyword"
       />
       <h-button @click="onSearch">搜索</h-button>
     </a-form>
@@ -89,9 +95,9 @@ import { CheckCircleTwoTone } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
 import {
   apiMovieBasicDownloadPoster,
-  apiMovieBasicMatchDouban,
+  apiMovieBasicMatchInfo,
   apiMovieBasicMatchPath,
-  apiMovieBasicSearchDouban,
+  apiMovieBasicSearchInfo,
 } from "@/api/movie/movieBasicApi";
 import { isNotEmpty } from "@ht/util";
 
@@ -102,20 +108,31 @@ let movieRecord = {};
 let pathRecord = {};
 let visible = ref();
 let dataSource = ref([]);
-let form = ref({
-  keywords: "",
+let searchForm = ref({
+  type: "douban",
+  keyword: "",
 });
+let typeColumns = [
+  {
+    text: "豆瓣",
+    value: "douban",
+  },
+  {
+    text: "TMDB",
+    value: "tmdb",
+  },
+];
 
 const show = (record, showType) => {
   visible.value = true;
   type.value = showType;
   if (type.value === "path") {
     pathRecord = record;
-    form.value.keywords = pathRecord.name.replaceAll("\.", " ");
+    searchForm.value.keyword = pathRecord.name.replaceAll("\.", " ");
     dataSource.value = [];
   } else {
     movieRecord = record;
-    form.value.keywords = movieRecord.title;
+    searchForm.value.keyword = movieRecord.title;
     dataSource.value = [];
     onSearch();
   }
@@ -123,7 +140,7 @@ const show = (record, showType) => {
 
 const onSearch = () => {
   loading.value = true;
-  apiMovieBasicSearchDouban(form.value).then((res) => {
+  apiMovieBasicSearchInfo(searchForm.value).then((res) => {
     dataSource.value = res;
     loading.value = false;
   });
@@ -144,7 +161,7 @@ const onMatch = (record) => {
         loading.value = false;
       });
   } else {
-    apiMovieBasicMatchDouban({ ...movieRecord, ...record })
+    apiMovieBasicMatchInfo({ ...movieRecord, ...record, ...searchForm.value })
       .then((res) => {
         message.success("匹配成功");
         visible.value = false;

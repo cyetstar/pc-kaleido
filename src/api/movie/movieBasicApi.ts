@@ -83,16 +83,16 @@ export const apiMovieBasicReadNFOById = (data: any) => {
   });
 };
 
-export const apiMovieBasicSearchDouban = (data: any) => {
+export const apiMovieBasicSearchInfo = (data: any) => {
   return useFetch.post<any>({
-    url: "/movieBasic/searchDouban",
+    url: "/movieBasic/searchInfo",
     data,
   });
 };
 
-export const apiMovieBasicMatchDouban = (data: any) => {
+export const apiMovieBasicMatchInfo = (data: any) => {
   return useFetch.post<any>({
-    url: "/movieBasic/matchDouban",
+    url: "/movieBasic/matchInfo",
     data,
   });
 };
@@ -177,5 +177,11 @@ export const apiMovieBasicUpdateSourceByDoubanId = (data: any) => {
   return useFetch.post<any>({
     url: "/movieBasic/updateSourceByDoubanId",
     data,
+  });
+};
+
+export const apiMovieBasicMoveMovieFolder = () => {
+  return useFetch.post<any>({
+    url: "/movieBasic/moveMovieFolder",
   });
 };

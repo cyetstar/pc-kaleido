@@ -9,8 +9,8 @@
       <h-button plain type="primary" @click="onMatch">手动匹配</h-button>
     </template>
   </k-file-modal>
-  <movie-basic-search-douban
-    ref="refMovieBasicSearchDouban"
+  <movie-basic-search-info
+    ref="refMovieBasicSearchInfo"
     @match-success="onMatchSuccess"
   />
 </template>
@@ -19,7 +19,7 @@
 import { ref } from "vue";
 import { useAppStore } from "@/store/modules/app";
 import { message } from "ant-design-vue";
-import MovieBasicSearchDouban from "@/views/movie/movieBasic/movieBasicSearchDouban.vue";
+import MovieBasicSearchInfo from "@/views/movie/movieBasic/movieBasicSearchInfo.vue";
 
 const emits = defineEmits(["match-success"]);
 
@@ -27,7 +27,7 @@ const appStore = useAppStore();
 const movieDownloadPath = appStore.$state.config["movieDownloadPath"];
 const movieLibraryPath = appStore.$state.config["movieLibraryPath"];
 const refFileModal = ref();
-const refMovieBasicSearchDouban = ref();
+const refMovieBasicSearchInfo = ref();
 
 const show = () => {
   refFileModal.value.show(movieDownloadPath);
@@ -39,7 +39,7 @@ const onMatch = () => {
     return;
   }
   let path = refFileModal.value.selectedRows[0];
-  refMovieBasicSearchDouban.value.show(path, "path");
+  refMovieBasicSearchInfo.value.show(path, "path");
 };
 
 const onMatchSuccess = () => {
