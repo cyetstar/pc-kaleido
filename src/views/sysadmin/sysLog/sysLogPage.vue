@@ -10,7 +10,6 @@
               name="fileName"
               v-model:value="searchForm.fileName"
               :columns="logFiles"
-              @select="selectFiles"
             />
           </h-col>
           <h-col :span="4">
@@ -37,8 +36,8 @@
                 type="primary"
                 :disabled="searchForm.auto"
                 @click="onRefresh"
-                >刷新</h-button
-              >
+                >刷新
+              </h-button>
             </a-space>
           </h-col>
         </a-row>
@@ -71,6 +70,7 @@ let frequencies = ref([
   { text: "10秒", value: 10 },
 ]);
 let interval;
+let fileName;
 
 const onAutoRefresh = () => {
   if (interval > 0) {
@@ -84,6 +84,10 @@ const onAutoRefresh = () => {
 
 const onRefresh = () => {
   formRef.value.validate().then(() => {
+    if (searchForm.value.fileName !== fileName) {
+      logs.value.splice(0, logs.value.length);
+    }
+    fileName = searchForm.value.fileName;
     const ansiUp = new AnsiUp();
     sysLogReadApi(searchForm.value).then((data) => {
       searchForm.value.lineNumber = data.lineNumber;
@@ -97,13 +101,6 @@ const onRefresh = () => {
 };
 const scrollToBottom = () => {
   consoleRef.value.scrollTop = consoleRef.value.scrollHeight;
-};
-const selectFiles = (v) => {
-  logs.value.splice(0);
-  searchForm.value.lineNumber = 0;
-  if (v.value) {
-    onRefresh();
-  }
 };
 
 const initData = () => {

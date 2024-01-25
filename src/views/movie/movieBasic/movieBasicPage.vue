@@ -37,6 +37,9 @@
           <h-button @click="onMovieSyncPlex"
             >{{ appStore.actions["movieSyncPlex"] ? "取消同步" : "同步Plex" }}
           </h-button>
+          <h-button @click="onMovieAnalyze"
+            >{{ appStore.actions["movieAnalyze"] ? "取消分析" : "分析文件" }}
+          </h-button>
           <h-button @click="onOpenDownloadFolder">打开下载目录</h-button>
         </a-space>
       </div>
@@ -193,6 +196,10 @@ const onMovieExportNFO = () => {
 
 const onMovieSyncPlex = () => {
   triggerAction("movieSyncPlex");
+};
+
+const onMovieAnalyze = () => {
+  triggerAction("movieAnalyze");
 };
 
 const onOpenDownloadFolder = () => {

@@ -53,17 +53,16 @@
         <a-tab-pane key="movie" tab="电影">
           <h-col :span="12">
             <h-input
-              label="电影资料库位置"
+              label="电影资料库目录"
               name="movieLibraryPath"
               v-model:value="form.movieLibraryPath"
             />
           </h-col>
           <h-col :span="12">
             <h-input
-              text-area
-              label="电影资料库忽略文件"
-              name="movieExcludePath"
-              v-model:value="form.movieExcludePath"
+              label="电影回收站"
+              name="movieTrashPath"
+              v-model:value="form.movieTrashPath"
             />
           </h-col>
           <h-col :span="12">
@@ -143,7 +142,7 @@ let form = ref({
   plexTvshowLibraryId: "",
   plexMusicLibraryId: "",
   movieLibraryPath: "",
-  movieExcludePath: "",
+  movieTrashPath: "/movie/#recycle",
   movieDownloadPath: "",
   musicLibraryPath: "",
   musicExcludePath: "",

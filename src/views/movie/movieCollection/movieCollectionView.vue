@@ -45,40 +45,42 @@
       </h-module-title>
       <div class="grid grid-cols-24 gap-6">
         <template :key="item.id" v-for="item in pageResult.records">
-          <a-card class="k-card col-span-3 relative" :bordered="false">
-            <template #cover>
-              <k-plex-image
-                  class="h-thumb"
-                  :class="isEmpty(item.movieId)?null:'cursor-pointer'"
-                  :preview="false"
-                  :plex-thumb="item.thumb"
-                  @click="isEmpty(item.movieId)?null:onViewMovieRecord(item.movieId)"
-              />
-              <k-logo-link
-                  type="plex"
-                  :id="item.movieId"
-                  :width="20"
-                  style="width: auto"
-                  class="absolute top-0 left-2px"
-              />
-              <k-logo-link
-                  v-if="isEmpty(item.movieId)"
-                  type="douban"
-                  :id="item.doubanId"
-                  :width="20"
-                  style="width: auto"
-                  class="absolute top-0 left-2px"
-              />
-            </template>
-            <a-card-meta
-                :title="item.title"
-            >
-              <template #description>
-                <div>{{ item.year }}</div>
-
+          <a-tooltip :title="item.comment">
+            <a-card class="k-card col-span-3 relative" :bordered="false">
+              <template #cover>
+                <k-plex-image
+                    class="h-thumb"
+                    :class="isEmpty(item.movieId)?null:'cursor-pointer'"
+                    :preview="false"
+                    :plex-thumb="item.thumb"
+                    @click="isEmpty(item.movieId)?null:onViewMovieRecord(item.movieId)"
+                />
+                <k-logo-link
+                    type="plex"
+                    :id="item.movieId"
+                    :width="20"
+                    style="width: auto"
+                    class="absolute top-0 left-2px"
+                />
+                <k-logo-link
+                    v-if="isEmpty(item.movieId)"
+                    type="douban"
+                    :id="item.doubanId"
+                    :width="20"
+                    style="width: auto"
+                    class="absolute top-0 left-2px"
+                />
               </template>
-            </a-card-meta>
-          </a-card>
+              <a-card-meta
+                  :title="item.title"
+              >
+                <template #description>
+                  <div>{{ item.year }}</div>
+
+                </template>
+              </a-card-meta>
+            </a-card>
+          </a-tooltip>
         </template>
       </div>
     </section>

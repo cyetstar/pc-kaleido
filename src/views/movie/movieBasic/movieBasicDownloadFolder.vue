@@ -24,12 +24,11 @@ import MovieBasicSearchInfo from "@/views/movie/movieBasic/movieBasicSearchInfo.
 const emits = defineEmits(["match-success"]);
 
 const appStore = useAppStore();
-const movieDownloadPath = appStore.$state.config["movieDownloadPath"];
-const movieLibraryPath = appStore.$state.config["movieLibraryPath"];
 const refFileModal = ref();
 const refMovieBasicSearchInfo = ref();
 
 const show = () => {
+  const movieDownloadPath = appStore.$state.config["movieDownloadPath"];
   refFileModal.value.show(movieDownloadPath);
 };
 

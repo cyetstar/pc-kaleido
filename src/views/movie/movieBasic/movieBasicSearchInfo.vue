@@ -43,10 +43,7 @@
       </a-table-column>
       <a-table-column title="海报" align="center" width="120px">
         <template #="{ record }">
-          <a
-            :href="`https://movie.douban.com/subject/${record.doubanId}/`"
-            target="_blank"
-          >
+          <a :href="getUrl(record)" target="_blank">
             <img
               :src="record.poster"
               :width="80"
@@ -90,7 +87,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { CheckCircleTwoTone } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
 import {
@@ -122,6 +119,14 @@ let typeColumns = [
     value: "tmdb",
   },
 ];
+
+const getUrl = (record) => {
+  if (isNotEmpty(record.doubanId)) {
+    return `https://movie.douban.com/subject/${record.doubanId}/`;
+  } else {
+    return `https://www.themoviedb.org/movie/${record.tmdbId}/`;
+  }
+};
 
 const show = (record, showType) => {
   visible.value = true;
