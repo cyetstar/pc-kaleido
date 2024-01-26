@@ -16,6 +16,7 @@
           <h-button @click="onExportNFO">导出NFO</h-button>
           <h-button @click="onReadNFO">读取NFO</h-button>
           <h-button @click="onSyncPlex">同步Plex</h-button>
+          <h-button @click="onAnalyze">分析</h-button>
         </a-space>
       </template>
     </a-page-header>
@@ -34,6 +35,10 @@
         </p>
         <p>
           <a-tag v-if="record.contentRating">{{ record.contentRating }}</a-tag>
+          <a-tag v-if="record.multipleFiles==='1'">多文件</a-tag>
+          <a-tag v-if="record.noSubtitle==='1'">无字幕</a-tag>
+          <a-tag v-if="record.lowQuality==='1'">低质量</a-tag>
+          <a-tag v-if="record.mandarin==='1'">国语配音</a-tag>
           <a-tag v-for="item in record.countryList" :key="item.id"
           >{{ item.idLabel }}
           </a-tag>
@@ -55,7 +60,7 @@
           <span class="flex-1">
             <template v-for="(item, index) in record.directorList">
               <span v-if="index !== 0" class="px-2">/</span>
-              <a @click="onViewArtist(item.id)">{{ item.name }}</a>
+              <a @click="onViewArtist(item)">{{ item.name }}</a>
             </template>
           </span>
         </p>
@@ -64,7 +69,7 @@
           <span class="flex-1">
             <template v-for="(item, index) in record.writerList">
               <span v-if="index !== 0" class="px-2">/</span>
-              <a @click="onViewArtist(item.id)">{{ item.name }}</a>
+              <a @click="onViewArtist(item)">{{ item.name }}</a>
             </template>
           </span>
         </p>
@@ -100,10 +105,10 @@
           <a-card class="k-card col-span-3" :bordered="false">
             <template #cover>
               <k-plex-image
-                  class="h-thumb"
+                  class="h-thumb cursor-pointer"
                   :preview="false"
                   :plex-thumb="item.thumb"
-                  @click="onViewRecord(item.id)"
+                  @click="onViewArtist(item)"
               />
             </template>
             <a-card-meta
@@ -125,7 +130,7 @@
                   class="cursor-pointer"
                   :preview="false"
                   :plex-thumb="item.thumb"
-                  @click="onViewCollectionRecord(item.id)"
+                  @click="onViewCollection(item.id)"
               />
             </template>
             <a-card-meta
@@ -145,9 +150,10 @@
 import {ref, onMounted, computed} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {
+  apiMovieBasicAnalyze, apiMovieBasicExportNFO,
   apiMovieBasicReadNFOById,
   apiMovieBasicSyncPlexById,
-  apiMovieBasicView, apiMovieBasicWriteNFO,
+  apiMovieBasicView,
 } from "@/api/movie/movieBasicApi.ts";
 import {message} from "ant-design-vue";
 import {LeftOutlined} from "@ant-design/icons-vue";
@@ -203,7 +209,9 @@ const onReadNFO = () => {
 };
 
 const onExportNFO = () => {
-  apiMovieBasicWriteNFO({id});
+  apiMovieBasicExportNFO({id}).then((res) => {
+    message.success('导出成功')
+  });
 }
 
 const onSearchInfo = () => {
@@ -221,7 +229,20 @@ const onSyncPlex = () => {
   });
 };
 
-const onViewCollectionRecord = (id) => {
+const onAnalyze = () => {
+  apiMovieBasicAnalyze({id}).then((res) => {
+    if (res) {
+      message.success("分析完成");
+      initData();
+    }
+  })
+}
+
+const onViewArtist = (actor) => {
+  router.push({name: "movieBasicPage", params: {actorId: actor.id, actorName: actor.name, load: true}});
+}
+
+const onViewCollection = (id) => {
   router.push({path: "/movie/movieCollection/view", query: {id}});
 }
 onMounted(() => {

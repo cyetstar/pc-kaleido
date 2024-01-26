@@ -28,6 +28,9 @@
                 : "检测发布"
             }}
           </h-button>
+          <h-button @click="onMovieMatchInfo"
+            >{{ appStore.actions["movieMatchInfo"] ? "取消匹配" : "匹配信息" }}
+          </h-button>
           <h-button @click="onMovieReadNFO"
             >{{ appStore.actions["movieReadNFO"] ? "取消读取" : "读取NFO" }}
           </h-button>
@@ -45,14 +48,18 @@
       </div>
       <div class="flex justify-between items-center mt-4 mb-2">
         <div class="flex items-center">
-          <a-cascader :options="dicts" @change="onChangeFilter">
-            <a href="#" v-if="isEmpty(filterText)">筛选</a>
-            <a href="#" v-else> {{ filterText }} </a>
+          <a-cascader
+            v-model:value="filter.value"
+            :options="cascaderOptions"
+            @change="onChangeCascader"
+          >
+            <a href="#" v-if="isEmpty(filter.value)">筛选</a>
+            <a href="#" v-else> {{ filter.text }} </a>
           </a-cascader>
           <close-circle-outlined
-            v-if="isNotEmpty(filterText)"
+            v-if="isNotEmpty(filter.value)"
             class="ml-2 cursor-pointer"
-            @click="onClearFilter"
+            @click="onClearCascader"
           />
         </div>
         <div>总记录数: {{ pageResult.total }}</div>
@@ -87,43 +94,66 @@
 
 <script setup>
 import { onActivated, onMounted, ref } from "vue";
-import {
-  apiMovieBasicMoveMovieFolder,
-  apiMovieBasicPage,
-} from "@/api/movie/movieBasicApi.ts";
+import { apiMovieBasicPage } from "@/api/movie/movieBasicApi.ts";
 
 import { Empty, message } from "ant-design-vue";
 import { CloseCircleOutlined } from "@ant-design/icons-vue";
-import { onBeforeRouteLeave, useRouter } from "vue-router";
+import { onBeforeRouteLeave, useRoute, useRouter } from "vue-router";
 import { useAppStore } from "@/store/modules/app";
-import MovieBasicDownloadFolder from "@/views/movie/movieBasic/movieBasicDownloadFolder.vue";
 import { apiSysDictListByDictType } from "@/api/sysadmin/sysDictApi";
 import { isEmpty, isNotEmpty } from "@ht/util";
 import { triggerAction } from "@/utils/action";
+import MovieBasicDownloadFolder from "@/views/movie/movieBasic/movieBasicDownloadFolder.vue";
 
+const route = useRoute();
 const router = useRouter();
 const appStore = useAppStore();
 const actions = ref(appStore.actions);
-const dicts = ref([
+const cascaderOptions = ref([
   {
     label: "类型",
-    value: "genre",
+    value: "genreId",
+    type: "movieGenre",
   },
   {
     label: "国家地区",
-    value: "country",
+    value: "countryId",
+    type: "movieCountry",
   },
   {
     label: "分级",
     value: "contentRating",
+    type: "movieContentRating",
   },
   {
     label: "年代",
     value: "decade",
+    type: "movieDecade",
   },
   {
     label: "年份",
     value: "year",
+    type: "movieYear",
+  },
+  {
+    label: "多文件",
+    value: "multipleFiles",
+    type: "sfbz",
+  },
+  {
+    label: "低质量",
+    value: "lowQuality",
+    type: "sfbz",
+  },
+  {
+    label: "国语配音",
+    value: "mandarin",
+    type: "sfbz",
+  },
+  {
+    label: "无字幕",
+    value: "noSubtitle",
+    type: "sfbz",
   },
 ]);
 const refScrollGrid = ref();
@@ -133,17 +163,51 @@ const searchForm = ref({});
 const pageResult = ref({
   records: [],
   pageNumber: 0,
-  pageSize: 100,
+  pageSize: 50,
 });
-const filterText = ref();
+
+const filter = ref({
+  key: "",
+  value: "",
+  text: "",
+});
+
+const setFilter = (key, value, text) => {
+  searchForm.value[key] = value;
+  filter.value.key = key;
+  filter.value.value = value;
+  filter.value.text = text;
+};
+
+const clearFilter = () => {
+  searchForm.value[filter.value.key] = "";
+  filter.value.key = "";
+  filter.value.value = "";
+  filter.value.text = "";
+};
+
+const initCascader = () => {
+  cascaderOptions.value.forEach((s) => {
+    apiSysDictListByDictType(s.type).then((r) => {
+      s.children = r.map((m) => ({ label: m.text, value: m.value }));
+    });
+  });
+};
 
 onMounted(() => {
   loadData();
-  initFilter();
+  initCascader();
 });
 
 onActivated(() => {
   refScrollGrid.value.scrollTop = appStore.getScrollTop("movie");
+  if (route.params.load) {
+    const actorId = route.params.actorId;
+    if (actorId) {
+      setFilter("actorId", actorId, "演职员: " + route.params.actorName);
+    }
+    onSearch();
+  }
 });
 
 onBeforeRouteLeave((to, from, next) => {
@@ -186,50 +250,36 @@ const onMovieCheckThreadStatus = () => {
   triggerAction("movieCheckThreadStatus");
 };
 
+const onMovieMatchInfo = () => {
+  triggerAction("movieMatchInfo", searchForm.value);
+};
+
 const onMovieReadNFO = () => {
-  triggerAction("movieReadNFO");
+  triggerAction("movieReadNFO", searchForm.value);
 };
 
 const onMovieExportNFO = () => {
-  triggerAction("movieExportNFO");
+  triggerAction("movieExportNFO", searchForm.value);
 };
 
 const onMovieSyncPlex = () => {
-  triggerAction("movieSyncPlex");
+  triggerAction("movieSyncPlex", searchForm.value);
 };
 
 const onMovieAnalyze = () => {
-  triggerAction("movieAnalyze");
+  triggerAction("movieAnalyze", searchForm.value);
 };
 
 const onOpenDownloadFolder = () => {
   refMovieBasicDownloadFolder.value.show();
 };
 
-const initFilter = () => {
-  dicts.value.forEach((s) => {
-    let type = appStore.config["plexMovieLibraryId"] + s.value;
-    apiSysDictListByDictType(type).then((r) => {
-      s.children = r.map((m) => ({ label: m.text, value: m.value }));
-    });
-  });
-};
-
-const clearFilter = () => {
-  filterText.value = null;
-  dicts.value.forEach((s) => {
-    searchForm.value[s.value] = null;
-  });
-};
-
-const onChangeFilter = (value, selectedOptions) => {
-  clearFilter();
-  filterText.value = selectedOptions.map((s) => s.label).join(" : ");
-  searchForm.value[value[0]] = value[1];
+const onChangeCascader = (value, selectedOptions) => {
+  setFilter(value[0], value[1], selectedOptions.map((s) => s.label).join(": "));
   onSearch();
 };
 
-const onClearFilter = () => {
+const onClearCascader = () => {
   clearFilter();
   onSearch();
 };

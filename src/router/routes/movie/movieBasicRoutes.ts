@@ -3,7 +3,7 @@ import type { AppRouteConfig } from "@/router/types";
 const movieBasicRoute: AppRouteConfig[] = [
   {
     path: "/movie/movieBasic/page",
-    name: "MovieBasicPage",
+    name: "movieBasicPage",
     component: () => import("@/views/movie/movieBasic/movieBasicPage.vue"),
     meta: {
       title: "电影",
@@ -12,7 +12,7 @@ const movieBasicRoute: AppRouteConfig[] = [
   },
   {
     path: "/movie/movieBasic/view",
-    name: "MovieBasicView",
+    name: "movieBasicView",
     component: () => import("@/views/movie/movieBasic/movieBasicView.vue"),
     meta: {
       title: "电影详情",

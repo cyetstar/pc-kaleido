@@ -166,9 +166,9 @@ export const apiMovieBasicCheckThreadStatus = () => {
   });
 };
 
-export const apiMovieBasicWriteNFO = (data: any) => {
+export const apiMovieBasicExportNFO = (data: any) => {
   return useFetch.post<any>({
-    url: "/movieBasic/writeNFO",
+    url: "/movieBasic/exportNFO",
     data,
   });
 };
@@ -183,5 +183,12 @@ export const apiMovieBasicUpdateSourceByDoubanId = (data: any) => {
 export const apiMovieBasicMoveMovieFolder = () => {
   return useFetch.post<any>({
     url: "/movieBasic/moveMovieFolder",
+  });
+};
+
+export const apiMovieBasicAnalyze = (data: any) => {
+  return useFetch.post<any>({
+    url: "/movieBasic/analyze",
+    data,
   });
 };
