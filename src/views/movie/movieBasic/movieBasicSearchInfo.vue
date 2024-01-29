@@ -11,7 +11,7 @@
     width="960px"
     :footer="null"
   >
-    <a-form layout="inline">
+    <div class="flex gap-2">
       <h-radio
         v-model:value="searchForm.type"
         button
@@ -19,13 +19,14 @@
         :columns="typeColumns"
       />
       <h-input
-        class="w-600px"
+        class="flex-1"
         placeholder=""
         v-model:value="searchForm.keyword"
         name="keyword"
       />
       <h-button @click="onSearch">搜索</h-button>
-    </a-form>
+      <h-button @click="onMatch">自动匹配</h-button>
+    </div>
 
     <a-table
       size="small"
@@ -131,15 +132,13 @@ const getUrl = (record) => {
 const show = (record, showType) => {
   visible.value = true;
   type.value = showType;
+  dataSource.value = [];
   if (type.value === "path") {
     pathRecord = record;
     searchForm.value.keyword = pathRecord.name.replaceAll("\.", " ");
-    dataSource.value = [];
   } else {
     movieRecord = record;
     searchForm.value.keyword = movieRecord.title;
-    dataSource.value = [];
-    onSearch();
   }
 };
 
@@ -152,25 +151,17 @@ const onSearch = () => {
 };
 
 const onMatch = (record) => {
-  debugger;
-  loading.value = true;
   if (type.value === "path") {
-    apiMovieBasicMatchPath({ ...pathRecord, ...record })
-      .then((res) => {
-        message.success("匹配成功");
-        visible.value = false;
-        loading.value = false;
-        emits("match-success");
-      })
-      .catch(() => {
-        loading.value = false;
-      });
+    apiMovieBasicMatchPath({ ...pathRecord, ...record }).then((res) => {
+      message.success("匹配成功");
+      visible.value = false;
+      emits("match-success");
+    });
   } else {
     apiMovieBasicMatchInfo({ ...movieRecord, ...record, ...searchForm.value })
       .then((res) => {
         message.success("匹配成功");
         visible.value = false;
-        loading.value = false;
         emits("match-success");
       })
       .catch(() => {
@@ -185,7 +176,6 @@ const onDownloadPoster = (record) => {
   apiMovieBasicDownloadPoster({ id: movieRecord.id, url: url }).then((res) => {
     message.success("下载成功");
     visible.value = false;
-    loading.value = false;
   });
 };
 

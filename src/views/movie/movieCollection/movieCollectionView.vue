@@ -46,7 +46,7 @@
       <div class="grid grid-cols-24 gap-6">
         <template :key="item.id" v-for="item in pageResult.records">
           <a-tooltip :title="item.comment">
-            <a-card class="k-card col-span-3 relative" :bordered="false">
+            <a-card class="k-card col-span-3" :bordered="false">
               <template #cover>
                 <k-plex-image
                     class="h-thumb"
@@ -55,21 +55,19 @@
                     :plex-thumb="item.thumb"
                     @click="isEmpty(item.movieId)?null:onViewMovieRecord(item.movieId)"
                 />
-                <k-logo-link
-                    type="plex"
-                    :id="item.movieId"
-                    :width="20"
-                    style="width: auto"
-                    class="absolute top-0 left-2px"
-                />
-                <k-logo-link
-                    v-if="isEmpty(item.movieId)"
-                    type="douban"
-                    :id="item.doubanId"
-                    :width="20"
-                    style="width: auto"
-                    class="absolute top-0 left-2px"
-                />
+                <div class="absolute top-0 left-0 m-2px">
+                  <k-logo-link
+                      type="plex"
+                      :id="item.movieId"
+                      :width="20"
+                      class="mr-1"
+                  />
+                  <k-logo-link
+                      type="douban"
+                      :id="item.doubanId"
+                      :width="20"
+                  />
+                </div>
               </template>
               <a-card-meta
                   :title="item.title"

@@ -32,7 +32,7 @@
           <div class="col-span-12">
             <a-badge-ribbon
               :text="'#' + record.top"
-              :color="isEmpty(record.delistingDate) ? 'red' : ''"
+              :color="record.status === '1' ? 'red' : ''"
             >
               <a-card class="k-card k-card-inline" :bordered="true">
                 <template #cover>
@@ -45,34 +45,32 @@
                       record.movieId ? onViewRecord(record.movieId) : null
                     "
                   />
+                  <div class="absolute top-0 left-0 m-2px">
+                    <k-logo-link
+                      type="plex"
+                      :id="record.movieId"
+                      :width="20"
+                      class="mr-1"
+                    />
+                    <k-logo-link
+                      type="douban"
+                      :id="record.doubanId"
+                      :width="20"
+                    />
+                  </div>
                 </template>
                 <a-card-meta :title="record.title + ' (' + record.year + ')'">
                   <template #description>
                     <div>
                       {{ record.originalTitle }}
                     </div>
-                    <div>
-                      {{ record.listingDate }} ～ {{ record.delistingDate }}
-                    </div>
-                    <div>
-                      <k-logo-link
-                        type="plex"
-                        :id="record.movieId"
-                        :width="20"
-                        class="mr-3"
-                      />
-                      <k-logo-link
-                        type="imdb"
-                        :id="record.imdb"
-                        :width="20"
-                        class="mr-3"
-                      />
-                      <k-logo-link
-                        type="douban"
-                        :id="record.id"
-                        :width="20"
-                        class="mr-3"
-                      />
+                    <div class="grid grid-rows-4 grid-flow-col gap-x-6">
+                      <div
+                        class="row-span-1"
+                        v-for="(value, key) in record.listingDetailMap"
+                      >
+                        {{ key }} ～ #{{ value }}
+                      </div>
                     </div>
                   </template>
                 </a-card-meta>

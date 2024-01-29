@@ -29,7 +29,7 @@
             }}
           </h-button>
           <h-button @click="onMovieMatchInfo"
-            >{{ appStore.actions["movieMatchInfo"] ? "取消匹配" : "匹配信息" }}
+            >{{ appStore.actions["movieMatchInfo"] ? "取消抓取" : "抓取信息" }}
           </h-button>
           <h-button @click="onMovieReadNFO"
             >{{ appStore.actions["movieReadNFO"] ? "取消读取" : "读取NFO" }}
@@ -79,6 +79,15 @@
                 :plex-thumb="record.thumb"
                 @click="onViewRecord(record.id)"
               />
+              <div class="absolute top-0 left-0 m-2px">
+                <k-logo-link
+                  type="plex"
+                  :id="record.id"
+                  :width="20"
+                  class="mr-1"
+                />
+                <k-logo-link type="douban" :id="record.doubanId" :width="20" />
+              </div>
             </template>
             <a-card-meta
               :title="record.title"

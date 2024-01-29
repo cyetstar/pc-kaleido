@@ -9,8 +9,8 @@ dependencies:
     specifier: ^6.0.1
     version: 6.0.1(vue@3.3.11)
   '@ht/http':
-    specifier: ^1.0.3
-    version: 1.0.3
+    specifier: ^1.0.6
+    version: 1.0.6
   '@ht/util':
     specifier: ^1.0.0
     version: 1.0.0
@@ -1890,8 +1890,8 @@ packages:
       - supports-color
     dev: true
 
-  /@ht/http@1.0.3:
-    resolution: {integrity: sha512-atFAGsL2dMiy7nbBGd5fzU/k61AXtRLKNnjNxGHHbGjeVBe7ERhblJJeCZ1/3MT47/N6OY7giQM44s3B89nlrw==}
+  /@ht/http@1.0.6:
+    resolution: {integrity: sha512-elDMJWdj/RG4Bn81Z490UCUILYhCKKScQzOeJohsi6j869ONFrl4m6YdysFVtSBnccMixzj1bnxZQbHdt8Y/aA==}
     dependencies:
       '@ht/util': 1.0.0
       axios: 1.6.2
