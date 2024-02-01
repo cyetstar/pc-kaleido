@@ -26,3 +26,7 @@ export const triggerAction = (action: string, params?: any) => {
     });
   }
 };
+
+export const isActionRunning = (action: string) => {
+  return !!appStore.actions[action];
+};

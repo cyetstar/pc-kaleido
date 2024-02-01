@@ -16,7 +16,23 @@
           />
         </a-form>
         <a-space>
-          <h-button @click="onSyncPlex">同步Plex</h-button>
+          <k-action-button
+            action="musicReadAudioTag"
+            ok-text="读取Tag"
+            cancel-text="取消读取"
+            :form="searchForm"
+          />
+          <k-action-button
+            action="musicDownloadLyric"
+            ok-text="下载歌词"
+            cancel-text="取消下载"
+            :form="searchForm"
+          />
+          <k-action-button
+            action="musicSyncPlex"
+            ok-text="同步Plex"
+            cancel-text="取消同步"
+          />
         </a-space>
       </div>
       <div class="flex justify-between items-center mt-4 mb-2">
@@ -77,6 +93,7 @@ import {
   apiMusicAlbumSyncPlex,
 } from "@/api/music/musicAlbumApi.ts";
 import { apiSysDictListByDictType } from "@/api/sysadmin/sysDictApi";
+import KActionButton from "@c/ActionButton/ActionButton.vue";
 
 const router = useRouter();
 const appStore = useAppStore();
@@ -117,12 +134,6 @@ onBeforeRouteLeave((to, from, next) => {
   appStore.setScrollTop(refScrollGrid.value.scrollTop, "music");
   next();
 });
-
-const onSyncPlex = () => {
-  apiMusicAlbumSyncPlex().then((res) => {
-    message.success("同步完成");
-  });
-};
 
 const loadData = () => {
   loading.value = true;

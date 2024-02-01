@@ -56,9 +56,16 @@ export const apiMusicTrackListByAlbumId = (params: any) => {
   });
 };
 
-export const apiMusicTrackViewLyrics = (params: any) => {
+export const apiMusicTrackViewLyric = (params: any) => {
   return useFetch.get<any>({
-    url: "/musicTrack/viewLyrics",
+    url: "/musicTrack/viewLyric",
     params,
+  });
+};
+
+export const apiMusicTrackDownloadLyric = (data: any) => {
+  return useFetch.post<any>({
+    url: "/musicTrack/downloadLyric",
+    data,
   });
 };

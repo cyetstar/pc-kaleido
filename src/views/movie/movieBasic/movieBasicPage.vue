@@ -16,33 +16,47 @@
           />
         </a-form>
         <a-space>
-          <h-button @click="onMovieUpdateSource"
-            >{{
-              appStore.actions["movieUpdateSource"] ? "取消更新" : "更新文件源"
-            }}
-          </h-button>
-          <h-button @click="onMovieCheckThreadStatus"
-            >{{
-              appStore.actions["movieCheckThreadStatus"]
-                ? "取消检测"
-                : "检测发布"
-            }}
-          </h-button>
-          <h-button @click="onMovieMatchInfo"
-            >{{ appStore.actions["movieMatchInfo"] ? "取消抓取" : "抓取信息" }}
-          </h-button>
-          <h-button @click="onMovieReadNFO"
-            >{{ appStore.actions["movieReadNFO"] ? "取消读取" : "读取NFO" }}
-          </h-button>
-          <h-button @click="onMovieExportNFO"
-            >{{ appStore.actions["movieExportNFO"] ? "取消导出" : "导出NFO" }}
-          </h-button>
-          <h-button @click="onMovieSyncPlex"
-            >{{ appStore.actions["movieSyncPlex"] ? "取消同步" : "同步Plex" }}
-          </h-button>
-          <h-button @click="onMovieAnalyze"
-            >{{ appStore.actions["movieAnalyze"] ? "取消分析" : "分析文件" }}
-          </h-button>
+          <k-action-button
+            action="movieUpdateSource"
+            ok-text="更新文件源"
+            cancel-text="取消更新"
+          />
+          <k-action-button
+            action="movieCheckThreadStatus"
+            ok-text="检测发布"
+            cancel-text="取消检测"
+            :form="searchForm"
+          />
+          <k-action-button
+            action="movieMatchInfo"
+            ok-text="自动抓取"
+            cancel-text="取消抓取"
+            :form="searchForm"
+          />
+          <k-action-button
+            action="movieReadNFO"
+            ok-text="读取NFO"
+            cancel-text="取消读取"
+            :form="searchForm"
+          />
+          <k-action-button
+            action="movieExportNFO"
+            ok-text="导出NFO"
+            cancel-text="取消导出"
+            :form="searchForm"
+          />
+          <k-action-button
+            action="movieSyncPlex"
+            ok-text="同步Plex"
+            cancel-text="取消同步"
+            :form="searchForm"
+          />
+          <k-action-button
+            action="movieAnalyze"
+            ok-text="分析文件"
+            cancel-text="取消分析"
+            :form="searchForm"
+          />
           <h-button @click="onOpenDownloadFolder">打开下载目录</h-button>
         </a-space>
       </div>
@@ -113,6 +127,7 @@ import { apiSysDictListByDictType } from "@/api/sysadmin/sysDictApi";
 import { isEmpty, isNotEmpty } from "@ht/util";
 import { triggerAction } from "@/utils/action";
 import MovieBasicDownloadFolder from "@/views/movie/movieBasic/movieBasicDownloadFolder.vue";
+import KActionButton from "@c/ActionButton/ActionButton.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -249,34 +264,6 @@ const onSearch = () => {
 
 const onViewRecord = (id) => {
   router.push({ path: "/movie/movieBasic/view", query: { id } });
-};
-
-const onMovieUpdateSource = () => {
-  triggerAction("movieUpdateSource");
-};
-
-const onMovieCheckThreadStatus = () => {
-  triggerAction("movieCheckThreadStatus");
-};
-
-const onMovieMatchInfo = () => {
-  triggerAction("movieMatchInfo", searchForm.value);
-};
-
-const onMovieReadNFO = () => {
-  triggerAction("movieReadNFO", searchForm.value);
-};
-
-const onMovieExportNFO = () => {
-  triggerAction("movieExportNFO", searchForm.value);
-};
-
-const onMovieSyncPlex = () => {
-  triggerAction("movieSyncPlex", searchForm.value);
-};
-
-const onMovieAnalyze = () => {
-  triggerAction("movieAnalyze", searchForm.value);
 };
 
 const onOpenDownloadFolder = () => {

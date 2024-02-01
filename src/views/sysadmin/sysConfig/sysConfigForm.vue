@@ -23,6 +23,13 @@
             />
           </h-col>
           <h-col :span="12">
+            <h-input
+              label="Plex重试次数"
+              name="plexRetries"
+              v-model:value="form.plexRetries"
+            />
+          </h-col>
+          <h-col :span="12">
             <h-select
               label="Plex电影资料库"
               :columns="columns"
@@ -113,6 +120,22 @@
             />
           </h-col>
         </a-tab-pane>
+        <a-tab-pane key="other" tab="其他">
+          <h-col :span="12">
+            <h-input
+              label="单次抓取信息延时（秒）"
+              name="matchInfoSleepSecond"
+              v-model:value="form.matchInfoSleepSecond"
+            />
+          </h-col>
+          <h-col :span="12">
+            <h-input
+              label="单次下载歌词延时（秒）"
+              name="downloadLyricSleepSecond"
+              v-model:value="form.downloadLyricSleepSecond"
+            />
+          </h-col>
+        </a-tab-pane>
       </a-tabs>
       <h-col :span="12" :offset="3">
         <h-button type="primary" @click="onSave">保存</h-button>
@@ -138,6 +161,7 @@ let columns = ref([]);
 let form = ref({
   plexUrl: "",
   plexToken: "",
+  plexRetries: "3",
   plexMovieLibraryId: "",
   plexTvshowLibraryId: "",
   plexMusicLibraryId: "",
@@ -149,6 +173,8 @@ let form = ref({
   neteaseUrl: "",
   doubanApikey: "",
   tmmUrl: "",
+  matchInfoSleepSecond: "3",
+  downloadLyricSleepSecond: "3",
 });
 
 onMounted(() => {

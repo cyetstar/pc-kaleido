@@ -21,7 +21,7 @@
     "@ht/http": "^1.0.6",
     "@ht/util": "^1.0.0",
     "ansi_up": "^6.0.2",
-    "ant-design-vue": "3.2.10",
+    "ant-design-vue": "3.2.20",
     "axios": "^0.25.0",
     "echarts": "^5.4.1",
     "hta-ui": "^1.2.3",

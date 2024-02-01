@@ -12,7 +12,7 @@
       <template #extra>
         <a-space>
           <h-button @click="onFileManage">文件管理</h-button>
-          <h-button @click="onSearchInfo">匹配信息</h-button>
+          <h-button @click="onSearchInfo">抓取信息</h-button>
           <h-button @click="onExportNFO">导出NFO</h-button>
           <h-button @click="onReadNFO">读取NFO</h-button>
           <h-button @click="onSyncPlex">同步Plex</h-button>

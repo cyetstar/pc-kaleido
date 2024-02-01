@@ -118,3 +118,10 @@ export const apiMusicAlbumDownloadCover = (data: any) => {
     data,
   });
 };
+
+export const apiMusicAlbumViewNetease = (params: any) => {
+  return useFetch.get<any>({
+    url: "/musicAlbum/viewNetease",
+    params,
+  });
+};

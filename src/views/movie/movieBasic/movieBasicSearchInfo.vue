@@ -7,7 +7,7 @@
   <a-modal
     ref="formRef"
     v-model:visible="visible"
-    title="匹配信息"
+    title="抓取信息"
     width="960px"
     :footer="null"
   >
@@ -23,28 +23,22 @@
         placeholder=""
         v-model:value="searchForm.keyword"
         name="keyword"
+        @keyup.enter="onSearch"
       />
       <h-button @click="onSearch">搜索</h-button>
-      <h-button @click="onMatch">自动匹配</h-button>
+      <h-button @click="onMatch">自动抓取</h-button>
     </div>
 
     <a-table
       size="small"
       :data-source="dataSource"
       :loading="loading"
+      :row-class-name="addRowColor"
       class="mt-3"
     >
-      <a-table-column align="center">
+      <a-table-column title="海报" align="center" width="150px">
         <template #="{ record }">
-          <check-circle-two-tone
-            two-tone-color="#52c41a"
-            v-if="record.doubanId === movieRecord.doubanId"
-          />
-        </template>
-      </a-table-column>
-      <a-table-column title="海报" align="center" width="120px">
-        <template #="{ record }">
-          <a :href="getUrl(record)" target="_blank">
+          <a :href="getUrl(record)" target="_blank" class="flex justify-center">
             <img
               :src="record.poster"
               :width="80"
@@ -53,19 +47,17 @@
           </a>
         </template>
       </a-table-column>
-      <a-table-column title="影片名" data-index="title" align="  ">
+      <a-table-column title="影片信息">
         <template #="{ record }">
-          {{ record.title }}
-          <span v-if="isNotEmpty(record.originalTitle)">
-            / {{ record.originalTitle }}
-          </span>
+          <p>
+            {{ record.title }}
+          </p>
+          <p class="text-muted" v-if="isNotEmpty(record.originalTitle)">
+            {{ record.originalTitle }}
+          </p>
+          <div class="text-muted">{{ record.year }}</div>
         </template>
       </a-table-column>
-      <a-table-column
-        title="年份"
-        data-index="year"
-        align="center"
-      ></a-table-column>
       <a-table-column title="操作" align="center" width="150px">
         <template #="{ record }">
           <a-space :size="0">
@@ -89,7 +81,6 @@
 
 <script setup>
 import { computed, ref } from "vue";
-import { CheckCircleTwoTone } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
 import {
   apiMovieBasicDownloadPoster,
@@ -153,7 +144,7 @@ const onSearch = () => {
 const onMatch = (record) => {
   if (type.value === "path") {
     apiMovieBasicMatchPath({ ...pathRecord, ...record }).then((res) => {
-      message.success("匹配成功");
+      message.success("抓取成功");
       visible.value = false;
       emits("match-success");
     });
@@ -179,8 +170,17 @@ const onDownloadPoster = (record) => {
   });
 };
 
+const addRowColor = (record) => {
+  if (
+    (record.doubanId && record.doubanId === movieRecord.doubanId) ||
+    (record.tmdbId && record.tmdbId === movieRecord.tmdbId)
+  ) {
+    return "bg-highlight";
+  }
+};
 defineExpose({
   show,
+  addRowColor,
 });
 </script>
 

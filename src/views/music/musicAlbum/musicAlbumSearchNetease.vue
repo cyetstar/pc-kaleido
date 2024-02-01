@@ -17,6 +17,7 @@
         placeholder=""
         v-model:value="form.keywords"
         name="keywords"
+        @keyup.enter="onSearch"
       />
       <h-button @click="onSearch">搜索</h-button>
     </a-form>
@@ -25,36 +26,35 @@
       size="small"
       :data-source="dataSource"
       :loading="loading"
+      :row-class-name="addRowColor"
       class="mt-3"
     >
-      <a-table-column align="center">
+      <a-table-column title="封面" align="center" :width="150">
         <template #="{ record }">
-          <check-circle-two-tone
-            two-tone-color="#52c41a"
-            v-if="record.neteaseId === albumRecord.neteaseId"
-          />
+          <a
+            :href="`https://music.163.com/#/album?id=${record.neteaseId}`"
+            target="_blank"
+            class="flex justify-center"
+          >
+            <img
+              :src="record.picUrl"
+              :width="100"
+              referrerpolicy="no-referrer"
+            />
+          </a>
         </template>
       </a-table-column>
-      <a-table-column title="封面" align="center">
+      <a-table-column title="专辑名">
         <template #="{ record }">
-          <a-image :src="record.picUrl" :width="100" />
+          <p>
+            {{ record.title }}
+          </p>
+          <p class="text-muted">
+            {{ record.artist }}
+          </p>
+          <div class="text-muted">{{ record.publishTime }}</div>
         </template>
       </a-table-column>
-      <a-table-column
-        title="专辑名"
-        data-index="title"
-        align="center"
-      ></a-table-column>
-      <a-table-column
-        title="艺术家"
-        data-index="artist"
-        align="center"
-      ></a-table-column>
-      <a-table-column
-        title="发行日期"
-        data-index="publishTime"
-        align="center"
-      ></a-table-column>
       <a-table-column title="操作" align="center" width="150px">
         <template #="{ record }">
           <a-space :size="0">
@@ -84,6 +84,7 @@ import {
   apiMusicAlbumMatchNetease,
   apiMusicAlbumDownloadCover,
 } from "@/api/music/musicAlbumApi.ts";
+import { isNotEmpty } from "@ht/util";
 
 const emits = defineEmits(["match-success"]);
 const loading = ref();
@@ -130,8 +131,15 @@ const onDownloadCover = (record) => {
   );
 };
 
+const addRowColor = (record) => {
+  if (record && record.neteaseId === albumRecord.neteaseId) {
+    return "bg-highlight";
+  }
+};
+
 defineExpose({
   show,
+  addRowColor,
 });
 </script>
 

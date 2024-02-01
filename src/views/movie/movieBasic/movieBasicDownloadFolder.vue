@@ -6,7 +6,7 @@
 <template>
   <k-file-modal ref="refFileModal">
     <template #footer>
-      <h-button plain type="primary" @click="onMatch">手动匹配</h-button>
+      <h-button plain type="primary" @click="onMatch">手动抓取</h-button>
     </template>
   </k-file-modal>
   <movie-basic-search-info
