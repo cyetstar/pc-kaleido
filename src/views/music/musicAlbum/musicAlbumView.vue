@@ -62,37 +62,41 @@
       </div>
     </section>
     <section>
-      <h-module-title title="曲目"/>
-      <a-table :pagination="false" size="small" :data-source="trackRecords">
-        <a-table-column
-            title="曲号"
-            width="10%"
-            data-index="trackIndex"
-            align="center"
-        ></a-table-column>
-        <a-table-column
-            title="歌名"
-            width="75%"
-            data-index="title"
-        ></a-table-column>
-        <a-table-column title="歌词" width="5%" align="center">
-          <template #="{ record: trackRecord }">
-            <file-text-outlined
-                v-if="trackRecord.hasLyric === '1'"
-                @click="onViewLyric(trackRecord)"
-            />
-            <file-search-outlined v-if="isNotEmpty(record.neteaseId) && trackRecord.hasLyric !== '1'"
-                                  @click="onSearchLyric(trackRecord)"/>
-          </template>
-        </a-table-column>
-        <a-table-column
-            title="曲长"
-            width="10%"
-            data-index="durationLabel"
-            align="center"
-        >
-        </a-table-column>
-      </a-table>
+
+      <template v-for="(discRecord, index) in discRecords">
+        <h-module-title v-if="discRecords.length > 1" :title="`Disc${ index + 1 }`"/>
+        <h-module-title v-else title="曲目"/>
+        <a-table :pagination="false" size="small" :data-source="discRecord" class="mb-6">
+          <a-table-column
+              title="曲号"
+              width="10%"
+              data-index="trackIndex"
+              align="center"
+          ></a-table-column>
+          <a-table-column
+              title="歌名"
+              width="75%"
+              data-index="title"
+          ></a-table-column>
+          <a-table-column title="歌词" width="5%" align="center">
+            <template #="{ record: trackRecord }">
+              <file-text-outlined
+                  v-if="trackRecord.hasLyric === '1'"
+                  @click="onViewLyric(trackRecord)"
+              />
+              <file-search-outlined v-if="isNotEmpty(record.neteaseId) && trackRecord.hasLyric !== '1'"
+                                    @click="onSearchLyric(trackRecord)"/>
+            </template>
+          </a-table-column>
+          <a-table-column
+              title="曲长"
+              width="10%"
+              data-index="durationLabel"
+              align="center"
+          >
+          </a-table-column>
+        </a-table>
+      </template>
     </section>
   </section>
   <a-modal v-model:visible="modalLyricsVisible" :footer="null">
@@ -137,7 +141,7 @@ const router = useRouter();
 
 const id = route.query.id;
 const record = ref({});
-const trackRecords = ref([]);
+const discRecords = ref([]);
 const modalLyricsVisible = ref(false);
 const modalLyricsTitle = ref();
 const lyrics = ref();
@@ -157,7 +161,7 @@ const initAlbumData = () => {
 
 const initTrackData = () => {
   apiMusicTrackListByAlbumId({albumId: id}).then(
-      (res) => (trackRecords.value = res)
+      (res) => discRecords.value = res
   );
 };
 
