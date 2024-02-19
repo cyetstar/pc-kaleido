@@ -11,20 +11,22 @@
       </template>
       <template #extra>
         <a-space>
-          <h-button @click="onSearchDouban">匹配豆瓣</h-button>
+          <h-button @click="onSearchInfo">抓取信息</h-button>
           <h-button @click="onViewNFO">查看NFO</h-button>
           <h-button @click="onReadNFO">读取NFO</h-button>
           <h-button @click="onRefreshPlexById">刷新Plex</h-button>
-          <h-button @click="onSyncPlexById">同步Plex</h-button>
+          <h-button @click="onSyncPlex">同步Plex</h-button>
         </a-space>
       </template>
     </a-page-header>
     <section class="flex">
-      <k-plex-image
-          class="h-poster"
-          style="width: 250px"
-          :plex-thumb="record.thumb"
-      />
+      <div>
+        <k-plex-image
+            class="h-poster"
+            style="width: 250px"
+            :plex-thumb="record.thumb"
+        />
+      </div>
       <div class="flex-1 ml-8">
         <p>{{ record.originalTitle }} <span v-if="isNotEmpty(record.year)">({{ record.year }})</span></p>
         <p class="flex items-center">
@@ -48,9 +50,30 @@
         </p>
         <p>
           <k-logo-link type="plex" :id="record.id" class="mr-3"/>
-          <k-logo-link type="imdb" :id="record.imdb" class="mr-3"/>
+          <k-logo-link type="imdb" :id="record.imdbId" class="mr-3"/>
+          <k-logo-link type="tmdbtv" :id="record.tmdbId" class="mr-3"/>
           <k-logo-link type="douban" :id="record.doubanId" class="mr-3"/>
         </p>
+      </div>
+    </section>
+    <section v-if="isNotEmpty(record.actorList)">
+      <h-module-title title="主演"/>
+      <div class="grid grid-cols-24 gap-6">
+        <template :key="item.id" v-for="item in actorList">
+          <a-card class="k-card col-span-3" :bordered="false">
+            <template #cover>
+              <k-plex-image
+                  class="h-thumb"
+                  :preview="false"
+                  :plex-thumb="item.thumb"
+              />
+            </template>
+            <a-card-meta
+                :title="item.name"
+                :description="item.playRole"
+            ></a-card-meta>
+          </a-card>
+        </template>
       </div>
     </section>
     <section v-if="isNotEmpty(episodeRecords)">
@@ -85,27 +108,8 @@
         </template>
       </div>
     </section>
-    <section v-if="isNotEmpty(record.actorList)">
-      <h-module-title title="主演"/>
-      <div class="grid grid-cols-24 gap-6">
-        <template :key="item.id" v-for="item in actorList">
-          <a-card class="k-card col-span-3" :bordered="false">
-            <template #cover>
-              <k-plex-image
-                  class="h-thumb"
-                  :preview="false"
-                  :plex-thumb="item.thumb"
-              />
-            </template>
-            <a-card-meta
-                :title="item.name"
-                :description="item.playRole"
-            ></a-card-meta>
-          </a-card>
-        </template>
-      </div>
-    </section>
   </section>
+  <tvshow-show-search-info ref="refTvshowShowSearchInfo" />
 </template>
 
 <script setup>
@@ -113,15 +117,18 @@ import {ref, onMounted, computed} from "vue";
 import {FileTextOutlined, LeftOutlined} from "@ant-design/icons-vue";
 import {useRoute, useRouter} from "vue-router";
 import {isNotEmpty} from "@ht/util";
-import {apiTvshowShowView} from "@/api/tvshow/tvshowShowApi.ts";
+import {apiTvshowShowReadNFO, apiTvshowShowSyncPlex, apiTvshowShowView} from "@/api/tvshow/tvshowShowApi.ts";
 import {apiTvshowEpisodePage} from "@/api/tvshow/tvshowEpisodeApi";
 import {apiTvshowSeasonPage} from "@/api/tvshow/tvshowSeasonApi";
+import {message} from "ant-design-vue";
+import TvshowShowSearchInfo from "@/views/tvshow/tvshowShow/tvshowShowSearchInfo.vue";
 
 const route = useRoute()
 const router = useRouter()
 const record = ref({})
 const episodeRecords = ref([]);
 const seasonRecords = ref([]);
+const refTvshowShowSearchInfo = ref();
 const id = route.query.id;
 const rating = computed(() => record.value.rating / 2);
 const actorList = computed(() => {
@@ -155,6 +162,32 @@ const initData = async () => {
 const onViewSeason = (id) => {
   router.push({path: "/tvshow/tvshowSeason/view", query: {id, title: record.value.title}})
 };
+
+
+const onSearchInfo = () => {
+  refTvshowShowSearchInfo.value.show(record.value)
+}
+const onReadNFO = () => {
+  apiTvshowShowReadNFO({id}).then((res) => {
+    if (res) {
+      message.success("读取成功");
+      initData();
+    } else {
+      message.error("读取失败");
+    }
+  })
+}
+
+const onSyncPlex = () => {
+  apiTvshowShowSyncPlex({id}).then((res) => {
+    if (res) {
+      message.success("同步成功");
+      initData();
+    } else {
+      message.error("读取失败");
+    }
+  })
+}
 
 onMounted(() => {
   initData()

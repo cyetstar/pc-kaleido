@@ -16,7 +16,18 @@
           />
         </a-form>
         <a-space>
-          <h-button @click="onSyncPlex">同步Plex</h-button>
+          <k-action-button
+            action="tvshowUpdateSource"
+            ok-text="更新文件源"
+            cancel-text="取消更新"
+          />
+          <k-action-button
+            action="tvshowSyncPlex"
+            ok-text="同步Plex"
+            cancel-text="取消同步"
+            :form="searchForm"
+          />
+          <h-button @click="onOpenDownloadFolder">打开下载目录</h-button>
         </a-space>
       </div>
       <div class="flex justify-between items-center mt-4 mb-2">
@@ -56,6 +67,7 @@
       </div>
     </section>
   </section>
+  <tvshow-show-download-folder ref="refTvshowShowDownloadFolder" />
 </template>
 
 <script setup>
@@ -63,11 +75,12 @@ import { Empty, message } from "ant-design-vue";
 import { onActivated, onMounted, ref } from "vue";
 import { onBeforeRouteLeave, useRouter } from "vue-router";
 import { apiTvshowShowPage } from "@/api/tvshow/tvshowShowApi";
-import { apiTvshowEpisodeSyncPlex } from "@/api/tvshow/tvshowEpisodeApi";
 import { useAppStore } from "@/store/modules/app";
 import { isEmpty, isNotEmpty } from "@ht/util";
 import { CloseCircleOutlined } from "@ant-design/icons-vue";
 import { apiSysDictListByDictType } from "@/api/sysadmin/sysDictApi";
+import KActionButton from "@c/ActionButton/ActionButton.vue";
+import TvshowShowDownloadFolder from "@/views/tvshow/tvshowShow/tvshowShowDownloadFolder.vue";
 
 const router = useRouter();
 const appStore = useAppStore();
@@ -86,6 +99,7 @@ const dicts = ref([
   },
 ]);
 const refScrollGrid = ref();
+const refTvshowShowDownloadFolder = ref();
 const searchForm = ref({});
 const loading = ref(false);
 const pageResult = ref({
@@ -115,12 +129,8 @@ const onSearch = () => {
   loadData();
 };
 
-const onSyncPlex = () => {
-  apiTvshowEpisodeSyncPlex().then((res) => {
-    if (res) {
-      message.success("开始同步");
-    }
-  });
+const onOpenDownloadFolder = () => {
+  refTvshowShowDownloadFolder.value.show();
 };
 
 const onViewRecord = (id) => {

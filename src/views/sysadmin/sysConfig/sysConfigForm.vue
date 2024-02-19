@@ -80,6 +80,29 @@
             />
           </h-col>
         </a-tab-pane>
+        <a-tab-pane key="tvshow" tab="剧集">
+          <h-col :span="12">
+            <h-input
+              label="剧集资料库目录"
+              name="tvshowLibraryPath"
+              v-model:value="form.tvshowLibraryPath"
+            />
+          </h-col>
+          <h-col :span="12">
+            <h-input
+              label="剧集回收站"
+              name="tvshowTrashPath"
+              v-model:value="form.tvshowTrashPath"
+            />
+          </h-col>
+          <h-col :span="12">
+            <h-input
+              label="剧集下载目录"
+              name="tvshowDownloadPath"
+              v-model:value="form.tvshowDownloadPath"
+            />
+          </h-col>
+        </a-tab-pane>
         <a-tab-pane key="music" tab="音乐">
           <h-col :span="12">
             <h-input
@@ -168,6 +191,9 @@ let form = ref({
   movieLibraryPath: "",
   movieTrashPath: "/movie/#recycle",
   movieDownloadPath: "",
+  tvshowLibraryPath: "",
+  tvshowTrashPath: "/movie/#recycle",
+  tvshowDownloadPath: "",
   musicLibraryPath: "",
   musicExcludePath: "",
   neteaseUrl: "",
