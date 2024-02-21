@@ -120,7 +120,7 @@
             />
           </h-col>
         </a-tab-pane>
-        <a-tab-pane key="third" tab="第三方接口">
+        <a-tab-pane key="third" tab="第三方">
           <h-col :span="12">
             <h-input
               label="网易云音乐API地址"
@@ -140,6 +140,14 @@
               label="TMM地址"
               name="tmmUrl"
               v-model:value="form.tmmUrl"
+            />
+          </h-col>
+          <h-col :span="12">
+            <h-input
+              label="豆瓣Cookie"
+              text-area
+              name="doubanCookie"
+              v-model:value="form.doubanCookie"
             />
           </h-col>
         </a-tab-pane>
@@ -198,6 +206,7 @@ let form = ref({
   musicExcludePath: "",
   neteaseUrl: "",
   doubanApikey: "",
+  doubanCookie: "",
   tmmUrl: "",
   matchInfoSleepSecond: "3",
   downloadLyricSleepSecond: "3",
