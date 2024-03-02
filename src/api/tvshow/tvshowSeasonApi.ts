@@ -1,9 +1,9 @@
 import { useFetch } from "@/utils/http";
 
 export const apiTvshowSeasonPage = (params: any) => {
-return useFetch.get<any>({
-  url: "/tvshowSeason/page",
-  params,
+  return useFetch.get<any>({
+    url: "/tvshowSeason/page",
+    params,
   });
 };
 
@@ -45,6 +45,27 @@ export const apiTvshowSeasonColumn = (params: any) => {
 export const apiTvshowSeasonExport = (params: any) => {
   return useFetch.get<any>({
     url: "/tvshowSeason/export",
+    params,
+  });
+};
+
+export const apiTvshowSeasonReadNFO = (data: any) => {
+  return useFetch.post<any>({
+    url: "/tvshowSeason/readNFO",
+    data,
+  });
+};
+
+export const apiTvshowSeasonSyncPlex = (data: any) => {
+  return useFetch.post<any>({
+    url: "/tvshowSeason/syncPlex",
+    data,
+  });
+};
+
+export const apiTvshowSeasonViewPath = (params: any) => {
+  return useFetch.get<any>({
+    url: "/tvshowSeason/viewPath",
     params,
   });
 };

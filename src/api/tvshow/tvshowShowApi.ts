@@ -90,3 +90,10 @@ export const apiTvshowShowSyncPlex = (data: any) => {
     data,
   });
 };
+
+export const apiTvshowShowViewPath = (params: any) => {
+  return useFetch.get<any>({
+    url: "/tvshowShow/viewPath",
+    params,
+  });
+};

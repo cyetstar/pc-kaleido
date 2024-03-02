@@ -11,11 +11,9 @@
       </template>
       <template #extra>
         <a-space>
-          <h-button @click="onSearchDouban">匹配豆瓣</h-button>
-          <h-button @click="onViewNFO">查看NFO</h-button>
+          <h-button @click="onFileManage">文件管理</h-button>
           <h-button @click="onReadNFO">读取NFO</h-button>
-          <h-button @click="onRefreshPlexById">刷新Plex</h-button>
-          <h-button @click="onSyncPlexById">同步Plex</h-button>
+          <h-button @click="onSyncPlex">同步Plex</h-button>
         </a-space>
       </template>
     </a-page-header>
@@ -26,7 +24,6 @@
           :plex-thumb="record.thumb"
       />
       <div class="flex-1 ml-8">
-        <h1><a @click="onViewShow(record.showId)">{{ title }}</a></h1>
         <p>{{ record.originalTitle }} <span v-if="isNotEmpty(record.year)">({{ record.year }})</span></p>
         <p class="flex items-center">
           <span v-if="isNotEmpty(record.rating)" class="mr-2">{{ record.rating }} 分</span>
@@ -43,13 +40,10 @@
             {{ item }}
           </p>
         </p>
-        <p class="flex" v-if="isNotEmpty(record.studio)">
-          <span class="mr-2">制片方:</span>
-          <span class="flex-1">{{ record.studio }}</span>
-        </p>
         <p>
           <k-logo-link type="plex" :id="record.id" class="mr-3"/>
           <k-logo-link type="imdb" :id="record.imdb" class="mr-3"/>
+          <k-logo-link type="tmdbtv" :id="record.tmdbId" class="mr-3"/>
           <k-logo-link type="douban" :id="record.doubanId" class="mr-3"/>
         </p>
       </div>
@@ -106,9 +100,8 @@
         </template>
       </div>
     </section>
-
-
   </section>
+  <tvshow-season-file-manage ref="refTvshowSeasonFileManage"/>
 </template>
 
 <script setup>
@@ -117,13 +110,23 @@ import {FileTextOutlined, LeftOutlined} from "@ant-design/icons-vue";
 import {useRoute, useRouter} from "vue-router";
 import {isNotEmpty} from "@ht/util";
 import {apiTvshowEpisodePage} from "@/api/tvshow/tvshowEpisodeApi";
-import {apiTvshowSeasonPage, apiTvshowSeasonView} from "@/api/tvshow/tvshowSeasonApi";
+import {
+  apiTvshowSeasonPage,
+  apiTvshowSeasonReadNFO,
+  apiTvshowSeasonSyncPlex,
+  apiTvshowSeasonView
+} from "@/api/tvshow/tvshowSeasonApi";
+import {apiTvshowShowReadNFO, apiTvshowShowSyncPlex} from "@/api/tvshow/tvshowShowApi";
+import {message} from "ant-design-vue";
+import TvshowShowFileManage from "@/views/tvshow/tvshowShow/tvshowShowFileManage.vue";
+import TvshowSeasonFileManage from "@/views/tvshow/tvshowSeason/tvshowSeasonFileManage.vue";
 
 const route = useRoute()
 const router = useRouter()
 const record = ref({})
 const episodeRecords = ref([]);
 const seasonRecords = ref([]);
+const refTvshowSeasonFileManage = ref();
 const id = route.query.id;
 const title = route.query.title
 const rating = computed(() => record.value.rating / 2);
@@ -149,9 +152,32 @@ const initData = async () => {
   })
 };
 
-const onViewShow = (id) => {
-  router.push({path: "/tvshow/tvshowShow/view", query: {id}})
+const onFileManage = () => {
+  refTvshowSeasonFileManage.value.show(id);
+};
+
+const onReadNFO = () => {
+  apiTvshowSeasonReadNFO({id}).then((res) => {
+    if (res) {
+      message.success("读取成功");
+      initData();
+    } else {
+      message.error("读取失败");
+    }
+  })
 }
+
+const onSyncPlex = () => {
+  apiTvshowSeasonSyncPlex({id}).then((res) => {
+    if (res) {
+      message.success("同步成功");
+      initData();
+    } else {
+      message.error("读取失败");
+    }
+  })
+}
+
 
 onMounted(() => {
   initData()

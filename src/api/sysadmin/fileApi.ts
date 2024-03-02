@@ -1,8 +1,8 @@
 import { useFetch } from "@/utils/http";
 
-export const apiFileList = (params: any) => {
+export const apiFilePage = (params: any) => {
   return useFetch.get<any>({
-    url: "/file/list",
+    url: "/file/page",
     params,
   });
 };

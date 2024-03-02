@@ -11,10 +11,9 @@
       </template>
       <template #extra>
         <a-space>
+          <h-button @click="onFileManage">文件管理</h-button>
           <h-button @click="onSearchInfo">抓取信息</h-button>
-          <h-button @click="onViewNFO">查看NFO</h-button>
           <h-button @click="onReadNFO">读取NFO</h-button>
-          <h-button @click="onRefreshPlexById">刷新Plex</h-button>
           <h-button @click="onSyncPlex">同步Plex</h-button>
         </a-space>
       </template>
@@ -109,7 +108,8 @@
       </div>
     </section>
   </section>
-  <tvshow-show-search-info ref="refTvshowShowSearchInfo" />
+  <tvshow-show-search-info ref="refTvshowShowSearchInfo"/>
+  <tvshow-show-file-manage ref="refTvshowShowFileManage"/>
 </template>
 
 <script setup>
@@ -122,6 +122,7 @@ import {apiTvshowEpisodePage} from "@/api/tvshow/tvshowEpisodeApi";
 import {apiTvshowSeasonPage} from "@/api/tvshow/tvshowSeasonApi";
 import {message} from "ant-design-vue";
 import TvshowShowSearchInfo from "@/views/tvshow/tvshowShow/tvshowShowSearchInfo.vue";
+import TvshowShowFileManage from "@/views/tvshow/tvshowShow/tvshowShowFileManage.vue";
 
 const route = useRoute()
 const router = useRouter()
@@ -129,6 +130,7 @@ const record = ref({})
 const episodeRecords = ref([]);
 const seasonRecords = ref([]);
 const refTvshowShowSearchInfo = ref();
+const refTvshowShowFileManage = ref();
 const id = route.query.id;
 const rating = computed(() => record.value.rating / 2);
 const actorList = computed(() => {
@@ -148,11 +150,11 @@ const initData = async () => {
   apiTvshowShowView({id}).then((res) => {
     record.value = res
     if (res.totalSeasons === 1) {
-      apiTvshowEpisodePage({pageSize: 1000, showId: id}).then(({records}) => {
+      apiTvshowEpisodePage({pageSize: 1000, orderBy: "ASC:episode_index", showId: id}).then(({records}) => {
         episodeRecords.value = records
       })
     } else {
-      apiTvshowSeasonPage({pageSize: 1000, showId: id}).then(({records}) => {
+      apiTvshowSeasonPage({pageSize: 1000, orderBy: "ASC:season_index", showId: id}).then(({records}) => {
         seasonRecords.value = records
       })
     }
@@ -167,6 +169,10 @@ const onViewSeason = (id) => {
 const onSearchInfo = () => {
   refTvshowShowSearchInfo.value.show(record.value)
 }
+
+const onFileManage = () => {
+  refTvshowShowFileManage.value.show(id);
+};
 const onReadNFO = () => {
   apiTvshowShowReadNFO({id}).then((res) => {
     if (res) {

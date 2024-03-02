@@ -58,7 +58,12 @@
       @selection-change="onSelectionChange"
       :scroll="{ y: 400 }"
     >
-      <a-table-column title="名称" width="540px">
+      <a-table-column
+        title="名称"
+        width="540px"
+        data-index="name"
+        sorter="true"
+      >
         <template #="{ record }">
           <div v-if="record.editable" class="flex items-center">
             <a-input
@@ -91,9 +96,19 @@
           </div>
         </template>
       </a-table-column>
-      <a-table-column title="修改日期" data-index="lastModified" align="center">
+      <a-table-column
+        title="修改日期"
+        data-index="lastModified"
+        align="center"
+        sorter="true"
+      >
       </a-table-column>
-      <a-table-column title="大小" align="center">
+      <a-table-column
+        title="大小"
+        data-index="length"
+        align="center"
+        sorter="true"
+      >
         <template #="{ record }">
           <span v-if="!record.isDir">{{ record.lengthLabel }}</span>
         </template>
@@ -119,12 +134,13 @@ import { HButton, HButtonDelete, HTableData } from "hta-ui";
 import {
   apiFileCopyOrCut,
   apiFileDelete,
-  apiFileList,
   apiFileNewDirectory,
   apiFileOpen,
+  apiFilePage,
   apiFileRename,
 } from "@/api/sysadmin/fileApi";
 import { isNotEmpty } from "@ht/util";
+import { apiTvshowEpisodePage } from "@/api/tvshow/tvshowEpisodeApi";
 
 export default defineComponent({
   name: "KFileModal",
@@ -166,7 +182,6 @@ export default defineComponent({
       if (isNotEmpty(pathList)) {
         let pathStrArr = pathList[0].split("/");
         pathStrArr.pop();
-        console.log(pathStrArr.join("/"));
         if (pathStrArr.join("/") !== searchForm.value.path) {
           return true;
         }
@@ -200,12 +215,7 @@ export default defineComponent({
 
     const onLoadData = (params, callbacks) => {
       callbacks(
-        apiFileList({ ...params, ...searchForm.value }).then((res) => {
-          return Promise.resolve({
-            records: res,
-            pageSize: params.pageSize,
-          });
-        })
+        apiFilePage({ ...params, ...searchForm.value, searchCount: true })
       );
     };
 
@@ -302,6 +312,11 @@ export default defineComponent({
         }
       });
     };
+
+    const onChange = (page, filters, sorter) => {
+      console.log(page, filters, sorter);
+    };
+
     return {
       visible,
       searchForm,
@@ -323,6 +338,7 @@ export default defineComponent({
       onCut,
       onPaste,
       onDelete,
+      onChange,
       show,
       load,
     };

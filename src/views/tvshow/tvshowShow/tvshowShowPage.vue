@@ -59,6 +59,15 @@
                 :plex-thumb="record.thumb"
                 @click="onViewRecord(record.id)"
               />
+              <div class="absolute top-0 left-0 m-2px">
+                <k-logo-link
+                  type="plex"
+                  :id="record.id"
+                  :width="20"
+                  class="mr-1"
+                />
+                <k-logo-link type="douban" :id="record.doubanId" :width="20" />
+              </div>
             </template>
             <a-card-meta :title="record.title" :description="record.year">
             </a-card-meta>

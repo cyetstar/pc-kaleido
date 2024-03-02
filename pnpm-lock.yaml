@@ -27,8 +27,8 @@ dependencies:
     specifier: ^5.4.1
     version: 5.4.3
   hta-ui:
-    specifier: ^1.2.3
-    version: 1.2.3
+    specifier: ^1.2.5
+    version: 1.2.5
   js-cookie:
     specifier: ^3.0.1
     version: 3.0.1
@@ -4574,8 +4574,8 @@ packages:
       lru-cache: 6.0.0
     dev: true
 
-  /hta-ui@1.2.3:
-    resolution: {integrity: sha512-NQIWCjWxVMTApxFMmJUgnJZQaUxlBJqI2L7af4OnK5PEd1JaIhFZbHxHi/GNnCvFsDTt9oK/rvnB5OJZOEoGjw==}
+  /hta-ui@1.2.5:
+    resolution: {integrity: sha512-tDuHxsmsp/CQML3Kw/9bVwoEiXPgUmKp960CAHWeq/EEIvVrP9N02sekoyUYNaEldzYPWlpxFOKVKKhR1bkGcw==}
     dependencies:
       '@hta-ui/utils': 1.0.1
     dev: false
