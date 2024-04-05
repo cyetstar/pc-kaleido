@@ -207,6 +207,7 @@ export default defineComponent({
     const show = (path) => {
       searchForm.value.path = path;
       visible.value = true;
+      load();
     };
 
     const load = () => {

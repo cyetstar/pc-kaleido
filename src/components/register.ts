@@ -76,9 +76,12 @@ import {
 } from "hta-ui";
 
 import GlobalConfig from "@/components/GlobalConfig";
+import CoverImage from "@/components/CoverImage";
 import PlexImage from "@/components/PlexImage";
+import KomgaImage from "@/components/KomgaImage";
 import LogoLink from "@/components/LogoLink";
 import FileModal from "@/components/FileModal";
+import ActionButton from "@/components/ActionButton";
 
 export const registerGlobComp = (app: App) => {
   app
@@ -101,10 +104,13 @@ export const registerGlobComp = (app: App) => {
     .component("h-table-data", HTableData)
     .component("h-upload-image", HUploadImage)
 
-    .component("k-global-config", GlobalConfig)
-    .component("k-plex-image", PlexImage)
-    .component("k-logo-link", LogoLink)
+    .component("k-action-button", ActionButton)
     .component("k-file-modal", FileModal)
+    .component("k-global-config", GlobalConfig)
+    .component("k-cover-image", CoverImage)
+    .component("k-komga-image", KomgaImage)
+    .component("k-logo-link", LogoLink)
+    .component("k-plex-image", PlexImage)
     .use(Layout)
     .use(Button)
     .use(Input)

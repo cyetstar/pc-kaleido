@@ -120,6 +120,50 @@
             />
           </h-col>
         </a-tab-pane>
+        <a-tab-pane key="comic" tab="漫画">
+          <h-col :span="12">
+            <h-input
+              label="漫画资料库目录"
+              name="comicLibraryPath"
+              v-model:value="form.comicLibraryPath"
+            />
+          </h-col>
+          <h-col :span="12">
+            <h-input
+              label="漫画回收站"
+              name="comicTrashPath"
+              v-model:value="form.comicTrashPath"
+            />
+          </h-col>
+          <h-col :span="12">
+            <h-input
+              label="漫画下载目录"
+              name="comicDownloadPath"
+              v-model:value="form.comicDownloadPath"
+            />
+          </h-col>
+          <h-col :span="12">
+            <h-input
+              label="Komga地址"
+              name="komgaUrl"
+              v-model:value="form.komgaUrl"
+            />
+          </h-col>
+          <h-col :span="12">
+            <h-input
+              label="Komga账号"
+              name="komgaUsername"
+              v-model:value="form.komgaUsername"
+            />
+          </h-col>
+          <h-col :span="12">
+            <h-input
+              label="Komga密码"
+              name="komgaPassword"
+              v-model:value="form.komgaPassword"
+            />
+          </h-col>
+        </a-tab-pane>
         <a-tab-pane key="third" tab="第三方">
           <h-col :span="12">
             <h-input
@@ -200,7 +244,7 @@ let form = ref({
   movieTrashPath: "/movie/#recycle",
   movieDownloadPath: "",
   tvshowLibraryPath: "",
-  tvshowTrashPath: "/movie/#recycle",
+  tvshowTrashPath: "/tvshow/#recycle",
   tvshowDownloadPath: "",
   musicLibraryPath: "",
   musicExcludePath: "",
@@ -210,6 +254,12 @@ let form = ref({
   tmmUrl: "",
   matchInfoSleepSecond: "3",
   downloadLyricSleepSecond: "3",
+  comicLibraryPath: "",
+  comicTrashPath: "/comic/#recycle",
+  comicDownloadPath: "/comic/download",
+  komgaUrl: "",
+  komgaUsername: "",
+  komgaPassword: "",
 });
 
 onMounted(() => {

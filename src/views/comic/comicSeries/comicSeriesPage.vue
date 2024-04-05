@@ -1,7 +1,7 @@
 <!--
  * @Author: cyetstar
- * @Date: 2023-11-26 01:20:15
- * @Description: 电影列表页面
+ * @Date: 2024-03-12 17:49:02
+ * @Description: 漫画系列列表页面
 -->
 <template>
   <section class="k-page-section">
@@ -17,45 +17,15 @@
         </a-form>
         <a-space>
           <k-action-button
-            action="movieUpdateSource"
-            ok-text="更新文件源"
-            cancel-text="取消更新"
-          />
-          <k-action-button
-            action="movieCheckThreadStatus"
-            ok-text="检测发布"
-            cancel-text="取消检测"
-            :form="searchForm"
-          />
-          <k-action-button
-            action="movieMatchInfo"
-            ok-text="自动抓取"
-            cancel-text="取消抓取"
-            :form="searchForm"
-          />
-          <k-action-button
-            action="movieReadNFO"
-            ok-text="读取NFO"
-            cancel-text="取消读取"
-            :form="searchForm"
-          />
-          <k-action-button
-            action="movieExportNFO"
-            ok-text="导出NFO"
-            cancel-text="取消导出"
-            :form="searchForm"
-          />
-          <k-action-button
-            action="movieSyncPlex"
-            ok-text="同步Plex"
+            action="comicSync"
+            ok-text="同步Komga"
             cancel-text="取消同步"
             :form="searchForm"
           />
           <k-action-button
-            action="movieAnalyze"
-            ok-text="分析文件"
-            cancel-text="取消分析"
-            :form="searchForm"
+            action="comicUpdateSource"
+            ok-text="更新文件源"
+            cancel-text="取消更新"
           />
           <h-button @click="onOpenDownloadFolder">打开下载目录</h-button>
         </a-space>
@@ -87,15 +57,17 @@
         <template :key="record.id" v-for="record in pageResult.records">
           <a-card class="k-card col-span-3" :bordered="false">
             <template #cover>
-              <k-plex-image
+              <k-cover-image
                 class="h-poster cursor-pointer"
+                type="comic"
                 :preview="false"
-                :plex-thumb="record.thumb"
+                :thumb="record.id"
                 @click="onViewRecord(record.id)"
               />
               <div class="absolute top-0 left-0 m-2px">
                 <k-logo-link
-                  type="plex"
+                  type="komga"
+                  sub="series"
                   :id="record.id"
                   :width="20"
                   class="mr-1"
@@ -112,12 +84,12 @@
       </div>
     </section>
   </section>
-  <movie-basic-download-folder ref="refMovieBasicDownloadFolder" />
+  <comic-series-download-folder ref="refComicSeriesDownloadFolder" />
 </template>
 
 <script setup>
 import { onActivated, onMounted, ref } from "vue";
-import { apiMovieBasicPage } from "@/api/movie/movieBasicApi.ts";
+import { apiComicSeriesPage } from "@/api/comic/comicSeriesApi.ts";
 
 import { Empty, message } from "ant-design-vue";
 import { CloseCircleOutlined } from "@ant-design/icons-vue";
@@ -125,7 +97,8 @@ import { onBeforeRouteLeave, useRoute, useRouter } from "vue-router";
 import { useAppStore } from "@/store/modules/app";
 import { apiSysDictListByDictType } from "@/api/sysadmin/sysDictApi";
 import { isEmpty, isNotEmpty } from "@ht/util";
-import MovieBasicDownloadFolder from "@/views/movie/movieBasic/movieBasicDownloadFolder.vue";
+import ComicSeriesDownloadFolder from "@/views/comic/comicSeries/comicSeriesDownloadFolder.vue";
+import KActionButton from "@c/ActionButton/ActionButton.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -135,27 +108,27 @@ const cascaderOptions = ref([
   {
     label: "类型",
     value: "genreId",
-    type: "movieGenre",
+    type: "comicGenre",
   },
   {
     label: "国家地区",
     value: "countryId",
-    type: "movieCountry",
+    type: "comicCountry",
   },
   {
     label: "分级",
     value: "contentRating",
-    type: "movieContentRating",
+    type: "comicContentRating",
   },
   {
     label: "年代",
     value: "decade",
-    type: "movieDecade",
+    type: "comicDecade",
   },
   {
     label: "年份",
     value: "year",
-    type: "movieYear",
+    type: "comicYear",
   },
   {
     label: "多文件",
@@ -179,7 +152,7 @@ const cascaderOptions = ref([
   },
 ]);
 const refScrollGrid = ref();
-const refMovieBasicDownloadFolder = ref();
+const refComicSeriesDownloadFolder = ref();
 const loading = ref(true);
 const searchForm = ref({});
 const pageResult = ref({
@@ -222,7 +195,7 @@ onMounted(() => {
 });
 
 onActivated(() => {
-  refScrollGrid.value.scrollTop = appStore.getScrollTop("movie");
+  refScrollGrid.value.scrollTop = appStore.getScrollTop("comic");
   if (route.params.load) {
     const actorId = route.params.actorId;
     if (actorId) {
@@ -233,7 +206,7 @@ onActivated(() => {
 });
 
 onBeforeRouteLeave((to, from, next) => {
-  appStore.setScrollTop(refScrollGrid.value.scrollTop, "movie");
+  appStore.setScrollTop(refScrollGrid.value.scrollTop, "comic");
   next();
 });
 
@@ -245,7 +218,7 @@ const loadData = () => {
     searchCount: true,
     ...searchForm.value,
   };
-  apiMovieBasicPage(data).then((res) => {
+  apiComicSeriesPage(data).then((res) => {
     loading.value = false;
     pageResult.value.records.push(...res.records);
     pageResult.value.pageNumber = res.pageNumber;
@@ -261,11 +234,11 @@ const onSearch = () => {
 };
 
 const onViewRecord = (id) => {
-  router.push({ path: "/movie/movieBasic/view", query: { id } });
+  router.push({ path: "/comic/comicSeries/view", query: { id } });
 };
 
 const onOpenDownloadFolder = () => {
-  refMovieBasicDownloadFolder.value.show();
+  refComicSeriesDownloadFolder.value.show();
 };
 
 const onChangeCascader = (value, selectedOptions) => {

@@ -17,6 +17,7 @@ export const useAppStore = defineStore("app", {
   actions: {
     async initAppConfig() {
       return apiSysConfigFindByKeys([
+        "komgaUrl",
         "plexUrl",
         "plexToken",
         "plexMovieLibraryId",
@@ -26,6 +27,8 @@ export const useAppStore = defineStore("app", {
         "movieDownloadPath",
         "tvshowLibraryPath",
         "tvshowDownloadPath",
+        "comicLibraryPath",
+        "comicDownloadPath",
       ]).then((res) => {
         this.config = { ...res };
       });

@@ -93,4 +93,14 @@ export const ALL_RESOURCE: resourceItem[] = [
     name: "剧集",
     action: ["page", "view", "create", "update", "delete", "export", "other"],
   },
+  {
+    type: "comicSeries",
+    name: "漫画系列",
+    action: ["page", "view", "create", "update", "delete", "export", "other"],
+  },
+  {
+    type: "comicAuthor",
+    name: "漫画作者",
+    action: ["page", "view", "create", "update", "delete", "export", "other"],
+  },
 ];

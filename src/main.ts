@@ -23,20 +23,21 @@ import "hta-ui/dist/style/index.less";
 import "@/styles/index.less";
 import directives from "./utils/directives";
 import directive from "./directives";
+
 const app = createApp(App);
 directives(app);
 app.use(directive);
 
 app.component("v-chart", ECharts);
 
-// 注册全局组件
-registerGlobComp(app);
-
 // 挂载全局方法
 mountFunction(app);
 
 // 配置 store
 setupStore(app);
+
+// 注册全局组件
+registerGlobComp(app);
 
 // 配置路由
 setupRouter(app);

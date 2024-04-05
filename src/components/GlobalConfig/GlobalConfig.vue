@@ -35,9 +35,17 @@ export default defineComponent({
       type: String,
       default: "/file/",
     },
+    imageUrl: {
+      type: String,
+      default: "/image/",
+    },
     plexUrl: {
       type: String,
       default: "http://127.0.0.1:32400",
+    },
+    komgaUrl: {
+      type: String,
+      default: "http://127.0.0.1:25600",
     },
     plexToken: String,
   },
@@ -48,6 +56,8 @@ export default defineComponent({
     provide("thumbSize", props.thumbSize);
     provide("plexUrl", props.plexUrl);
     provide("plexToken", props.plexToken);
+    provide("komgaUrl", props.komgaUrl);
+    provide("imageUrl", props.imageUrl);
   },
 });
 </script>

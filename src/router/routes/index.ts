@@ -23,6 +23,9 @@ import movieCollectionRoutes from "@/router/routes/movie/movieCollectionRoutes";
 import tvshowShowRoutes from "@/router/routes/tvshow/tvshowShowRoutes";
 import tvshowSeasonRoutes from "@/router/routes/tvshow/tvshowSeasonRoutes";
 import movieDoubanWeeklyRoutes from "@/router/routes/movie/movieDoubanWeeklyRoutes";
+import comicSeriesRoutes from "@/router/routes/comic/comicSeriesRoutes";
+import comicAuthorRoutes from "@/router/routes/comic/comicAuthorRoutes";
+import comicBookRoutes from "@/router/routes/comic/comicBookRoutes";
 
 const LoginRoute: AppRouteConfig = {
   path: "/login",
@@ -66,6 +69,9 @@ const BackstageRoute: AppRouteConfig = {
     ...movieDoubanWeeklyRoutes,
     ...tvshowShowRoutes,
     ...tvshowSeasonRoutes,
+    ...comicSeriesRoutes,
+    ...comicBookRoutes,
+    ...comicAuthorRoutes,
   ],
 };
 export const allRoutes = [LoginRoute, BackstageRoute];

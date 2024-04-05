@@ -5,8 +5,12 @@ import { createVNode } from "vue";
 import { useAppStore } from "@/store/modules/app";
 import { useWebSocketStore } from "@/store/modules/websocket";
 
-const webSocketStore = useWebSocketStore();
-const appStore = useAppStore();
+import { createPinia } from "pinia";
+const pinia = createPinia();
+export default pinia;
+
+const webSocketStore = useWebSocketStore(pinia);
+const appStore = useAppStore(pinia);
 export const triggerAction = (action: string, params?: any) => {
   if (appStore.actions[action]) {
     return apiActionStop({ action });

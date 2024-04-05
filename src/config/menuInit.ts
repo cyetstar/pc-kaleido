@@ -61,6 +61,24 @@ export const MENUS = [
     ],
   },
   {
+    title: "漫画",
+    name: "comic",
+    children: [
+      {
+        title: "漫画系列",
+        name: "comicSeriesPage",
+        path: "/comic/comicSeries/page",
+        permission: "comicSeries:page",
+      },
+      {
+        title: "漫画作者",
+        name: "comicAuthorPage",
+        path: "/comic/comicAuthor/page",
+        permission: "comicAuthor:page",
+      },
+    ],
+  },
+  {
     title: "系统管理",
     name: "sysadmin",
     children: [

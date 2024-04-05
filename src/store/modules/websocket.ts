@@ -10,7 +10,11 @@ import { useUserStore } from "@/store/modules/user";
 
 const { VITE_BASE_WS } = import.meta.env;
 
-const userStore = useUserStore();
+import { createPinia } from "pinia";
+const pinia = createPinia();
+export default pinia;
+
+const userStore = useUserStore(pinia);
 export const useWebSocketStore = defineStore("websocket", {
   state: (): any => ({
     websocket: null,
