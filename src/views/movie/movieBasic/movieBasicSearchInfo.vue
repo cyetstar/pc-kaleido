@@ -23,7 +23,8 @@
         placeholder=""
         v-model:value="searchForm.keyword"
         name="keyword"
-        @keyup.enter="onSearch"
+        @blur="onSearch"
+        @keyup.enter.native="$event.target.blur()"
       />
       <h-button @click="onSearch">搜索</h-button>
       <h-button @click="onMatch">自动抓取</h-button>

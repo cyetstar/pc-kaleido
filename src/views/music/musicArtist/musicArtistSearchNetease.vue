@@ -17,6 +17,8 @@
         placeholder=""
         v-model:value="form.keywords"
         name="keywords"
+        @blur="onSearch"
+        @keyup.enter.native="$event.target.blur()"
       />
       <h-button @click="onSearch">搜索</h-button>
     </a-form>

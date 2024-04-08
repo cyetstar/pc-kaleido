@@ -13,9 +13,9 @@
   >
     <div class="flex gap-2">
       <h-radio
-        v-model:value="searchForm.type"
+        v-model:value="searchForm.ver"
         button
-        name="type"
+        name="ver"
         :columns="typeColumns"
       />
       <h-input
@@ -23,7 +23,8 @@
         placeholder=""
         v-model:value="searchForm.keyword"
         name="keyword"
-        @keyup.enter="onSearch"
+        @blur="onSearch"
+        @keyup.enter.native="$event.target.blur()"
       />
       <h-button @click="onSearch">搜索</h-button>
       <h-button @click="onMatch">自动抓取</h-button>
@@ -50,10 +51,10 @@
       <a-table-column title="漫画信息">
         <template #="{ record }">
           <p>
-            {{ record.title }}
+            {{ record.series }}
           </p>
-          <p class="text-muted" v-if="isNotEmpty(record.originalTitle)">
-            {{ record.originalTitle }}
+          <p class="text-muted" v-if="isNotEmpty(record.originalSeries)">
+            {{ record.originalSeries }}
           </p>
           <div class="text-muted">{{ record.year }}</div>
         </template>
@@ -88,13 +89,17 @@ let visible = ref();
 let record = {};
 let dataSource = ref([]);
 let searchForm = ref({
-  type: "bgm",
+  ver: "1",
   keyword: "",
 });
 let typeColumns = [
   {
-    text: "番组计划",
-    value: "bgm",
+    text: "番组",
+    value: "1",
+  },
+  {
+    text: "番组（新）",
+    value: "0",
   },
 ];
 
