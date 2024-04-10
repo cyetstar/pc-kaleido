@@ -35,6 +35,7 @@
       :data-source="dataSource"
       :loading="loading"
       :row-class-name="addRowColor"
+      :pagination="false"
       class="mt-3"
     >
       <a-table-column title="封面" align="center" width="150px">
@@ -109,7 +110,7 @@ const show = (source, showType) => {
   type.value = showType;
   dataSource.value = [];
   if (type.value === "path") {
-    searchForm.value.keyword = record.name.replaceAll("\.", " ");
+    searchForm.value.keyword = record.name.replace(/\[.+\]/, "").trim();
   } else {
     searchForm.value.keyword = record.title;
   }
