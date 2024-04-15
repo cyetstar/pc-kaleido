@@ -69,3 +69,24 @@ export const apiComicSeriesMatchInfo = (data: any) => {
     data,
   });
 };
+
+export const apiComicSeriesSync = (data: any) => {
+  return useFetch.post<any>({
+    url: "/comicSeries/sync",
+    data,
+  });
+};
+
+export const apiComicSeriesReadComicInfo = (data: any) => {
+  return useFetch.post<any>({
+    url: "/comicSeries/readComicInfo",
+    data,
+  });
+};
+
+export const apiComicSeriesViewPath = (params: any) => {
+  return useFetch.get<any>({
+    url: "/comicSeries/viewPath",
+    params,
+  });
+};

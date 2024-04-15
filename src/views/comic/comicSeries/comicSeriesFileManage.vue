@@ -22,7 +22,7 @@ import { ref } from "vue";
 
 import { message } from "ant-design-vue";
 import { apiMovieBasicUploadPoster } from "@/api/movie/movieBasicApi";
-import { apiTvshowShowViewPath } from "@/api/tvshow/tvshowShowApi";
+import { apiComicSeriesViewPath } from "@/api/comic/comicSeriesApi";
 
 const emits = defineEmits(["match-success"]);
 
@@ -33,7 +33,7 @@ let path = null;
 
 const show = (recordId) => {
   id = recordId;
-  apiTvshowShowViewPath({ id }).then((res) => {
+  apiComicSeriesViewPath({ id }).then((res) => {
     path = res;
     refFileModal.value.show(path);
   });

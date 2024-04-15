@@ -1,9 +1,10 @@
 import { useFetch } from "@/utils/http";
+import { RequestMethod } from "@ht/http";
 
 export const apiComicBookPage = (params: any) => {
-return useFetch.get<any>({
-  url: "/comicBook/page",
-  params,
+  return useFetch.get<any>({
+    url: "/comicBook/page",
+    params,
   });
 };
 
@@ -46,5 +47,20 @@ export const apiComicBookExport = (params: any) => {
   return useFetch.get<any>({
     url: "/comicBook/export",
     params,
+  });
+};
+
+export const apiComicBookListPage = (params: any) => {
+  return useFetch.get<any>({
+    url: "/comicBook/listPage",
+    params,
+  });
+};
+
+export const apiComicBookUploadCover = (data: any) => {
+  return useFetch.upload<any>({
+    url: "/comicBook/uploadCover",
+    method: RequestMethod.POST,
+    data,
   });
 };

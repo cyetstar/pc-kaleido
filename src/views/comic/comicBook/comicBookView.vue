@@ -11,25 +11,25 @@
       </template>
       <template #extra>
         <a-space>
-          <h-button @click="onFileManage">文件管理</h-button>
-          <h-button @click="onReadNFO">读取NFO</h-button>
-          <h-button @click="onSyncPlex">同步Plex</h-button>
+          <h-button @click="onSetCover">设置封面</h-button>
         </a-space>
       </template>
     </a-page-header>
     <section class="flex">
-      <k-cover-image v-if="record.id"
-          class="h-poster"
-          style="width: 250px"
-          type="comic" sub="book"
-          :thumb="record.id"
-      />
-      <p v-if="isNotEmpty(summaryList)">
-        <p v-for="(item, index) in summaryList" :key="index">
-          {{ item }}
-        </p>
-      </p>
+      <div>
+        <k-cover-image v-if="record.id"
+                       class="h-poster"
+                       style="width: 250px"
+                       type="comic" sub="book"
+                       :thumb="record.id"
+        />
+      </div>
       <div class="flex-1 ml-8">
+        <p v-if="isNotEmpty(summaryList)">
+          <p v-for="(item, index) in summaryList" :key="index">
+            {{ item }}
+          </p>
+        </p>
         <p class="flex" v-if="isNotEmpty(record.authorList)">
           <span class="mr-2">作者:</span>
           <span class="flex-1">
@@ -53,27 +53,8 @@
         </p>
       </div>
     </section>
-    <section v-if="isNotEmpty(record.actorList)">
-      <h-module-title title="主演"/>
-      <div class="grid grid-cols-24 gap-6">
-        <template :key="item.id" v-for="item in actorList">
-          <a-card class="k-card col-span-3">
-            <template #cover>
-              <k-plex-image
-                  class="h-thumb"
-                  :preview="false"
-                  :plex-thumb="item.thumb"
-              />
-            </template>
-            <a-card-meta
-                :title="item.name"
-                :description="item.playRole"
-            ></a-card-meta>
-          </a-card>
-        </template>
-      </div>
-    </section>
   </section>
+  <comic-book-set-cover ref="refComicBookSetCover"></comic-book-set-cover>
 </template>
 
 <script setup>
@@ -82,17 +63,13 @@ import {FileTextOutlined, LeftOutlined} from "@ant-design/icons-vue";
 import {useRoute, useRouter} from "vue-router";
 import {isNotEmpty} from "@ht/util";
 import {apiComicBookView} from "@/api/comic/comicBookApi";
+import ComicBookSetCover from "@/views/comic/comicBook/comicBookSetCover.vue";
 
 const route = useRoute()
 const router = useRouter()
 const record = ref({})
+const refComicBookSetCover = ref();
 const id = route.query.id;
-const actorList = computed(() => {
-  if (isNotEmpty(record.value.actorList) && record.value.actorList.length > 8) {
-    return record.value.actorList.slice(0, 8)
-  }
-  return record.value.actorList;
-});
 const summaryList = computed(() => {
   if (isNotEmpty(record.value.summary)) {
     return record.value.summary.split("\n")
@@ -105,6 +82,10 @@ const initData = async () => {
     record.value = res
   });
 };
+
+const onSetCover = () => {
+  refComicBookSetCover.value.show(id);
+}
 
 onMounted(() => {
   initData()

@@ -6,6 +6,11 @@
 <template>
   <section class="k-view-section">
     <a-page-header :title="record.title" @back="() => $router.go(-1)">
+      <template v-if="record.status==='ENDED'" #subTitle>
+        <a-tag color="green"
+        >已完结
+        </a-tag>
+      </template>
       <template #backIcon>
         <LeftOutlined/>
       </template>
@@ -13,21 +18,26 @@
         <a-space>
           <h-button @click="onFileManage">文件管理</h-button>
           <h-button @click="onSearchInfo">抓取信息</h-button>
-          <h-button @click="onReadNFO">读取NFO</h-button>
-          <h-button @click="onSyncPlex">同步Plex</h-button>
+          <h-button @click="onReadComicInfo">读取ComicInfo</h-button>
+          <h-button @click="onSync">同步Komga</h-button>
         </a-space>
       </template>
     </a-page-header>
     <section class="flex">
       <div>
         <k-cover-image v-if="record.id"
-            class="h-poster"
-            style="width: 250px"
-            type="comic"
-            :thumb="record.id"
+                       class="h-poster"
+                       style="width: 250px"
+                       type="comic"
+                       :thumb="record.id"
         />
       </div>
       <div class="flex-1 ml-8">
+<!--        <p>-->
+<!--          <a-tag color="green"-->
+<!--          >已完结-->
+<!--          </a-tag>-->
+<!--        </p>-->
         <p class="flex items-center">
           <span v-if="isNotEmpty(record.rating)" class="mr-2">{{ record.rating }} 分</span>
           <a-rate v-model:value="rating" disabled allow-half/>
@@ -91,6 +101,8 @@
       </div>
     </section>
   </section>
+
+  <comic-series-file-manage ref="refComicSeriesFileManage"/>
 </template>
 
 <script setup>
@@ -100,23 +112,18 @@ import {useRoute, useRouter} from "vue-router";
 import {isNotEmpty} from "@ht/util";
 import {apiTvshowShowReadNFO, apiTvshowShowSyncPlex, apiTvshowShowView} from "@/api/tvshow/tvshowShowApi.ts";
 import {message} from "ant-design-vue";
-import {apiComicSeriesView} from "@/api/comic/comicSeriesApi";
+import {apiComicSeriesReadComicInfo, apiComicSeriesSync, apiComicSeriesView} from "@/api/comic/comicSeriesApi";
 import {apiComicBookPage} from "@/api/comic/comicBookApi";
+import ComicSeriesFileManage from "@/views/comic/comicSeries/comicSeriesFileManage.vue";
 
 const route = useRoute()
 const router = useRouter()
 const record = ref({})
 const bookRecords = ref([]);
 const refTvshowShowSearchInfo = ref();
-const refTvshowShowFileManage = ref();
+const refComicSeriesFileManage = ref();
 const id = route.query.id;
 const rating = computed(() => record.value.rating / 2);
-const actorList = computed(() => {
-  if (isNotEmpty(record.value.actorList) && record.value.actorList.length > 8) {
-    return record.value.actorList.slice(0, 8)
-  }
-  return record.value.actorList;
-});
 const summaryList = computed(() => {
   if (isNotEmpty(record.value.summary)) {
     return record.value.summary.split("\n")
@@ -143,10 +150,10 @@ const onSearchInfo = () => {
 }
 
 const onFileManage = () => {
-  refTvshowShowFileManage.value.show(id);
+  refComicSeriesFileManage.value.show(id);
 };
-const onReadNFO = () => {
-  apiTvshowShowReadNFO({id}).then((res) => {
+const onReadComicInfo = () => {
+  apiComicSeriesReadComicInfo({id}).then((res) => {
     if (res) {
       message.success("读取成功");
       initData();
@@ -156,13 +163,13 @@ const onReadNFO = () => {
   })
 }
 
-const onSyncPlex = () => {
-  apiTvshowShowSyncPlex({id}).then((res) => {
+const onSync = () => {
+  apiComicSeriesSync({id}).then((res) => {
     if (res) {
       message.success("同步成功");
       initData();
     } else {
-      message.error("读取失败");
+      message.error("同步失败");
     }
   })
 }
