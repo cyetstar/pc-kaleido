@@ -26,7 +26,7 @@
             dragMode: 'crop',
             initialAspectRatio: 21 / 29.7,
           }"
-          @ready="onCropend"
+          @ready="onReady"
           @cropend="onCropend"
         />
       </div>
@@ -43,6 +43,9 @@
       <h-radio button :columns="columns" v-model:value="number" />
     </div>
     <template #footer>
+      <h-button type="default" @click="onFixed"
+        >{{ !fixed ? "固定比例" : "取消固定" }}
+      </h-button>
       <h-button type="primary" @click="onSubmit">确认选定</h-button>
     </template>
   </a-modal>
@@ -73,6 +76,7 @@ let url = computed(() => {
   url = url + "page?id=" + id + "&number=" + number.value;
   return url;
 });
+let fixed = ref(false);
 
 const initData = () => {
   apiComicBookListPage({ id }).then((res) => {
@@ -86,9 +90,27 @@ const show = (bookId) => {
   initData();
 };
 
+const onReady = () => {
+  if (!cropper) return;
+  cropper.setCropBoxData({
+    left: 0,
+    top: 0,
+  });
+  newUrl.value = cropper.getDataURL();
+};
 const onCropend = () => {
   if (!cropper) return;
   newUrl.value = cropper.getDataURL();
+};
+
+const onFixed = () => {
+  if (!cropper) return;
+  if (fixed.value) {
+    cropper.setAspectRatio(NaN);
+  } else {
+    cropper.setAspectRatio(21 / 29.7);
+  }
+  fixed.value = !fixed.value;
 };
 
 const onSubmit = () => {
