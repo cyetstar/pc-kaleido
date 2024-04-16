@@ -84,7 +84,7 @@ const initData = async () => {
 };
 
 const onSetCover = () => {
-  refComicBookSetCover.value.show(id);
+  refComicBookSetCover.value.show(record.value);
 }
 
 onMounted(() => {

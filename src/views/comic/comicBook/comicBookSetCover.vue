@@ -70,6 +70,7 @@ let visible = ref();
 let number = ref(1);
 let columns = ref([]);
 let id = null;
+let pageCount = 0;
 let newUrl = ref();
 let url = computed(() => {
   let url = inject("imageUrl");
@@ -79,13 +80,14 @@ let url = computed(() => {
 let fixed = ref(false);
 
 const initData = () => {
-  apiComicBookListPage({ id }).then((res) => {
-    columns.value = res.map((s) => ({ text: s.number, value: s.number }));
-  });
+  for (let i = 1; i <= pageCount; i++) {
+    columns.value.push({ text: i, value: i });
+  }
 };
 
-const show = (bookId) => {
-  id = bookId;
+const show = (record) => {
+  id = record.id;
+  pageCount = record.pageCount;
   visible.value = true;
   initData();
 };
@@ -118,7 +120,7 @@ const onSubmit = () => {
   // let cropBoxData = cropper.getCropBoxData();
   let data = cropper.getData();
   let scale = 300 / data.width;
-  cropper.scale(scale, scale);
+  // cropper.scale(scale, scale);
   // console.log(data.height / cropBoxData.height);
   // console.log(cropBoxData);
   // console.log(data);
