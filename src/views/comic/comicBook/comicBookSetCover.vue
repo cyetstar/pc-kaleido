@@ -9,6 +9,7 @@
     v-model:visible="visible"
     title="设置封面页"
     width="1280px"
+    style="top: 20px"
   >
     <div class="flex">
       <div>
@@ -38,15 +39,24 @@
         />
       </div>
     </div>
+    <h-module-title title="单卷" class="mt-4" />
+    <div class="mt-4">
+      <h-radio
+        button
+        :columns="bookColumns"
+        v-model:value="bookNumber"
+        @change="onChangeBook"
+      />
+    </div>
     <h-module-title title="页码" class="mt-4" />
     <div class="mt-4">
-      <h-radio button :columns="columns" v-model:value="number" />
+      <h-radio button :columns="pageColumns" v-model:value="pageNumber" />
     </div>
     <template #footer>
       <h-button type="default" @click="onFixed"
         >{{ !fixed ? "固定比例" : "取消固定" }}
       </h-button>
-      <h-button type="primary" @click="onSubmit">确认选定</h-button>
+      <h-button type="primary" @click="onSubmit">确认</h-button>
     </template>
   </a-modal>
 </template>
@@ -58,6 +68,7 @@ import { useRoute, useRouter } from "vue-router";
 import VuePictureCropper, { cropper } from "vue-picture-cropper";
 import {
   apiComicBookListPage,
+  apiComicBookPage,
   apiComicBookUploadCover,
   apiComicBookView,
 } from "@/api/comic/comicBookApi";
@@ -66,33 +77,60 @@ import { useAppStore } from "@/store/modules/app";
 
 const route = useRoute();
 const router = useRouter();
-const record = ref({});
 let visible = ref();
-let number = ref(1);
-let columns = ref([]);
+let record = ref({});
+let bookNumber = ref(-1);
+let pageNumber = ref(1);
+let pageColumns = ref([]);
+let bookColumns = ref([]);
+
 let id = null;
 let pageCount = 0;
 let newUrl = ref();
+
 let url = computed(() => {
   let url = inject("imageUrl");
-  url = url + "page?id=" + id + "&number=" + number.value;
+  url = url + "page?id=" + record.value.id + "&number=" + pageNumber.value;
   return url;
 });
+
 let fixed = ref(false);
 let appStore = useAppStore();
 
-const initData = () => {
-  columns.value = [];
-  for (let i = 1; i <= pageCount; i++) {
-    columns.value.push({ text: i, value: i });
+const genPageColumns = () => {
+  pageColumns.value = [];
+  for (let i = 1; i <= record.value.pageCount; i++) {
+    pageColumns.value.push({ text: i, value: i });
   }
 };
 
-const show = (record) => {
-  id = record.id;
-  pageCount = record.pageCount;
+const initData = () => {
+  apiComicBookPage({
+    pageSize: 1000,
+    orderBy: "ASC:book_number",
+    seriesId: record.value.seriesId,
+  }).then((res) => {
+    bookColumns.value = res.records.map((s) => ({
+      text: s.bookNumber,
+      value: s.bookNumber,
+      ...s,
+    }));
+    genPageColumns();
+  });
+};
+
+const show = (bookRecord) => {
+  record.value = bookRecord;
+  bookNumber.value = record.value.bookNumber;
+  console.log(bookNumber.value);
   visible.value = true;
   initData();
+};
+
+const onChangeBook = (e) => {
+  record.value = bookColumns.value[e.bookNumber - 1];
+  pageNumber.value = 1;
+  genPageColumns();
 };
 
 const onReady = () => {
@@ -129,12 +167,11 @@ const onSubmit = () => {
   cropper
     .getFile()
     .then((file) => {
-      return apiComicBookUploadCover({ id, file });
+      return apiComicBookUploadCover({ id: record.value.id, file });
     })
     .then((res) => {
       if (res) {
         message.success("设置成功");
-        visible.value = false;
       } else {
         message.error("设置失败");
       }

@@ -18,6 +18,7 @@
         <a-space>
           <h-button @click="onFileManage">文件管理</h-button>
           <h-button @click="onSearchInfo">抓取信息</h-button>
+          <h-button @click="onSetCover">设置封面</h-button>
           <h-button @click="onReadComicInfo">读取ComicInfo</h-button>
           <h-button @click="onSync">同步Komga</h-button>
         </a-space>
@@ -33,11 +34,11 @@
         />
       </div>
       <div class="flex-1 ml-8">
-<!--        <p>-->
-<!--          <a-tag color="green"-->
-<!--          >已完结-->
-<!--          </a-tag>-->
-<!--        </p>-->
+        <!--        <p>-->
+        <!--          <a-tag color="green"-->
+        <!--          >已完结-->
+        <!--          </a-tag>-->
+        <!--        </p>-->
         <p class="flex items-center">
           <span v-if="isNotEmpty(record.rating)" class="mr-2">{{ record.rating }} 分</span>
           <a-rate v-model:value="rating" disabled allow-half/>
@@ -100,9 +101,10 @@
         </template>
       </div>
     </section>
-  </section>
 
+  </section>
   <comic-series-file-manage ref="refComicSeriesFileManage"/>
+  <comic-book-set-cover ref="refComicBookSetCover"/>
 </template>
 
 <script setup>
@@ -115,12 +117,13 @@ import {message} from "ant-design-vue";
 import {apiComicSeriesReadComicInfo, apiComicSeriesSync, apiComicSeriesView} from "@/api/comic/comicSeriesApi";
 import {apiComicBookPage} from "@/api/comic/comicBookApi";
 import ComicSeriesFileManage from "@/views/comic/comicSeries/comicSeriesFileManage.vue";
+import ComicBookSetCover from "@/views/comic/comicBook/comicBookSetCover.vue";
 
 const route = useRoute()
 const router = useRouter()
 const record = ref({})
 const bookRecords = ref([]);
-const refTvshowShowSearchInfo = ref();
+const refComicBookSetCover = ref();
 const refComicSeriesFileManage = ref();
 const id = route.query.id;
 const rating = computed(() => record.value.rating / 2);
@@ -145,13 +148,14 @@ const onViewBook = (id) => {
 };
 
 
-const onSearchInfo = () => {
-  refTvshowShowSearchInfo.value.show(record.value)
-}
-
 const onFileManage = () => {
   refComicSeriesFileManage.value.show(id);
 };
+
+const onSetCover = () => {
+  let bookRecord = bookRecords.value[0]
+  refComicBookSetCover.value.show(bookRecord)
+}
 const onReadComicInfo = () => {
   apiComicSeriesReadComicInfo({id}).then((res) => {
     if (res) {
