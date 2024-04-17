@@ -7,8 +7,7 @@ const comicSeriesRoute: AppRouteConfig[] = [
     component: () => import("@/views/comic/comicSeries/comicSeriesPage.vue"),
     meta: {
       title: "漫画系列",
-      requiresAuth: false,
-      icon: ["i-home.png", "i-home-active.png"],
+      keepAlive: true,
     },
   },
   {
@@ -17,9 +16,8 @@ const comicSeriesRoute: AppRouteConfig[] = [
     component: () => import("@/views/comic/comicSeries/comicSeriesView.vue"),
     meta: {
       title: "漫画系列详情",
-      requiresAuth: false,
     },
   },
-]
+];
 
-export default comicSeriesRoute
+export default comicSeriesRoute;

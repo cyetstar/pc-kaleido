@@ -6,6 +6,7 @@ interface AppState {
   config: any;
   scrollTop: any;
   actions: any;
+  cropBoxData: any;
 }
 
 export const useAppStore = defineStore("app", {
@@ -13,6 +14,7 @@ export const useAppStore = defineStore("app", {
     config: {},
     scrollTop: {},
     actions: {},
+    cropBoxData: { top: 0, left: 0 },
   }),
   actions: {
     async initAppConfig() {
@@ -64,6 +66,10 @@ export const useAppStore = defineStore("app", {
 
     clearAppState() {
       this.$reset();
+    },
+
+    setCropBoxData(data: any) {
+      this.cropBoxData = data;
     },
   },
   persist: {

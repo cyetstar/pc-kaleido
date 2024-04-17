@@ -62,6 +62,7 @@ import {
   apiComicBookView,
 } from "@/api/comic/comicBookApi";
 import { message } from "ant-design-vue";
+import { useAppStore } from "@/store/modules/app";
 
 const route = useRoute();
 const router = useRouter();
@@ -78,8 +79,10 @@ let url = computed(() => {
   return url;
 });
 let fixed = ref(false);
+let appStore = useAppStore();
 
 const initData = () => {
+  columns.value = [];
   for (let i = 1; i <= pageCount; i++) {
     columns.value.push({ text: i, value: i });
   }
@@ -94,10 +97,8 @@ const show = (record) => {
 
 const onReady = () => {
   if (!cropper) return;
-  cropper.setCropBoxData({
-    left: 0,
-    top: 0,
-  });
+  let cropBoxData = appStore.$state.cropBoxData;
+  cropper.setCropBoxData(cropBoxData);
   newUrl.value = cropper.getDataURL();
 };
 const onCropend = () => {
@@ -118,8 +119,9 @@ const onFixed = () => {
 const onSubmit = () => {
   if (!cropper) return;
   // let cropBoxData = cropper.getCropBoxData();
-  let data = cropper.getData();
-  let scale = 300 / data.width;
+  let data = cropper.getCropBoxData();
+  appStore.setCropBoxData(data);
+  // let scale = 300 / data.width;
   // cropper.scale(scale, scale);
   // console.log(data.height / cropBoxData.height);
   // console.log(cropBoxData);
