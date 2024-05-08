@@ -7,7 +7,7 @@
   <a-modal
     ref="formRef"
     v-model:visible="visible"
-    title="抓取信息"
+    :title="`匹配【${title}】信息`"
     width="960px"
     :footer="null"
   >
@@ -23,11 +23,10 @@
         placeholder=""
         v-model:value="searchForm.keyword"
         name="keyword"
-        @blur="onSearch"
-        @keyup.enter.native="$event.target.blur()"
+        @keyup.enter="onSearch"
       />
       <h-button @click="onSearch">搜索</h-button>
-      <h-button @click="onMatch">自动抓取</h-button>
+      <h-button @click="onMatch">自动匹配</h-button>
     </div>
 
     <a-table
@@ -52,7 +51,9 @@
       <a-table-column title="漫画信息">
         <template #="{ record }">
           <p>
-            {{ record.series }}
+            <a :href="`https://bgm.tv/subject/${record.bgmId}`" target="_blank">
+              {{ record.series }}
+            </a>
           </p>
           <p class="text-muted" v-if="isNotEmpty(record.originalSeries)">
             {{ record.originalSeries }}
@@ -74,7 +75,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 import { message } from "ant-design-vue";
 import { isNotEmpty } from "@ht/util";
 import {
@@ -84,6 +85,7 @@ import {
 } from "@/api/comic/comicSeriesApi";
 
 const emits = defineEmits(["match-success"]);
+const title = ref();
 const type = ref();
 const loading = ref();
 let visible = ref();
@@ -95,11 +97,11 @@ let searchForm = ref({
 });
 let typeColumns = [
   {
-    text: "番组",
+    text: "bgm",
     value: "1",
   },
   {
-    text: "番组（新）",
+    text: "bgm(新)",
     value: "0",
   },
 ];
@@ -110,8 +112,14 @@ const show = (source, showType) => {
   type.value = showType;
   dataSource.value = [];
   if (type.value === "path") {
-    searchForm.value.keyword = record.name.replace(/\[.+\]/, "").trim();
+    title.value = record.name;
+    searchForm.value = {
+      keyword: record.name.replaceAll("[", "").replaceAll("]", "").trim(),
+      ver: "1",
+    };
+    searchForm.value.ver = "1";
   } else {
+    title.value = record.title;
     searchForm.value.keyword = record.title;
   }
 };

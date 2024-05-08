@@ -45,6 +45,6 @@ export const useMenuStore = defineStore("menu", {
   },
   persist: {
     key: "MENU_STORE",
-    storage: window.sessionStorage,
+    storage: window.localStorage,
   },
 });

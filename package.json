@@ -24,7 +24,7 @@
     "ant-design-vue": "3.2.20",
     "axios": "^0.25.0",
     "echarts": "^5.4.1",
-    "hta-ui": "^1.2.5",
+    "hta-ui": "^1.2.6",
     "js-cookie": "^3.0.1",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",

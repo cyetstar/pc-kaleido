@@ -74,6 +74,6 @@ export const useAppStore = defineStore("app", {
   },
   persist: {
     key: "APP_STORE",
-    storage: window.sessionStorage,
+    storage: window.localStorage,
   },
 });

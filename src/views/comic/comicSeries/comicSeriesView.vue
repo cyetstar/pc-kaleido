@@ -112,7 +112,6 @@ import {ref, onMounted, computed} from "vue";
 import {FileTextOutlined, LeftOutlined} from "@ant-design/icons-vue";
 import {useRoute, useRouter} from "vue-router";
 import {isNotEmpty} from "@ht/util";
-import {apiTvshowShowReadNFO, apiTvshowShowSyncPlex, apiTvshowShowView} from "@/api/tvshow/tvshowShowApi.ts";
 import {message} from "ant-design-vue";
 import {apiComicSeriesReadComicInfo, apiComicSeriesSync, apiComicSeriesView} from "@/api/comic/comicSeriesApi";
 import {apiComicBookPage} from "@/api/comic/comicBookApi";

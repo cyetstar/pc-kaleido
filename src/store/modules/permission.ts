@@ -58,6 +58,6 @@ export const usePermissionStore = defineStore("permission", {
   },
   persist: {
     key: "PERMISSION_STORE",
-    storage: window.sessionStorage,
+    storage: window.localStorage,
   },
 });

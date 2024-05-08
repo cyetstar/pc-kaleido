@@ -6,12 +6,9 @@ import { useAppStore } from "@/store/modules/app";
 import { useWebSocketStore } from "@/store/modules/websocket";
 
 import { createPinia } from "pinia";
-const pinia = createPinia();
-export default pinia;
 
-const webSocketStore = useWebSocketStore(pinia);
-const appStore = useAppStore(pinia);
 export const triggerAction = (action: string, params?: any) => {
+  const appStore = useAppStore();
   if (appStore.actions[action]) {
     return apiActionStop({ action });
   } else {
@@ -23,7 +20,7 @@ export const triggerAction = (action: string, params?: any) => {
           action,
           params,
         }).then(() => {
-          webSocketStore.connect();
+          useWebSocketStore().connect();
         });
       },
       onCancel() {},
@@ -32,5 +29,5 @@ export const triggerAction = (action: string, params?: any) => {
 };
 
 export const isActionRunning = (action: string) => {
-  return !!appStore.actions[action];
+  return !!useAppStore().$state.actions[action];
 };

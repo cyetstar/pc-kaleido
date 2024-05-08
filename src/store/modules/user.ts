@@ -93,6 +93,6 @@ export const useUserStore = defineStore("user", {
   },
   persist: {
     key: "USER_STORE",
-    storage: window.sessionStorage,
+    storage: window.localStorage,
   },
 });

@@ -122,14 +122,16 @@ const initData = () => {
 const show = (bookRecord) => {
   record.value = bookRecord;
   bookNumber.value = record.value.bookNumber;
-  console.log(bookNumber.value);
+  pageNumber.value = 1;
   visible.value = true;
   initData();
 };
 
 const onChangeBook = (e) => {
   record.value = bookColumns.value[e.bookNumber - 1];
-  pageNumber.value = 1;
+  if (record.value.pageCount < pageNumber.value) {
+    pageNumber.value = record.value.pageCount;
+  }
   genPageColumns();
 };
 
@@ -156,14 +158,6 @@ const onFixed = () => {
 
 const onSubmit = () => {
   if (!cropper) return;
-  // let cropBoxData = cropper.getCropBoxData();
-  let data = cropper.getCropBoxData();
-  appStore.setCropBoxData(data);
-  // let scale = 300 / data.width;
-  // cropper.scale(scale, scale);
-  // console.log(data.height / cropBoxData.height);
-  // console.log(cropBoxData);
-  // console.log(data);
   cropper
     .getFile()
     .then((file) => {
@@ -171,6 +165,8 @@ const onSubmit = () => {
     })
     .then((res) => {
       if (res) {
+        let data = cropper.getCropBoxData();
+        appStore.setCropBoxData(data);
         message.success("设置成功");
       } else {
         message.error("设置失败");
@@ -182,8 +178,8 @@ defineExpose({
   show,
 });
 </script>
-<style lang="less">
-.ant-radio-button-wrapper {
+<style lang="less" scoped>
+/deep/ .ant-radio-button-wrapper {
   width: 32px;
   text-align: center;
   padding: 0;

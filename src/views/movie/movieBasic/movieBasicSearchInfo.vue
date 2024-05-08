@@ -7,7 +7,7 @@
   <a-modal
     ref="formRef"
     v-model:visible="visible"
-    title="抓取信息"
+    :title="`匹配【${title}】信息`"
     width="960px"
     :footer="null"
   >
@@ -23,8 +23,7 @@
         placeholder=""
         v-model:value="searchForm.keyword"
         name="keyword"
-        @blur="onSearch"
-        @keyup.enter.native="$event.target.blur()"
+        @keyup.enter="onSearch"
       />
       <h-button @click="onSearch">搜索</h-button>
       <h-button @click="onMatch">自动抓取</h-button>
@@ -92,6 +91,7 @@ import {
 import { isNotEmpty } from "@ht/util";
 
 const emits = defineEmits(["match-success"]);
+const title = ref();
 const type = ref();
 const loading = ref();
 let movieRecord = {};
@@ -127,9 +127,11 @@ const show = (record, showType) => {
   dataSource.value = [];
   if (type.value === "path") {
     pathRecord = record;
+    title.value = record.name;
     searchForm.value.keyword = pathRecord.name.replaceAll("\.", " ");
   } else {
     movieRecord = record;
+    title.value = record.title;
     searchForm.value.keyword = movieRecord.title;
   }
 };
