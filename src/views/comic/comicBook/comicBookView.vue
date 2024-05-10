@@ -35,7 +35,7 @@
           <span class="flex-1">
             <template v-for="(item, index) in record.authorList">
               <span v-if="index !== 0" class="px-2">/</span>
-              {{ item.name }}
+               <a @click="onViewAuthor(item)">{{ item.name }}</a>
             </template>
           </span>
         </p>
@@ -89,6 +89,10 @@ const initData = async () => {
 
 const onSetCover = () => {
   refComicBookSetCover.value.show(record.value);
+}
+
+const onViewAuthor = (author) => {
+  router.push({name: "comicSeriesPage", params: {keyword: author.name, load: true}});
 }
 
 onMounted(() => {

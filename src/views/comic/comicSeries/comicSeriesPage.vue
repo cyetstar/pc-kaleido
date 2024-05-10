@@ -197,10 +197,7 @@ onMounted(() => {
 onActivated(() => {
   refScrollGrid.value.scrollTop = appStore.getScrollTop("comic");
   if (route.params.load) {
-    const actorId = route.params.actorId;
-    if (actorId) {
-      setFilter("actorId", actorId, "演职员: " + route.params.actorName);
-    }
+    searchForm.value.keyword = route.params.keyword;
     onSearch();
   }
 });
