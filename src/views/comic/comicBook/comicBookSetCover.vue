@@ -62,15 +62,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, inject } from "vue";
-import { FileTextOutlined, LeftOutlined } from "@ant-design/icons-vue";
+import { ref, computed, inject } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import VuePictureCropper, { cropper } from "vue-picture-cropper";
+import { ImageCompressor } from "image-compressor";
 import {
-  apiComicBookListPage,
   apiComicBookPage,
   apiComicBookUploadCover,
-  apiComicBookView,
 } from "@/api/comic/comicBookApi";
 import { message } from "ant-design-vue";
 import { useAppStore } from "@/store/modules/app";
@@ -158,12 +156,16 @@ const onFixed = () => {
 
 const onSubmit = () => {
   if (!cropper) return;
-  cropper
-    .getFile()
-    .then((file) => {
-      return apiComicBookUploadCover({ id: record.value.id, file });
-    })
-    .then((res) => {
+  let dataURL = cropper.getDataURL();
+  const imageCompressor = new ImageCompressor();
+  const compressorSettings = {
+    toWidth: 300,
+    mimeType: "image/jpg",
+    mode: "strict",
+    speed: "low",
+  };
+  imageCompressor.run(dataURL, compressorSettings, (data) => {
+    apiComicBookUploadCover({ id: record.value.id, data }).then((res) => {
       if (res) {
         let data = cropper.getCropBoxData();
         appStore.setCropBoxData(data);
@@ -172,6 +174,7 @@ const onSubmit = () => {
         message.error("设置失败");
       }
     });
+  });
 };
 
 defineExpose({

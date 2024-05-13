@@ -23,8 +23,10 @@
     "ansi_up": "^6.0.2",
     "ant-design-vue": "3.2.20",
     "axios": "^0.25.0",
+    "cropperjs": "1.6.1",
     "echarts": "^5.4.1",
     "hta-ui": "^1.2.6",
+    "image-compressor": "^2.0.3",
     "js-cookie": "^3.0.1",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
@@ -37,9 +39,8 @@
     "vue": "^3.2.47",
     "vue-echarts": "^6.5.2",
     "vue-native-websocket-vue3": "^3.1.7",
-    "vue-router": "4",
-    "cropperjs": "1.6.1",
-    "vue-picture-cropper": "^0.7.0"
+    "vue-picture-cropper": "^0.7.0",
+    "vue-router": "4"
   },
   "devDependencies": {
     "@commitlint/cli": "^16.1.0",

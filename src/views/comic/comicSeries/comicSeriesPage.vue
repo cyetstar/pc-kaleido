@@ -27,6 +27,12 @@
             ok-text="更新文件源"
             cancel-text="取消更新"
           />
+          <k-action-button
+            action="comicReadComicInfo"
+            ok-text="读取ComicInfo"
+            cancel-text="取消读取"
+            :form="searchForm"
+          />
           <h-button @click="onOpenDownloadFolder">打开下载目录</h-button>
         </a-space>
       </div>

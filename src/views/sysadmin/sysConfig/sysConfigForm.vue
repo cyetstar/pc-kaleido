@@ -57,6 +57,29 @@
             />
           </h-col>
         </a-tab-pane>
+        <a-tab-pane key="komga" tab="Komga">
+          <h-col :span="12">
+            <h-input
+              label="Komga地址"
+              name="komgaUrl"
+              v-model:value="form.komgaUrl"
+            />
+          </h-col>
+          <h-col :span="12">
+            <h-input
+              label="Komga账号"
+              name="komgaUsername"
+              v-model:value="form.komgaUsername"
+            />
+          </h-col>
+          <h-col :span="12">
+            <h-input
+              label="Komga密码"
+              name="komgaPassword"
+              v-model:value="form.komgaPassword"
+            />
+          </h-col>
+        </a-tab-pane>
         <a-tab-pane key="movie" tab="电影">
           <h-col :span="12">
             <h-input
@@ -142,29 +165,15 @@
               v-model:value="form.comicDownloadPath"
             />
           </h-col>
-          <h-col :span="12">
-            <h-input
-              label="Komga地址"
-              name="komgaUrl"
-              v-model:value="form.komgaUrl"
-            />
-          </h-col>
-          <h-col :span="12">
-            <h-input
-              label="Komga账号"
-              name="komgaUsername"
-              v-model:value="form.komgaUsername"
-            />
-          </h-col>
-          <h-col :span="12">
-            <h-input
-              label="Komga密码"
-              name="komgaPassword"
-              v-model:value="form.komgaPassword"
-            />
-          </h-col>
         </a-tab-pane>
-        <a-tab-pane key="third" tab="第三方">
+        <a-tab-pane key="third" tab="TMM">
+          <h-col :span="12">
+            <h-input
+              label="TMM地址"
+              name="tmmUrl"
+              v-model:value="form.tmmUrl"
+            />
+          </h-col>
           <h-col :span="12">
             <h-input
               label="网易云音乐API地址"
@@ -181,18 +190,23 @@
           </h-col>
           <h-col :span="12">
             <h-input
-              label="TMM地址"
-              name="tmmUrl"
-              v-model:value="form.tmmUrl"
-            />
-          </h-col>
-          <h-col :span="12">
-            <h-input
               label="豆瓣Cookie"
               text-area
               name="doubanCookie"
               v-model:value="form.doubanCookie"
             />
+          </h-col>
+          <h-col :span="12">
+            <h-input
+              label="番组计划AccessToken"
+              name="bgmAccessToken"
+              v-model:value="form.bgmAccessToken"
+            />
+            <h-col :offset="6">
+              <a href="https://next.bgm.tv/demo/access-token/create"
+                >https://next.bgm.tv/demo/access-token/create</a
+              ></h-col
+            >
           </h-col>
         </a-tab-pane>
         <a-tab-pane key="other" tab="其他">
@@ -212,7 +226,7 @@
           </h-col>
         </a-tab-pane>
       </a-tabs>
-      <h-col :span="12" :offset="3">
+      <h-col :span="12" :offset="3" class="mt-3">
         <h-button type="primary" @click="onSave">保存</h-button>
       </h-col>
     </a-form>
@@ -260,6 +274,7 @@ let form = ref({
   komgaUrl: "",
   komgaUsername: "",
   komgaPassword: "",
+  bgmAccessToken: "",
 });
 
 onMounted(() => {

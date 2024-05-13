@@ -58,9 +58,8 @@ export const apiComicBookListPage = (params: any) => {
 };
 
 export const apiComicBookUploadCover = (data: any) => {
-  return useFetch.upload<any>({
+  return useFetch.post<any>({
     url: "/comicBook/uploadCover",
-    method: RequestMethod.POST,
     data,
   });
 };
