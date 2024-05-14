@@ -40,20 +40,13 @@
       </div>
     </div>
     <h-module-title title="单卷" class="mt-4" />
-    <div class="mt-4 flex">
+    <div class="mt-4">
       <h-radio
         button
         :columns="bookColumns"
         v-model:value="bookNumber"
         @change="onChangeBook"
       />
-      <h-button
-        type="primary"
-        class="ml-3"
-        @click="onSubmitNextBook"
-        :disabled="maxBookNumber === bookNumber"
-        >确认且下一卷
-      </h-button>
     </div>
     <h-module-title title="页码" class="mt-4" />
     <div class="mt-4">
@@ -64,6 +57,16 @@
         >{{ !fixed ? "固定比例" : "取消固定" }}
       </h-button>
       <h-button type="primary" @click="onSubmit">确认</h-button>
+      <h-button
+        type="primary"
+        class="ml-3"
+        @click="onSubmitNextBook"
+        v-if="maxBookNumber > bookNumber"
+        >确认并下卷
+      </h-button>
+      <h-button type="primary" class="ml-3" @click="onSubmitClose" v-else
+        >确认并关闭
+      </h-button>
     </template>
   </a-modal>
 </template>
@@ -172,9 +175,18 @@ const onSubmitNextBook = () => {
   if (maxBookNumber.value === bookNumber.value) {
     return;
   }
-  onSubmit();
-  bookNumber.value = bookNumber.value + 1;
-  onChangeBook({ bookNumber: bookNumber.value });
+  onSubmit().then((res) => {
+    if (res) {
+      bookNumber.value = bookNumber.value + 1;
+      onChangeBook({ bookNumber: bookNumber.value });
+    }
+  });
+};
+
+const onSubmitClose = () => {
+  onSubmit().then((res) => {
+    visible.value = !res;
+  });
 };
 
 const onSubmit = () => {
@@ -187,15 +199,19 @@ const onSubmit = () => {
     mode: "strict",
     speed: "low",
   };
-  imageCompressor.run(dataURL, compressorSettings, (data) => {
-    apiComicBookUploadCover({ id: record.value.id, data }).then((res) => {
-      if (res) {
-        let data = cropper.getCropBoxData();
-        appStore.setCropBoxData(data);
-        message.success("设置成功");
-      } else {
-        message.error("设置失败");
-      }
+
+  return new Promise((resolve) => {
+    imageCompressor.run(dataURL, compressorSettings, (data) => {
+      apiComicBookUploadCover({ id: record.value.id, data }).then((res) => {
+        if (res) {
+          let data = cropper.getCropBoxData();
+          appStore.setCropBoxData(data);
+          message.success("设置成功");
+        } else {
+          message.error("设置失败");
+        }
+        return resolve(res);
+      });
     });
   });
 };
