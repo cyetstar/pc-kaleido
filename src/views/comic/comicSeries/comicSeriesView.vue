@@ -17,7 +17,6 @@
       <template #extra>
         <a-space>
           <h-button @click="onFileManage">文件管理</h-button>
-          <h-button @click="onSearchInfo">抓取信息</h-button>
           <h-button @click="onSetCover">设置封面</h-button>
           <h-button @click="onReadComicInfo">读取ComicInfo</h-button>
           <h-button @click="onSync">同步Komga</h-button>

@@ -126,7 +126,7 @@ const show = (bookRecord) => {
 };
 
 const onChangeBook = (e) => {
-  record.value = bookColumns.value[e.bookNumber - 1];
+  record.value = bookColumns.value.filter((s) => s.value === e.bookNumber)[0];
   if (record.value.pageCount < pageNumber.value) {
     pageNumber.value = record.value.pageCount;
   }
