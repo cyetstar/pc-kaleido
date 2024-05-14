@@ -40,13 +40,20 @@
       </div>
     </div>
     <h-module-title title="单卷" class="mt-4" />
-    <div class="mt-4">
+    <div class="mt-4 flex">
       <h-radio
         button
         :columns="bookColumns"
         v-model:value="bookNumber"
         @change="onChangeBook"
       />
+      <h-button
+        type="primary"
+        class="ml-3"
+        @click="onSubmitNextBook"
+        :disabled="maxBookNumber === bookNumber"
+        >确认且下一卷
+      </h-button>
     </div>
     <h-module-title title="页码" class="mt-4" />
     <div class="mt-4">
@@ -83,7 +90,7 @@ let pageColumns = ref([]);
 let bookColumns = ref([]);
 
 let id = null;
-let pageCount = 0;
+let maxBookNumber = ref(0);
 let newUrl = ref();
 
 let url = computed(() => {
@@ -113,6 +120,13 @@ const initData = () => {
       value: s.bookNumber,
       ...s,
     }));
+
+    maxBookNumber.value = Math.max.apply(
+      Math,
+      res.records.map((s) => {
+        return s.bookNumber;
+      })
+    );
     genPageColumns();
   });
 };
@@ -152,6 +166,15 @@ const onFixed = () => {
     cropper.setAspectRatio(21 / 29.7);
   }
   fixed.value = !fixed.value;
+};
+
+const onSubmitNextBook = () => {
+  if (maxBookNumber.value === bookNumber.value) {
+    return;
+  }
+  onSubmit();
+  bookNumber.value = bookNumber.value + 1;
+  onChangeBook({ bookNumber: bookNumber.value });
 };
 
 const onSubmit = () => {
