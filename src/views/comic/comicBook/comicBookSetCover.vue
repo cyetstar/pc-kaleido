@@ -44,7 +44,7 @@
       <h-radio
         button
         :columns="bookColumns"
-        v-model:value="bookNumber"
+        v-model:value="bookId"
         @change="onChangeBook"
       />
     </div>
@@ -61,7 +61,7 @@
         type="primary"
         class="ml-3"
         @click="onSubmitNextBook"
-        v-if="maxBookNumber > bookNumber"
+        v-if="bookCount > bookIndex + 1"
         >确认并下卷
       </h-button>
       <h-button type="primary" class="ml-3" @click="onSubmitClose" v-else
@@ -86,15 +86,17 @@ import { useAppStore } from "@/store/modules/app";
 const route = useRoute();
 const router = useRouter();
 let visible = ref();
-let record = ref({});
-let bookNumber = ref(-1);
+
 let pageNumber = ref(1);
 let pageColumns = ref([]);
 let bookColumns = ref([]);
 
 let id = null;
-let maxBookNumber = ref(0);
 let newUrl = ref();
+let bookCount = ref(0);
+let bookId = ref();
+let bookIndex = ref(0);
+let record = ref({});
 
 let url = computed(() => {
   let url = inject("imageUrl");
@@ -120,30 +122,30 @@ const initData = () => {
   }).then((res) => {
     bookColumns.value = res.records.map((s) => ({
       text: s.bookNumber,
-      value: s.bookNumber,
+      value: s.id,
       ...s,
     }));
-
-    maxBookNumber.value = Math.max.apply(
-      Math,
-      res.records.map((s) => {
-        return s.bookNumber;
-      })
-    );
+    bookCount.value = res.records.length;
+    bookIndex.value = res.records.findIndex((s) => s.id === bookId.value);
     genPageColumns();
   });
 };
 
 const show = (bookRecord) => {
   record.value = bookRecord;
-  bookNumber.value = record.value.bookNumber;
+  bookId.value = bookRecord.id;
   pageNumber.value = 1;
   visible.value = true;
   initData();
 };
 
 const onChangeBook = (e) => {
-  record.value = bookColumns.value.filter((s) => s.value === e.bookNumber)[0];
+  bookIndex.value = bookColumns.value.findIndex(
+    (s) => s.value === bookId.value
+  );
+  console.log(bookIndex.value);
+  console.log(bookCount.value);
+  record.value = bookColumns.value.filter((s) => s.value === e.id)[0];
   if (record.value.pageCount < pageNumber.value) {
     pageNumber.value = record.value.pageCount;
   }
@@ -172,13 +174,10 @@ const onFixed = () => {
 };
 
 const onSubmitNextBook = () => {
-  if (maxBookNumber.value === bookNumber.value) {
-    return;
-  }
   onSubmit().then((res) => {
     if (res) {
-      bookNumber.value = bookNumber.value + 1;
-      onChangeBook({ bookNumber: bookNumber.value });
+      bookId.value = bookColumns.value[bookIndex.value + 1].value;
+      onChangeBook({ id: bookId.value });
     }
   });
 };
