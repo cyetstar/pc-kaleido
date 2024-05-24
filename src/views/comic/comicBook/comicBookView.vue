@@ -11,6 +11,7 @@
       </template>
       <template #extra>
         <a-space>
+          <h-button @click="onOpenComicInfo">查看ComicInfo</h-button>
           <h-button @click="onSetCover">设置封面</h-button>
         </a-space>
       </template>
@@ -66,7 +67,7 @@ import {ref, onMounted, computed} from "vue";
 import {FileTextOutlined, LeftOutlined} from "@ant-design/icons-vue";
 import {useRoute, useRouter} from "vue-router";
 import {isNotEmpty} from "@ht/util";
-import {apiComicBookView} from "@/api/comic/comicBookApi";
+import {apiComicBookOpenComicInfo, apiComicBookView} from "@/api/comic/comicBookApi";
 import ComicBookSetCover from "@/views/comic/comicBook/comicBookSetCover.vue";
 
 const route = useRoute()
@@ -87,6 +88,9 @@ const initData = async () => {
   });
 };
 
+const onOpenComicInfo = ()=>{
+  apiComicBookOpenComicInfo({id})
+}
 const onSetCover = () => {
   refComicBookSetCover.value.show(record.value);
 }

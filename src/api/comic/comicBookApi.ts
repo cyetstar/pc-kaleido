@@ -63,3 +63,10 @@ export const apiComicBookUploadCover = (data: any) => {
     data,
   });
 };
+
+export const apiComicBookOpenComicInfo = (params: any) => {
+  return useFetch.open<any>({
+    url: "/comicBook/openComicInfo",
+    params,
+  });
+};
