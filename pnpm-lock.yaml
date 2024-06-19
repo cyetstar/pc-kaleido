@@ -30,8 +30,8 @@ dependencies:
     specifier: ^5.4.1
     version: 5.4.3
   hta-ui:
-    specifier: ^1.2.7
-    version: 1.2.7
+    specifier: ^1.2.9
+    version: 1.2.9
   image-compressor:
     specifier: ^2.0.3
     version: 2.0.3
@@ -4599,8 +4599,8 @@ packages:
       lru-cache: 6.0.0
     dev: true
 
-  /hta-ui@1.2.7:
-    resolution: {integrity: sha512-lYnr3S9cyOZCR+QKY3u/P0Aq0nAvAG8LlO0KQejjiywlR+oBkvZO2aRb0CZ3ORsTSoCP2nhl/kFOWjoFXtPuuw==}
+  /hta-ui@1.2.9:
+    resolution: {integrity: sha512-NAZFFnrF5Xf9PTO6vktevhO4N4YkQxpaJYrqcCHM2cNMLhE9qxES2039BFjVi5B8iyUJCuUrg1o/BYoYBQxXnw==}
     dependencies:
       '@hta-ui/utils': 1.0.1
     dev: false

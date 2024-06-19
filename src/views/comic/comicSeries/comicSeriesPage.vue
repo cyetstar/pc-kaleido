@@ -12,6 +12,7 @@
             v-model:value="searchForm.keyword"
             placeholder="关键字"
             search
+            enter-button
             @search="onSearch"
           />
         </a-form>

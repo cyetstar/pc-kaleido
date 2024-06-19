@@ -13,7 +13,7 @@ export const mountFunction = (app: App) => {
   app.config.globalProperties.$dowloadExcel = dowloadExcel;
 };
 
-function debounce(fn: Function, wait: number) {
+export function debounce(fn: Function, wait: number) {
   let timeout: any = null;
   return function () {
     if (timeout !== null) clearTimeout(timeout);

@@ -9,6 +9,13 @@ export const apiSysDictListByDictType = (dictType: string) => {
   });
 };
 
+export const apiSysDictPage = (params: any) => {
+  return useFetch.get<any>({
+    url: "/sysDict/page",
+    params,
+  });
+};
+
 export const sysDictViewApi = (id: string) => {
   return useFetch.get<any>({
     url: "/sysDict/view",

@@ -4,118 +4,222 @@
  * @Description: 漫画书籍表单页面
 -->
 <template>
-    <h-form-modal ref="formRef" :label-col="{ span: 4 }" width="600px" v-model:form="form" title="漫画书籍"
-                  @submit="onSubmit">
-                <h-col :span="24">
-                        <h-input label="系列id" v-model:value="form.seriesId"
-                                 name="seriesId"/>
-                </h-col>
-                <h-col :span="24">
-                        <h-input label="标题" v-model:value="form.title"
-                                 name="title"/>
-                </h-col>
-                <h-col :span="24">
-                        <h-input label="简介" v-model:value="form.summary"
-                                 name="summary"/>
-                </h-col>
-                <h-col :span="24">
-                        <h-input label="卷号" v-model:value="form.bookNumber"
-                                 name="bookNumber"/>
-                </h-col>
-                <h-col :span="24">
-                        <h-input label="页数" v-model:value="form.pageCount"
-                                 name="pageCount"/>
-                </h-col>
-                <h-col :span="24">
-                        <h-input label="路径" v-model:value="form.path"
-                                 name="path"/>
-                </h-col>
-                <h-col :span="24">
-                        <h-input label="封面" v-model:value="form.cover"
-                                 name="cover"/>
-                </h-col>
-                <h-col :span="24">
-                        <h-input label="文件大小" v-model:value="form.fileSize"
-                                 name="fileSize"/>
-                </h-col>
-                <h-col :span="24">
-                        <h-input label="番组计划编号" v-model:value="form.bgmId"
-                                 name="bgmId"/>
-                </h-col>
-                <h-col :span="24">
-                        <h-input label="加入时间" v-model:value="form.addedAt"
-                                 name="addedAt"/>
-                </h-col>
-                <h-col :span="24">
-                        <h-input label="更新时间" v-model:value="form.updatedAt"
-                                 name="updatedAt"/>
-                </h-col>
-    </h-form-modal>
+  <h-form-modal
+    ref="formRef"
+    :label-col="{ span: 4 }"
+    width="1200px"
+    v-model:form="form"
+    title="编辑信息"
+    @submit="onSubmit"
+  >
+    <a-col :span="24">
+      <a-tabs v-model:activeKey="activeKey" tab-position="left">
+        <a-tab-pane key="basic" tab="基本">
+          <h-col :span="24">
+            <h-input label="标题" v-model:value="form.title" name="title" />
+          </h-col>
+          <h-col :span="24">
+            <h-input
+              label="原标题"
+              v-model:value="form.originalTitle"
+              name="originalTitle"
+            />
+          </h-col>
+          <h-col :span="24">
+            <h-input
+              label="卷号"
+              v-model:value="form.bookNumber"
+              name="bookNumber"
+            />
+          </h-col>
+          <h-col :span="24">
+            <h-input
+              label="排序"
+              v-model:value="form.sortNumber"
+              name="sortNumber"
+            />
+          </h-col>
+          <h-col :span="24">
+            <h-input
+              label="番组计划编号"
+              v-model:value="form.bgmId"
+              name="bgmId"
+            />
+          </h-col>
+        </a-tab-pane>
+        <a-tab-pane key="cover" tab="封面">
+          <div class="flex">
+            <div>
+              <vue-picture-cropper
+                :boxStyle="{
+                  width: '800px',
+                  height: '300px',
+                  backgroundColor: '#f8f8f8',
+                  margin: 'auto',
+                }"
+                :img="url"
+                :options="{
+                  viewMode: 1,
+                  zoomable: false,
+                  dragMode: 'crop',
+                  initialAspectRatio: 21 / 29.7,
+                }"
+                @ready="onReady"
+                @cropend="onCropend"
+              />
+            </div>
+            <div class="ml-3">
+              <img
+                v-if="newUrl"
+                :src="newUrl"
+                class=""
+                style="object-fit: contain; width: 200px; height: 300px"
+              />
+            </div>
+          </div>
+          <div class="mt-4">
+            <h-radio
+              button
+              :columns="pageNumberColumns"
+              v-model:value="form.coverPageNumber"
+            />
+          </div>
+        </a-tab-pane>
+      </a-tabs>
+    </a-col>
+  </h-form-modal>
 </template>
 
 <script setup>
-  import {ref} from "vue";
-  import {message} from "ant-design-vue";
+import { computed, inject, ref } from "vue";
+import { message } from "ant-design-vue";
+import {
+  apiComicBookUpdate,
+  apiComicBookUploadCover,
+  apiComicBookView,
+} from "@/api/comic/comicBookApi";
+import VuePictureCropper, { cropper } from "vue-picture-cropper";
+import { ImageCompressor } from "image-compressor";
+import { useAppStore } from "@/store/modules/app";
 
-  const emits = defineEmits(["save-complete"]);
+const emits = defineEmits(["save-complete"]);
 
-    let formAction = ref("create");
+let formAction = ref("create");
+let formRef = ref();
+let activeKey = ref("basic");
+let pageNumberColumns = ref([]);
 
-    let formRef = ref();
+let form = ref({
+  id: "",
+  title: "",
+  originalTitle: "",
+  bookNumber: "",
+  sortNumber: "",
+  coverPageNumber: 1,
+  bgmId: "",
+});
 
-    let form = ref({
-        id: "",
-        seriesId: "",
-        title: "",
-        summary: "",
-        bookNumber: "",
-        pageCount: "",
-        path: "",
-        cover: "",
-        fileSize: "",
-        bgmId: "",
-        addedAt: "",
-        updatedAt: "",
-    });
+let id;
+let newUrl = ref();
+let url = computed(() => {
+  let url = inject("imageUrl");
+  url =
+    url +
+    "page?id=" +
+    form.value.id +
+    "&number=" +
+    (form.value.coverPageNumber || 1);
+  return url;
+});
 
-    const create = () => {
-        formAction.value = "create";
-        formRef.value.reset();
-        formRef.value.show();
-    };
+const update = async (id) => {
+  formAction.value = "update";
+  formRef.value.reset();
+  apiComicBookView({ id }).then((res) => {
+    form.value = res;
+    form.value.coverPageNumber = form.value.coverPageNumber || 1;
+    pageNumberColumns.value = [];
+    for (let i = 1; i <= form.value.pageCount; i++) {
+      pageNumberColumns.value.push({ text: i, value: i });
+    }
+    formRef.value.show();
+  });
+};
 
-    const update = async (id) => {
-        formAction.value = "update";
-        formRef.value.reset();
-        form.value = await apiComicBookView({id});
-        formRef.value.show();
-    };
+let appStore = useAppStore();
+const onReady = () => {
+  if (!cropper) {
+    return;
+  }
+  let cropBoxData =
+    JSON.parse(form.value.coverBoxData) || appStore.$state.cropBoxData;
+  if (cropBoxData) {
+    cropper.setCropBoxData(cropBoxData);
+  }
+  newUrl.value = cropper.getDataURL();
+};
+const onCropend = () => {
+  if (!cropper) {
+    return;
+  }
+  newUrl.value = cropper.getDataURL();
+};
 
-    const onSubmit = async () => {
-        try {
-            if (formAction.value === "create") {
-                let res = await apiComicBookCreate(form.value);
-                if (res) {
-                    message.success("操作成功");
-                    emits("save-complete");
-                    formRef.value.hide();
-                }
-            } else if (formAction.value === "update") {
-                let res = await apiComicBookUpdate(form.value);
-                if (res) {
-                    message.success("操作成功");
-                    emits("save-complete");
-                    formRef.value.hide();
-                }
-            }
-        } catch (e) {
+const compressorSettings = {
+  toWidth: 300,
+  mimeType: "image/jpg",
+  mode: "strict",
+  speed: "low",
+};
+const imageCompressor = new ImageCompressor();
+const onSubmit = async () => {
+  try {
+    if (activeKey.value === "cover") {
+      if (!cropper) {
+        return;
+      }
+      let dataURL = cropper.getDataURL();
+      let cropBoxData = cropper.getCropBoxData();
+      imageCompressor.run(dataURL, compressorSettings, (data) => {
+        apiComicBookUploadCover({
+          ...form.value,
+          data: data,
+          coverBoxData: JSON.stringify(cropBoxData),
+        }).then((res) => {
+          if (res) {
+            appStore.setCropBoxData(cropBoxData);
+            message.success("设置成功");
+            emits("save-complete");
+            formRef.value.hide();
+          } else {
+            message.error("设置失败");
+          }
+        });
+      });
+    } else {
+      apiComicBookUpdate(form.value).then((res) => {
+        if (res) {
+          message.success("保存成功");
+          emits("save-complete");
+          formRef.value.hide();
+        } else {
+          message.error("保存失败");
         }
-    };
+      });
+    }
+  } catch (e) {}
+};
 
-    defineExpose({
-        create,
-        update,
-    });
+defineExpose({
+  update,
+});
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+/deep/ .ant-radio-button-wrapper {
+  width: 32px;
+  text-align: center;
+  padding: 0;
+  margin: 1px;
+}
+</style>

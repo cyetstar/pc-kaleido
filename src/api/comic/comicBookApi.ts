@@ -70,3 +70,10 @@ export const apiComicBookOpenComicInfo = (params: any) => {
     params,
   });
 };
+
+export const apiComicBookWriteComicInfo = (data: any) => {
+  return useFetch.post<any>({
+    url: "/comicBook/writeComicInfo",
+    data,
+  });
+};

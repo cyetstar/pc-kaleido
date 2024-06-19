@@ -14,6 +14,7 @@
       :komga-url="appStore.$state.config.komgaUrl"
       :komga-username="appStore.$state.config.komgaUsername"
       :komga-password="appStore.$state.config.komgaPassword"
+      :list-dict-by-type="listDictByType"
     >
       <router-view v-slot="{ Component, route }">
         <keep-alive>
@@ -36,9 +37,14 @@
 <script setup>
 import { useAppStore } from "@/store/modules/app";
 import { ref } from "vue";
+import { apiSysDictListByDictType } from "@/api/sysadmin/sysDictApi";
 
 const { VITE_IMAGE_PATH } = import.meta.env;
 const appStore = useAppStore();
+
+const listDictByType = (type) => {
+  return apiSysDictListByDictType(type);
+};
 </script>
 
 <style lang="less" scoped>

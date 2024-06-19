@@ -7,7 +7,7 @@
 -->
 <template>
   <section class="h-page-section">
-    <ModuleTitle title="基本信息" class="mb-20px"></ModuleTitle>
+    <h-module-title title="基本信息"></h-module-title>
     <a-row>
       <h-col :span="8">
         <span style="color: #333">字典名称：{{ form.name }}</span>
@@ -17,7 +17,7 @@
       </h-col>
     </a-row>
 
-    <ModuleTitle title="字典项" class="mt-40px"></ModuleTitle>
+    <h-module-title title="字典项" class="mt-40px"></h-module-title>
 
     <a-space class="h-btn-space">
       <h-button type="primary" @click="onCreateBatchRecord">批量新增</h-button>
@@ -43,15 +43,15 @@
               size="small"
               v-permissKey="'sysDict:update'"
               @click="onUpdateRecord(record.id)"
-              >编辑</h-button
-            >
+              >编辑
+            </h-button>
             <h-button-delete
               link
               size="small"
               v-permissKey="'sysDict:delete'"
               @delete="onDeleteRecord(record.id)"
-              >删除</h-button-delete
-            >
+              >删除
+            </h-button-delete>
           </a-space>
         </template>
       </a-table-column>
@@ -73,6 +73,7 @@ import { sysDictTypeViewApi } from "@/api/sysadmin/sysDictTypeApi";
 import {
   sysDictDeleteApi,
   apiSysDictListByDictType,
+  apiSysDictPage,
 } from "@/api/sysadmin/sysDictApi";
 import sysDictCreateBatch from "../sysDict/sysDictCreateBatch.vue";
 import sysDictForm from "../sysDict/sysDictForm.vue";
@@ -98,14 +99,11 @@ const initData = async () => {
   if (id) {
     sysDictTypeViewApi(id.value).then((data) => {
       Object.assign(form, data);
-      return listByDictType();
+      apiSysDictPage({ dictType: form.type }).then((res) => {
+        dataSource.value = res.records;
+      });
     });
   }
-};
-const listByDictType = async () => {
-  apiSysDictListByDictType(form.type).then((data) => {
-    dataSource.value = data;
-  });
 };
 
 const onUpdateRecord = (id: string) => {
@@ -116,7 +114,9 @@ const onDeleteRecord = async (id: string | string[]) => {
   sysDictDeleteApi(ids).then((res) => {
     if (res) {
       message.success("操作成功！");
-      listByDictType();
+      apiSysDictPage({ dictType: form.type }).then((res) => {
+        dataSource.value = res.records;
+      });
     }
   });
 };
@@ -128,7 +128,9 @@ const onCreateBatchRecord = () => {
   formBatchRef.value.create(form.type);
 };
 const saveComplete = () => {
-  listByDictType();
+  apiSysDictPage({ dictType: form.type }).then((res) => {
+    dataSource.value = res.records;
+  });
 };
 
 let selectedRowKeys = ref<string[]>([]);

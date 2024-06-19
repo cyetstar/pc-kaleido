@@ -19,7 +19,9 @@
           <h-button @click="onFileManage">文件管理</h-button>
           <h-button @click="onSetCover">设置封面</h-button>
           <h-button @click="onReadComicInfo">读取ComicInfo</h-button>
+          <h-button @click="onWriteComicInfo">写入ComicInfo</h-button>
           <h-button @click="onSync">同步Komga</h-button>
+          <h-button @click="onUpdate">编辑</h-button>
         </a-space>
       </template>
     </a-page-header>
@@ -33,18 +35,13 @@
         />
       </div>
       <div class="flex-1 ml-8">
-        <!--        <p>-->
-        <!--          <a-tag color="green"-->
-        <!--          >已完结-->
-        <!--          </a-tag>-->
-        <!--        </p>-->
         <p class="flex items-center">
           <span v-if="isNotEmpty(record.rating)" class="mr-2">{{ record.rating }} 分</span>
           <a-rate v-model:value="rating" disabled allow-half/>
         </p>
         <p>
-          <a-tag v-for="item in record.tagList" :key="item.id"
-          >{{ item.value }}
+          <a-tag v-for="item in record.tagList" :key="item"
+          >{{ item }}
           </a-tag>
         </p>
         <p v-if="isNotEmpty(summaryList)">
@@ -103,7 +100,8 @@
 
   </section>
   <comic-series-file-manage ref="refComicSeriesFileManage"/>
-  <comic-book-set-cover ref="refComicBookSetCover"/>
+  <comic-series-set-cover ref="refComicSeriesSetCover"/>
+  <comic-series-form ref="refComicSeriesForm" @save-complete="onSaveComplete"/>
 </template>
 
 <script setup>
@@ -112,17 +110,24 @@ import {FileTextOutlined, LeftOutlined} from "@ant-design/icons-vue";
 import {useRoute, useRouter} from "vue-router";
 import {isNotEmpty} from "@ht/util";
 import {message} from "ant-design-vue";
-import {apiComicSeriesReadComicInfo, apiComicSeriesSync, apiComicSeriesView} from "@/api/comic/comicSeriesApi";
+import {
+  apiComicSeriesReadComicInfo,
+  apiComicSeriesSync,
+  apiComicSeriesView,
+  apiComicSeriesWriteComicInfo
+} from "@/api/comic/comicSeriesApi";
 import {apiComicBookPage} from "@/api/comic/comicBookApi";
 import ComicSeriesFileManage from "@/views/comic/comicSeries/comicSeriesFileManage.vue";
-import ComicBookSetCover from "@/views/comic/comicBook/comicBookSetCover.vue";
+import ComicSeriesSetCover from "@/views/comic/comicSeries/comicSeriesSetCover.vue";
+import ComicSeriesForm from "@/views/comic/comicSeries/comicSeriesForm.vue";
 
 const route = useRoute()
 const router = useRouter()
 const record = ref({})
 const bookRecords = ref([]);
-const refComicBookSetCover = ref();
+const refComicSeriesSetCover = ref();
 const refComicSeriesFileManage = ref();
+const refComicSeriesForm = ref();
 const id = route.query.id;
 const rating = computed(() => record.value.rating / 2);
 const summaryList = computed(() => {
@@ -146,7 +151,7 @@ const onViewBook = (id) => {
 };
 
 const onViewAuthor = (author) => {
-  router.push({name: "comicSeriesPage", params: {keyword: author.name, load: true}});
+  router.push({name: "comicSeriesPage", params: {keyword: author.name, load: "true"}});
 }
 
 
@@ -156,7 +161,7 @@ const onFileManage = () => {
 
 const onSetCover = () => {
   let bookRecord = bookRecords.value[0]
-  refComicBookSetCover.value.show(bookRecord)
+  refComicSeriesSetCover.value.show(bookRecord)
 }
 const onReadComicInfo = () => {
   apiComicSeriesReadComicInfo({id}).then((res) => {
@@ -165,6 +170,16 @@ const onReadComicInfo = () => {
       initData();
     } else {
       message.error("读取失败");
+    }
+  })
+}
+
+const onWriteComicInfo = () => {
+  apiComicSeriesWriteComicInfo({id}).then((res) => {
+    if (res) {
+      message.success("写入成功");
+    } else {
+      message.error("写入失败");
     }
   })
 }
@@ -178,6 +193,14 @@ const onSync = () => {
       message.error("同步失败");
     }
   })
+}
+
+const onUpdate = () => {
+  refComicSeriesForm.value.update(id);
+}
+
+const onSaveComplete = () => {
+  initData();
 }
 
 onMounted(() => {

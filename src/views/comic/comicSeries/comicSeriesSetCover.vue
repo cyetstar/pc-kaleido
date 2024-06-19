@@ -8,15 +8,15 @@
     ref="formRef"
     v-model:visible="visible"
     title="设置封面页"
-    width="1280px"
+    width="1200px"
     style="top: 20px"
   >
     <div class="flex">
       <div>
         <vue-picture-cropper
           :boxStyle="{
-            width: '900px',
-            height: '350px',
+            width: '800px',
+            height: '300px',
             backgroundColor: '#f8f8f8',
             margin: 'auto',
           }"
@@ -31,11 +31,11 @@
           @cropend="onCropend"
         />
       </div>
-      <div class="flex-1 mx-8">
+      <div class="ml-3">
         <img
           :src="newUrl"
           class=""
-          style="object-fit: contain; height: 350px"
+          style="object-fit: contain; height: 300px"
         />
       </div>
     </div>
@@ -50,7 +50,7 @@
     </div>
     <h-module-title title="页码" class="mt-4" />
     <div class="mt-4">
-      <h-radio button :columns="pageColumns" v-model:value="pageNumber" />
+      <h-radio button :columns="pageColumns" v-model:value="coverPageNumber" />
     </div>
     <template #footer>
       <h-button type="default" @click="onFixed"
@@ -87,7 +87,7 @@ const route = useRoute();
 const router = useRouter();
 let visible = ref();
 
-let pageNumber = ref(1);
+let coverPageNumber = ref(1);
 let pageColumns = ref([]);
 let bookColumns = ref([]);
 
@@ -100,7 +100,7 @@ let record = ref({});
 
 let url = computed(() => {
   let url = inject("imageUrl");
-  url = url + "page?id=" + record.value.id + "&number=" + pageNumber.value;
+  url = url + "page?id=" + record.value.id + "&number=" + coverPageNumber.value;
   return url;
 });
 
@@ -134,7 +134,7 @@ const initData = () => {
 const show = (bookRecord) => {
   record.value = bookRecord;
   bookId.value = bookRecord.id;
-  pageNumber.value = 1;
+  coverPageNumber.value = 1;
   visible.value = true;
   initData();
 };
@@ -143,19 +143,22 @@ const onChangeBook = (e) => {
   bookIndex.value = bookColumns.value.findIndex(
     (s) => s.value === bookId.value
   );
-  console.log(bookIndex.value);
-  console.log(bookCount.value);
   record.value = bookColumns.value.filter((s) => s.value === e.id)[0];
-  if (record.value.pageCount < pageNumber.value) {
-    pageNumber.value = record.value.pageCount;
+  if (record.value.pageCount < coverPageNumber.value) {
+    coverPageNumber.value = record.value.pageCount;
   }
   genPageColumns();
 };
 
 const onReady = () => {
-  if (!cropper) return;
-  let cropBoxData = appStore.$state.cropBoxData;
-  cropper.setCropBoxData(cropBoxData);
+  if (!cropper) {
+    return;
+  }
+  let cropBoxData =
+    JSON.parse(record.value.coverBoxData) || appStore.$state.cropBoxData;
+  if (cropBoxData) {
+    cropper.setCropBoxData(cropBoxData);
+  }
   newUrl.value = cropper.getDataURL();
 };
 const onCropend = () => {
@@ -191,6 +194,7 @@ const onSubmitClose = () => {
 const onSubmit = () => {
   if (!cropper) return;
   let dataURL = cropper.getDataURL();
+  let cropBoxData = cropper.getCropBoxData();
   const imageCompressor = new ImageCompressor();
   const compressorSettings = {
     toWidth: 300,
@@ -201,7 +205,12 @@ const onSubmit = () => {
 
   return new Promise((resolve) => {
     imageCompressor.run(dataURL, compressorSettings, (data) => {
-      apiComicBookUploadCover({ id: record.value.id, data }).then((res) => {
+      apiComicBookUploadCover({
+        ...record.value,
+        data: data,
+        coverPageNumber: coverPageNumber.value,
+        coverBoxData: JSON.stringify(cropBoxData),
+      }).then((res) => {
         if (res) {
           let data = cropper.getCropBoxData();
           appStore.setCropBoxData(data);

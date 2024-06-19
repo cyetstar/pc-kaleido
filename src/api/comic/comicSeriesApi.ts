@@ -84,6 +84,13 @@ export const apiComicSeriesReadComicInfo = (data: any) => {
   });
 };
 
+export const apiComicSeriesWriteComicInfo = (data: any) => {
+  return useFetch.post<any>({
+    url: "/comicSeries/writeComicInfo",
+    data,
+  });
+};
+
 export const apiComicSeriesViewPath = (params: any) => {
   return useFetch.get<any>({
     url: "/comicSeries/viewPath",
