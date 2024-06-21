@@ -87,13 +87,6 @@ const onUpdate = () => {
   refComicBookForm.value.update(id);
 };
 
-const onViewAuthor = (author) => {
-  router.push({
-    name: "comicSeriesPage",
-    params: { keyword: author.name, load: "true" },
-  });
-};
-
 onMounted(() => {
   initData();
 });

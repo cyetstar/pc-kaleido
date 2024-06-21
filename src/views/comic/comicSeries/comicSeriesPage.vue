@@ -34,6 +34,12 @@
             cancel-text="取消读取"
             :form="searchForm"
           />
+          <k-action-button
+            action="comicWriteComicInfo"
+            ok-text="写入ComicInfo"
+            cancel-text="取消写入"
+            :form="searchForm"
+          />
           <h-button @click="onOpenDownloadFolder">打开下载目录</h-button>
         </a-space>
       </div>
