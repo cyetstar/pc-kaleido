@@ -16,11 +16,14 @@
       </template>
       <template #extra>
         <a-space>
+          <k-action-button
+              action="comicSync"
+              ok-text="同步Komga"
+              cancel-text="取消同步"
+              :form="searchForm"
+          />
           <h-button @click="onFileManage">文件管理</h-button>
           <h-button @click="onSetCover">设置封面</h-button>
-          <h-button @click="onReadComicInfo">读取ComicInfo</h-button>
-          <h-button @click="onWriteComicInfo">写入ComicInfo</h-button>
-          <h-button @click="onSync">同步Komga</h-button>
           <h-button @click="onUpdate">编辑</h-button>
         </a-space>
       </template>
@@ -120,6 +123,7 @@ import {apiComicBookPage} from "@/api/comic/comicBookApi";
 import ComicSeriesFileManage from "@/views/comic/comicSeries/comicSeriesFileManage.vue";
 import ComicSeriesSetCover from "@/views/comic/comicSeries/comicSeriesSetCover.vue";
 import ComicSeriesForm from "@/views/comic/comicSeries/comicSeriesForm.vue";
+import KActionButton from "@c/ActionButton/ActionButton.vue";
 
 const route = useRoute()
 const router = useRouter()
@@ -136,6 +140,11 @@ const summaryList = computed(() => {
   }
   return null;
 });
+
+const searchForm = ref({
+  seriesId: id,
+  force: true
+})
 
 const initData = async () => {
   apiComicSeriesView({id}).then((res) => {
@@ -163,26 +172,7 @@ const onSetCover = () => {
   let bookRecord = bookRecords.value[0]
   refComicSeriesSetCover.value.show(bookRecord)
 }
-const onReadComicInfo = () => {
-  apiComicSeriesReadComicInfo({id}).then((res) => {
-    if (res) {
-      message.success("读取成功");
-      initData();
-    } else {
-      message.error("读取失败");
-    }
-  })
-}
 
-const onWriteComicInfo = () => {
-  apiComicSeriesWriteComicInfo({id}).then((res) => {
-    if (res) {
-      message.success("写入成功");
-    } else {
-      message.error("写入失败");
-    }
-  })
-}
 
 const onSync = () => {
   apiComicSeriesSync({id}).then((res) => {

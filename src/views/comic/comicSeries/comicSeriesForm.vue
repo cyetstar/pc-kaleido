@@ -213,7 +213,7 @@ const onSubmit = async () => {
       }
     } else if (formAction.value === "update") {
       form.value.alternateTitleList = form.value.alternateTitleList.filter(
-        (s) => s.value !== ""
+        (s) => s !== ""
       );
       let res = await apiComicSeriesUpdate(form.value);
       if (res) {

@@ -79,8 +79,17 @@
               v-model:value="form.komgaPassword"
             />
           </h-col>
+          <h-col :span="12">
+            <h-select
+              label="Komga漫画资料库"
+              :columns="columns"
+              name="komgaComicLibraryId"
+              @change="onChange($event, 'comic')"
+              v-model:value="form.komgaComicLibraryId"
+            />
+          </h-col>
         </a-tab-pane>
-        <a-tab-pane key="movie" tab="电影">
+        <a-tab-pane key="dir" tab="目录">
           <h-col :span="12">
             <h-input
               label="电影资料库目录"
@@ -90,43 +99,11 @@
           </h-col>
           <h-col :span="12">
             <h-input
-              label="电影回收站"
-              name="movieTrashPath"
-              v-model:value="form.movieTrashPath"
-            />
-          </h-col>
-          <h-col :span="12">
-            <h-input
-              label="电影下载目录"
-              name="movieDownloadPath"
-              v-model:value="form.movieDownloadPath"
-            />
-          </h-col>
-        </a-tab-pane>
-        <a-tab-pane key="tvshow" tab="剧集">
-          <h-col :span="12">
-            <h-input
               label="剧集资料库目录"
               name="tvshowLibraryPath"
               v-model:value="form.tvshowLibraryPath"
             />
           </h-col>
-          <h-col :span="12">
-            <h-input
-              label="剧集回收站"
-              name="tvshowTrashPath"
-              v-model:value="form.tvshowTrashPath"
-            />
-          </h-col>
-          <h-col :span="12">
-            <h-input
-              label="剧集下载目录"
-              name="tvshowDownloadPath"
-              v-model:value="form.tvshowDownloadPath"
-            />
-          </h-col>
-        </a-tab-pane>
-        <a-tab-pane key="music" tab="音乐">
           <h-col :span="12">
             <h-input
               label="音乐资料库位置"
@@ -136,33 +113,9 @@
           </h-col>
           <h-col :span="12">
             <h-input
-              text-area
-              label="音乐资料库忽略文件"
-              name="musicExcludePath"
-              v-model:value="form.musicExcludePath"
-            />
-          </h-col>
-        </a-tab-pane>
-        <a-tab-pane key="comic" tab="漫画">
-          <h-col :span="12">
-            <h-input
               label="漫画资料库目录"
               name="comicLibraryPath"
               v-model:value="form.comicLibraryPath"
-            />
-          </h-col>
-          <h-col :span="12">
-            <h-input
-              label="漫画回收站"
-              name="comicTrashPath"
-              v-model:value="form.comicTrashPath"
-            />
-          </h-col>
-          <h-col :span="12">
-            <h-input
-              label="漫画下载目录"
-              name="comicDownloadPath"
-              v-model:value="form.comicDownloadPath"
             />
           </h-col>
         </a-tab-pane>
@@ -236,12 +189,13 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { message } from "ant-design-vue";
-import { apiPlexGetLibraries } from "@/api/plexApi";
+import { apiPlexListLibrary } from "@/api/plexApi";
 import {
   apiSysConfigFindByKeys,
   apiSysConfigSave,
 } from "@/api/sysadmin/sysConfigApi";
 import { useAppStore } from "@/store/modules/app";
+import { apiKomgaListLibrary } from "@/api/komgaApi";
 
 let appStore = useAppStore();
 let activeKey = ref();
@@ -254,27 +208,24 @@ let form = ref({
   plexMovieLibraryId: "",
   plexTvshowLibraryId: "",
   plexMusicLibraryId: "",
-  movieLibraryPath: "",
-  movieTrashPath: "/movie/#recycle",
-  movieDownloadPath: "",
-  tvshowLibraryPath: "",
-  tvshowTrashPath: "/tvshow/#recycle",
-  tvshowDownloadPath: "",
-  musicLibraryPath: "",
-  musicExcludePath: "",
-  neteaseUrl: "",
-  doubanApikey: "",
-  doubanCookie: "",
-  tmmUrl: "",
-  matchInfoSleepSecond: "3",
-  downloadLyricSleepSecond: "3",
-  comicLibraryPath: "",
-  comicTrashPath: "/comic/#recycle",
-  comicDownloadPath: "/comic/download",
+
   komgaUrl: "",
   komgaUsername: "",
   komgaPassword: "",
+  komgaComicLibraryId: "",
+
+  neteaseUrl: "",
+  doubanApikey: "",
+  doubanCookie: "",
   bgmAccessToken: "",
+  tmmUrl: "",
+  matchInfoSleepSecond: "3",
+  downloadLyricSleepSecond: "3",
+
+  movieLibraryPath: "",
+  tvshowLibraryPath: "",
+  musicLibraryPath: "",
+  comicLibraryPath: "",
 });
 
 onMounted(() => {
@@ -284,11 +235,17 @@ onMounted(() => {
 const initData = () => {
   apiSysConfigFindByKeys(Object.keys(form.value)).then((res) => {
     form.value = res;
-    if (form.value.plexUrl && form.value.plexToken) {
-      apiPlexGetLibraries(form.value).then((res) => {
-        columns.value = res.map((s) => ({ text: s.name, value: s.key, ...s }));
-      });
-    }
+    columns.value = [];
+    Promise.all([apiPlexListLibrary(), apiKomgaListLibrary()]).then(
+      ([res1, res2]) => {
+        res1.forEach((s) => {
+          columns.value.push({ text: s.name, value: s.key, ...s });
+        });
+        res2.forEach((s) => {
+          columns.value.push({ text: s.name, value: s.key, ...s });
+        });
+      }
+    );
   });
 };
 
@@ -299,6 +256,8 @@ const onChange = (e, type) => {
     form.value.plexTvshowLibraryPath = e.path;
   } else if (type === "music") {
     form.value.plexMusicLibraryPath = e.path;
+  } else if (type === "comic") {
+    form.value.komgaComicLibraryPath = e.path;
   }
 };
 

@@ -12,7 +12,6 @@
       <template #extra>
         <a-space>
           <h-button @click="onOpenComicInfo">查看ComicInfo</h-button>
-          <h-button @click="onWriteComicInfo">写入ComicInfo</h-button>
           <h-button @click="onUpdate">编辑</h-button>
         </a-space>
       </template>
@@ -80,9 +79,6 @@ const onOpenComicInfo = () => {
   apiComicBookOpenComicInfo({ id });
 };
 
-const onWriteComicInfo = () => {
-  apiComicBookWriteComicInfo({ id });
-};
 const onUpdate = () => {
   refComicBookForm.value.update(id);
 };
