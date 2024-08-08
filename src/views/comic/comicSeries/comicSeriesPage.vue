@@ -18,15 +18,16 @@
         </a-form>
         <a-space>
           <k-action-button
+            action="comicUpdateSource"
+            ok-text="导入源文件"
+            cancel-text="取消导入"
+          />
+          <h-button @click="onOpenDownloadFolder">打开源目录</h-button>
+          <k-action-button
             action="comicSync"
             ok-text="同步Komga"
             cancel-text="取消同步"
             :form="searchForm"
-          />
-          <k-action-button
-            action="comicUpdateSource"
-            ok-text="更新文件源"
-            cancel-text="取消更新"
           />
           <k-action-button
             action="comicReadComicInfo"
@@ -40,7 +41,6 @@
             cancel-text="取消写入"
             :form="searchForm"
           />
-          <h-button @click="onOpenDownloadFolder">打开下载目录</h-button>
         </a-space>
       </div>
       <div class="flex justify-between items-center mt-4 mb-2">

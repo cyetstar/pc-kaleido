@@ -106,7 +106,7 @@
           </h-col>
           <h-col :span="12">
             <h-input
-              label="音乐资料库位置"
+              label="音乐资料库目录"
               name="musicLibraryPath"
               v-model:value="form.musicLibraryPath"
             />
