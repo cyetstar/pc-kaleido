@@ -6,7 +6,7 @@
 <template>
   <k-file-modal ref="refFileModal">
     <template #footer>
-      <h-button plain type="primary" @click="onMatch">手动抓取</h-button>
+      <h-button plain type="primary" @click="onMatch">搜索匹配</h-button>
     </template>
   </k-file-modal>
   <movie-basic-search-info
@@ -28,8 +28,11 @@ const refFileModal = ref();
 const refMovieBasicSearchInfo = ref();
 
 const show = () => {
-  const movieDownloadPath = appStore.$state.config["movieDownloadPath"];
-  refFileModal.value.show(movieDownloadPath);
+  const movieLibraryPath = appStore.$state.config["movieLibraryPath"];
+  const parts = movieLibraryPath.split("/");
+  parts[parts.length - 1] = "import";
+  const movieImportPath = parts.join("/");
+  refFileModal.value.show(movieImportPath);
 };
 
 const onMatch = () => {

@@ -11,12 +11,27 @@
       </template>
       <template #extra>
         <a-space>
+          <k-action-button
+              action="movieSync"
+              ok-text="同步Plex"
+              cancel-text="取消同步"
+              :form="searchForm"
+          />
+          <k-action-button
+              action="movieAnalyze"
+              ok-text="分析文件"
+              cancel-text="取消分析"
+              :form="searchForm"
+          />
+          <k-action-button
+              action="movieMatchInfo"
+              ok-text="自动抓取"
+              cancel-text="取消抓取"
+              :form="searchForm"
+          />
+          <h-button @click="onSearchInfo">匹配抓取</h-button>
           <h-button @click="onFileManage">文件管理</h-button>
-          <h-button @click="onSearchInfo">抓取信息</h-button>
-          <h-button @click="onExportNFO">导出NFO</h-button>
-          <h-button @click="onReadNFO">读取NFO</h-button>
-          <h-button @click="onSyncPlex">同步Plex</h-button>
-          <h-button @click="onAnalyze">分析</h-button>
+          <h-button @click="onUpdate">编辑</h-button>
         </a-space>
       </template>
     </a-page-header>
@@ -39,15 +54,9 @@
           <a-tag v-if="record.noSubtitle==='1'">无字幕</a-tag>
           <a-tag v-if="record.lowQuality==='1'">低质量</a-tag>
           <a-tag v-if="record.mandarin==='1'">国语配音</a-tag>
-          <a-tag v-for="item in record.countryList" :key="item.id"
-          >{{ item.idLabel }}
-          </a-tag>
-          <a-tag v-for="item in record.genreList" :key="item.id"
-          >{{ item.idLabel }}
-          </a-tag>
-          <a-tag v-for="item in record.languageList" :key="item.id"
-          >{{ item.idLabel }}
-          </a-tag>
+          <a-tag v-for="item in record.countryList" :key="item">{{ item }}</a-tag>
+          <a-tag v-for="item in record.genreList" :key="item">{{ item }}</a-tag>
+          <a-tag v-for="item in record.languageList" :key="item">{{ item }}</a-tag>
           <a-tag v-for="item in record.tagList" :key="item">{{ item }}</a-tag>
         </p>
         <p>
@@ -144,6 +153,7 @@
 
   <movie-basic-search-info ref="refMovieBasicSearchInfo" @match-success="initData"/>
   <movie-basic-file-manage ref="refMovieBasicFileManage"/>
+  <movie-basic-form ref="refMovieBasicForm"/>
 </template>
 
 <script setup>
@@ -155,19 +165,22 @@ import {
   apiMovieBasicReadNFOById,
   apiMovieBasicSyncPlexById,
   apiMovieBasicView,
-} from "@/api/movie/movieBasicApi.ts";
+} from "@/api/movie/movieBasicApi";
+import {apiMovieCollectionListByMovieId} from "@/api/movie/movieCollectionApi";
 import {message} from "ant-design-vue";
 import {LeftOutlined} from "@ant-design/icons-vue";
 import {isNotEmpty} from "@ht/util";
 import MovieBasicSearchInfo from "@/views/movie/movieBasic/movieBasicSearchInfo.vue";
 import MovieBasicFileManage from "@/views/movie/movieBasic/movieBasicFileManage.vue";
-import {apiMovieCollectionListByMovieId} from "@/api/movie/movieCollectionApi";
+import MovieBasicForm from "@/views/movie/movieBasic/movieBasicForm.vue";
+import KActionButton from "@c/ActionButton/ActionButton.vue";
 
 const router = useRouter();
 const record = ref({});
 const collectionRecordList = ref([]);
 const refMovieBasicSearchInfo = ref();
 const refMovieBasicFileManage = ref();
+const refMovieBasicForm = ref();
 const route = useRoute();
 const id = route.query.id;
 const rating = computed(() => record.value.rating / 2);
@@ -177,6 +190,11 @@ const actorList = computed(() => {
   }
   return record.value.actorList;
 });
+
+const searchForm = ref({
+  id: id,
+  force: true
+})
 
 
 const initData = async () => {
@@ -198,46 +216,9 @@ const onFileManage = () => {
   refMovieBasicFileManage.value.show(id);
 };
 
-const onReadNFO = () => {
-  apiMovieBasicReadNFOById({id}).then((res) => {
-    if (res) {
-      message.success("读取成功");
-      initData();
-    } else {
-      message.error("读取失败");
-    }
-  });
-};
-
-const onExportNFO = () => {
-  apiMovieBasicExportNFO({id}).then((res) => {
-    message.success('导出成功')
-  });
-}
 
 const onSearchInfo = () => {
   refMovieBasicSearchInfo.value.show(record.value);
-}
-
-
-const onSyncPlex = () => {
-  apiMovieBasicSyncPlexById({id}).then((res) => {
-    if (res) {
-      message.success("同步成功");
-      initData();
-    } else {
-      message.error("同步失败");
-    }
-  });
-};
-
-const onAnalyze = () => {
-  apiMovieBasicAnalyze({id}).then((res) => {
-    if (res) {
-      message.success("分析完成");
-      initData();
-    }
-  })
 }
 
 const onViewArtist = (actor) => {
@@ -247,6 +228,11 @@ const onViewArtist = (actor) => {
 const onViewCollection = (id) => {
   router.push({path: "/movie/movieCollection/view", query: {id}});
 }
+
+const onUpdate = () => {
+  refMovieBasicForm.value.update(id);
+}
+
 onMounted(() => {
   initData();
 });

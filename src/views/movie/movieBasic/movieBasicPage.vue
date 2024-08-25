@@ -24,7 +24,7 @@
           />
           <k-action-button
             action="movieCheckThreadStatus"
-            ok-text="检测发布"
+            ok-text="检测TLF"
             cancel-text="取消检测"
             :form="searchForm"
           />
@@ -35,19 +35,7 @@
             :form="searchForm"
           />
           <k-action-button
-            action="movieReadNFO"
-            ok-text="读取NFO"
-            cancel-text="取消读取"
-            :form="searchForm"
-          />
-          <k-action-button
-            action="movieExportNFO"
-            ok-text="导出NFO"
-            cancel-text="取消导出"
-            :form="searchForm"
-          />
-          <k-action-button
-            action="movieSyncPlex"
+            action="movieSync"
             ok-text="同步Plex"
             cancel-text="取消同步"
             :form="searchForm"

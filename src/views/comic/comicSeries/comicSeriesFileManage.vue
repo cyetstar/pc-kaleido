@@ -21,7 +21,6 @@
 import { ref } from "vue";
 
 import { message } from "ant-design-vue";
-import { apiMovieBasicUploadPoster } from "@/api/movie/movieBasicApi";
 import { apiComicSeriesViewPath } from "@/api/comic/comicSeriesApi";
 
 const emits = defineEmits(["match-success"]);

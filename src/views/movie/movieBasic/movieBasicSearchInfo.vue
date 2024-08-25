@@ -26,7 +26,6 @@
         @keyup.enter="onSearch"
       />
       <h-button @click="onSearch">搜索</h-button>
-      <h-button @click="onMatch">自动抓取</h-button>
     </div>
 
     <a-table
