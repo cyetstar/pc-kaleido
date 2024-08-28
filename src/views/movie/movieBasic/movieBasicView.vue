@@ -160,14 +160,9 @@
 import {computed, onMounted, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {
-  apiMovieBasicAnalyze,
-  apiMovieBasicExportNFO,
-  apiMovieBasicReadNFOById,
-  apiMovieBasicSyncPlexById,
   apiMovieBasicView,
 } from "@/api/movie/movieBasicApi";
 import {apiMovieCollectionListByMovieId} from "@/api/movie/movieCollectionApi";
-import {message} from "ant-design-vue";
 import {LeftOutlined} from "@ant-design/icons-vue";
 import {isNotEmpty} from "@ht/util";
 import MovieBasicSearchInfo from "@/views/movie/movieBasic/movieBasicSearchInfo.vue";
