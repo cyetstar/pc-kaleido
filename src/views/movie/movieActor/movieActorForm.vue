@@ -34,11 +34,7 @@
 <script setup>
 import { ref } from "vue";
 import { message } from "ant-design-vue";
-import {
-  apiMovieActorCreate,
-  apiMovieActorUpdate,
-  apiMovieActorView,
-} from "@/api/movie/movieActorApi";
+import { apiActorCreate, apiActorUpdate, apiActorView } from "@/api/actorApi";
 
 const emits = defineEmits(["save-complete"]);
 
@@ -62,21 +58,21 @@ const create = () => {
 const update = async (id) => {
   formAction.value = "update";
   formRef.value.reset();
-  form.value = await apiMovieActorView({ id });
+  form.value = await apiActorView({ id });
   formRef.value.show();
 };
 
 const onSubmit = async () => {
   try {
     if (formAction.value === "create") {
-      let res = await apiMovieActorCreate(form.value);
+      let res = await apiActorCreate(form.value);
       if (res) {
         message.success("操作成功");
         emits("save-complete");
         formRef.value.hide();
       }
     } else if (formAction.value === "update") {
-      let res = await apiMovieActorUpdate(form.value);
+      let res = await apiActorUpdate(form.value);
       if (res) {
         message.success("操作成功");
         emits("save-complete");

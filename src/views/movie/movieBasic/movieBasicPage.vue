@@ -23,9 +23,9 @@
             cancel-text="取消更新"
           />
           <k-action-button
-            action="movieCheckThreadStatus"
-            ok-text="检测TLF"
-            cancel-text="取消检测"
+            action="movieSync"
+            ok-text="同步Plex"
+            cancel-text="取消同步"
             :form="searchForm"
           />
           <k-action-button
@@ -35,9 +35,9 @@
             :form="searchForm"
           />
           <k-action-button
-            action="movieSync"
-            ok-text="同步Plex"
-            cancel-text="取消同步"
+            action="movieCheckThreadStatus"
+            ok-text="检测TLF"
+            cancel-text="取消检测"
             :form="searchForm"
           />
           <k-action-button
@@ -46,7 +46,7 @@
             cancel-text="取消分析"
             :form="searchForm"
           />
-          <h-button @click="onOpenDownloadFolder">打开下载目录</h-button>
+          <h-button @click="onOpenDownloadFolder">文件源目录</h-button>
         </a-space>
       </div>
       <div class="flex justify-between items-center mt-4 mb-2">

@@ -69,24 +69,18 @@
         </a-tab-pane>
         <a-tab-pane key="authors" tab="作者">
           <h-col :span="24">
-            <a-form-item label="作者" name="writerName">
-              <a-auto-complete
-                v-model:value="form.writerName"
-                placeholder="请输入作者"
-                :options="authorOptions"
-                @search="onSearch"
-              />
-            </a-form-item>
+            <k-select-author
+              v-model:value="form.writerIdList"
+              name="writerIdList"
+              label="作者"
+            />
           </h-col>
           <h-col :span="24">
-            <a-form-item label="作画" name="pencillerName">
-              <a-auto-complete
-                v-model:value="form.pencillerName"
-                placeholder="请输入作画"
-                :options="authorOptions"
-                @search="onSearch"
-              />
-            </a-form-item>
+            <k-select-author
+              v-model:value="form.pencillerIdList"
+              name="pencillerIdList"
+              label="作画"
+            />
           </h-col>
         </a-tab-pane>
         <a-tab-pane key="tags" tab="标签">
@@ -134,9 +128,7 @@ import {
   apiComicSeriesUpdate,
   apiComicSeriesView,
 } from "@/api/comic/comicSeriesApi";
-import { apiComicAuthorPage } from "@/api/comic/comicAuthorApi";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons-vue";
-import _ from "lodash";
 
 const emits = defineEmits(["save-complete"]);
 
@@ -166,18 +158,16 @@ const update = async (id) => {
   formAction.value = "update";
   formRef.value.reset();
   form.value = await apiComicSeriesView({ id });
-  form.value.writerName = form.value.writer ? form.value.writer.name : null;
-  form.value.pencillerName = form.value.penciller
-    ? form.value.penciller.name
-    : null;
+  if (form.value.writerList.length > 0) {
+    form.value.writerIdList = form.value.writerList.map((s) => s.id);
+  }
+  if (form.value.pencillerList.length > 0) {
+    form.value.pencillerIdList = form.value.pencillerList.map((s) => s.id);
+  }
   if (form.value.alternateTitleList.length === 0) {
     form.value.alternateTitleList.push("");
   }
   formRef.value.show();
-};
-
-const onSearch = (v) => {
-  debouncedSearchAuthor(v);
 };
 
 const onEnterButton = (i) => {
@@ -186,20 +176,6 @@ const onEnterButton = (i) => {
   } else {
     form.value.alternateTitleList.splice(i, 1);
   }
-};
-
-const debouncedSearchAuthor = _.debounce((v) => {
-  searchAuthor(v);
-}, 500);
-
-const searchAuthor = (v) => {
-  apiComicAuthorPage({ keyword: v }).then((res) => {
-    authorOptions.value = res.records.map((s) => {
-      return {
-        value: s.name,
-      };
-    });
-  });
 };
 
 const onSubmit = async () => {
@@ -231,4 +207,11 @@ defineExpose({
 });
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+/deep/ .ant-input-search-button {
+  background: #fff;
+  border: 1px solid #d9d9d9;
+  color: #00000072;
+  padding: 4px 10px;
+}
+</style>

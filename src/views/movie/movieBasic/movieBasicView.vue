@@ -30,8 +30,8 @@
               :form="searchForm"
           />
           <h-button @click="onSearchInfo">匹配抓取</h-button>
-          <h-button @click="onFileManage">文件管理</h-button>
           <h-button @click="onUpdate">编辑</h-button>
+          <h-button @click="onFileManage">文件管理</h-button>
         </a-space>
       </template>
     </a-page-header>
@@ -89,6 +89,12 @@
               <span v-if="index !== 0" class="px-2">/</span>
               {{ item }}
             </template>
+          </span>
+        </p>
+        <p class="flex">
+          <span class="mr-2">更新于:</span>
+          <span class="flex-1">
+            {{ formatUnixTimestamp(record.updatedAt) }}
           </span>
         </p>
         <!--        <p class="flex" v-if="isNotEmpty(record.studio)">-->
@@ -168,7 +174,7 @@ import {isNotEmpty} from "@ht/util";
 import MovieBasicSearchInfo from "@/views/movie/movieBasic/movieBasicSearchInfo.vue";
 import MovieBasicFileManage from "@/views/movie/movieBasic/movieBasicFileManage.vue";
 import MovieBasicForm from "@/views/movie/movieBasic/movieBasicForm.vue";
-import KActionButton from "@c/ActionButton/ActionButton.vue";
+import {formatUnixTimestamp} from "@/utils/utils";
 
 const router = useRouter();
 const record = ref({});
@@ -227,6 +233,7 @@ const onViewCollection = (id) => {
 const onUpdate = () => {
   refMovieBasicForm.value.update(id);
 }
+
 
 onMounted(() => {
   initData();

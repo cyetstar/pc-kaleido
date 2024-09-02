@@ -19,10 +19,9 @@
         <a-space>
           <k-action-button
             action="comicUpdateSource"
-            ok-text="导入源文件"
-            cancel-text="取消导入"
+            ok-text="更新文件源"
+            cancel-text="取消更新"
           />
-          <h-button @click="onOpenDownloadFolder">打开源目录</h-button>
           <k-action-button
             action="comicSync"
             ok-text="同步Komga"
@@ -30,17 +29,12 @@
             :form="searchForm"
           />
           <k-action-button
-            action="comicReadComicInfo"
-            ok-text="读取ComicInfo"
-            cancel-text="取消读取"
+            action="comicMatchInfo"
+            ok-text="自动抓取"
+            cancel-text="取消抓取"
             :form="searchForm"
           />
-          <k-action-button
-            action="comicWriteComicInfo"
-            ok-text="写入ComicInfo"
-            cancel-text="取消写入"
-            :form="searchForm"
-          />
+          <h-button @click="onOpenDownloadFolder">文件源目录</h-button>
         </a-space>
       </div>
       <div class="flex justify-between items-center mt-4 mb-2">
@@ -85,7 +79,7 @@
                   :width="20"
                   class="mr-1"
                 />
-                <k-logo-link type="douban" :id="record.doubanId" :width="20" />
+                <k-logo-link type="bgm" :id="record.bgmId" :width="20" />
               </div>
             </template>
             <a-card-meta

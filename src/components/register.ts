@@ -82,6 +82,8 @@ import KomgaImage from "@/components/KomgaImage";
 import LogoLink from "@/components/LogoLink";
 import FileModal from "@/components/FileModal";
 import ActionButton from "@/components/ActionButton";
+import SelectActor from "@/components/SelectActor";
+import SelectAuthor from "@/components/SelectAuthor";
 
 export const registerGlobComp = (app: App) => {
   app
@@ -111,6 +113,8 @@ export const registerGlobComp = (app: App) => {
     .component("k-komga-image", KomgaImage)
     .component("k-logo-link", LogoLink)
     .component("k-plex-image", PlexImage)
+    .component("k-select-actor", SelectActor)
+    .component("k-select-author", SelectAuthor)
     .use(Layout)
     .use(Button)
     .use(Input)

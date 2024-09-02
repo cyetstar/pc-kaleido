@@ -22,9 +22,16 @@
               cancel-text="取消同步"
               :form="searchForm"
           />
-          <h-button @click="onFileManage">文件管理</h-button>
+          <k-action-button
+              action="comicMatchInfo"
+              ok-text="自动抓取"
+              cancel-text="取消抓取"
+              :form="searchForm"
+          />
+          <h-button @click="onSearchInfo">匹配抓取</h-button>
           <h-button @click="onSetCover">设置封面</h-button>
           <h-button @click="onUpdate">编辑</h-button>
+          <h-button @click="onFileManage">文件管理</h-button>
         </a-space>
       </template>
     </a-page-header>
@@ -72,6 +79,12 @@
               <span v-if="index !== 0" class="px-2">/</span>
               {{ item }}
             </template>
+          </span>
+        </p>
+        <p class="flex">
+          <span class="mr-2">更新于:</span>
+          <span class="flex-1">
+            {{ formatUnixTimestamp(record.updatedAt) }}
           </span>
         </p>
         <p>
@@ -124,6 +137,7 @@ import ComicSeriesFileManage from "@/views/comic/comicSeries/comicSeriesFileMana
 import ComicSeriesSetCover from "@/views/comic/comicSeries/comicSeriesSetCover.vue";
 import ComicSeriesForm from "@/views/comic/comicSeries/comicSeriesForm.vue";
 import KActionButton from "@c/ActionButton/ActionButton.vue";
+import {formatUnixTimestamp} from "@/utils/utils";
 
 const route = useRoute()
 const router = useRouter()
@@ -142,7 +156,7 @@ const summaryList = computed(() => {
 });
 
 const searchForm = ref({
-  seriesId: id,
+  id: id,
   force: true
 })
 
@@ -173,17 +187,6 @@ const onSetCover = () => {
   refComicSeriesSetCover.value.show(bookRecord)
 }
 
-
-const onSync = () => {
-  apiComicSeriesSync({id}).then((res) => {
-    if (res) {
-      message.success("同步成功");
-      initData();
-    } else {
-      message.error("同步失败");
-    }
-  })
-}
 
 const onUpdate = () => {
   refComicSeriesForm.value.update(id);

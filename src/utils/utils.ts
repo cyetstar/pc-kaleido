@@ -172,3 +172,18 @@ export const isValidKey = (
 export function sortApp(list: yypbInfo[]) {
   return list.sort((a, b) => a?.xh - b?.xh);
 }
+
+export function formatUnixTimestamp(unixTimestamp: number): string {
+  if (isNaN(unixTimestamp)) {
+    return "";
+  }
+  let date = new Date(unixTimestamp * 1000);
+  let year = date.getFullYear();
+  let month = String(date.getMonth() + 1).padStart(2, "0"); // 月份从0开始，因此要加1
+  let day = String(date.getDate()).padStart(2, "0");
+  let hours = String(date.getHours()).padStart(2, "0");
+  let minutes = String(date.getMinutes()).padStart(2, "0");
+  let seconds = String(date.getSeconds()).padStart(2, "0");
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}

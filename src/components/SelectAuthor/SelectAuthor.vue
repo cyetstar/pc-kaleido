@@ -25,16 +25,16 @@
 
 <script>
 import { computed, defineComponent, onMounted, ref } from "vue";
-import { FormItem, Select, Spin } from "ant-design-vue";
-import { apiActorPage } from "@/api/actorApi";
+import { Select, FormItem, Spin } from "ant-design-vue";
+import { apiAuthorPage } from "@/api/authorApi";
 import { isNotEmpty } from "@ht/util";
 
 export default defineComponent({
-  name: "KSelectActor",
+  name: "KSelectAuthor",
   components: {
+    ASelect: Select,
     AFormItem: FormItem,
     ASpin: Spin,
-    ASelect: Select,
   },
   props: {
     label: String,
@@ -76,7 +76,7 @@ export default defineComponent({
         if (Array.isArray(props.value)) {
           ids = props.value.join(",");
         }
-        apiActorPage({ ids }).then((res) => {
+        apiAuthorPage({ ids }).then((res) => {
           options.value = res.records.map((s) => {
             return {
               value: s.id + "",
@@ -89,7 +89,7 @@ export default defineComponent({
 
     const search = (v) => {
       fetching = true;
-      apiActorPage({ keyword: v }).then((res) => {
+      apiAuthorPage({ keyword: v }).then((res) => {
         fetching = false;
         options.value = res.records.map((s) => {
           return {

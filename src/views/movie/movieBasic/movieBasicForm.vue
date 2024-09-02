@@ -103,7 +103,6 @@
                     :labelCol="{ span: 8 }"
                     v-model:value="form.actorList[i].id"
                     :name="'form.actorList[' + i + '].id'"
-                    mode="multiple"
                     label="主演"
                   />
                 </h-col>
@@ -199,8 +198,6 @@ import {
   apiMovieBasicUpdate,
   apiMovieBasicView,
 } from "@/api/movie/movieBasicApi";
-import { apiMovieActorPage } from "@/api/movie/movieActorApi";
-import _ from "lodash";
 import KSelectActor from "@c/SelectActor/SelectActor.vue";
 import MovieActorForm from "@/views/movie/movieActor/movieActorForm.vue";
 
@@ -276,28 +273,12 @@ const onSubmit = async () => {
   } catch (e) {}
 };
 
-const searchActor = (v) => {
-  apiMovieActorPage({ keyword: v }).then((res) => {
-    actorOptions.value = res.records.map((s) => {
-      return {
-        value: `${s.name}`,
-        label: `${s.name}`,
-      };
-    });
-  });
-};
-
-const debouncedSearchActor = _.debounce((v) => {
-  searchActor(v);
-}, 500);
-
-const onSearch = (v) => {
-  debouncedSearchActor(v);
-};
-
 const onAddActor = (i) => {
   if (i === 0) {
-    form.value.actorList.push("");
+    form.value.actorList.push({
+      id: "",
+      playRole: "",
+    });
   } else {
     form.value.actorList.splice(i, 1);
   }

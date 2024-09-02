@@ -29,41 +29,41 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import {apiMovieActorView} from "@/api/movie/movieActorApi.ts";
+import { apiActorView } from "@/api/actorApi.ts";
 
-const route = useRoute()
-const id = route.query.id
+const route = useRoute();
+const id = route.query.id;
 
-const record = ref({})
+const record = ref({});
 const initData = async () => {
-  const res = await apiMovieActorView({ id })
-  record.value = res
-}
+  const res = await apiActorView({ id });
+  record.value = res;
+};
 onMounted(() => {
-  initData()
-})
+  initData();
+});
 </script>
 
-<style lang='less' scoped>
-  .view-box {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20;
-  }
+<style lang="less" scoped>
+.view-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20;
+}
 
-  .view-item {
-    width: 50%;
-    display: flex;
-    align-items: center;
-    margin-bottom: 16px;
-    font-size: 14px;
+.view-item {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  font-size: 14px;
 
   &-label {
-     min-width: 90px;
-   }
+    min-width: 90px;
+  }
 
   &-value {
-     flex: 1;
-   }
+    flex: 1;
   }
+}
 </style>
