@@ -19,11 +19,6 @@ export const ALL_RESOURCE: resourceItem[] = [
     action: ["page", "view", "create", "update", "delete", "export", "other"],
   },
   {
-    type: "sysDept",
-    name: "部门表",
-    action: ["page", "view", "create", "update", "delete", "export", "other"],
-  },
-  {
     type: "sysMenu",
     name: "菜单管理",
     action: ["page", "view", "create", "update", "delete", "export", "other"],
@@ -54,23 +49,23 @@ export const ALL_RESOURCE: resourceItem[] = [
     action: ["page", "view", "create", "update", "delete", "export", "other"],
   },
   {
-    type: "webLog",
-    name: "操作日志",
-    action: ["page", "view", "create", "update", "delete", "export", "other"],
-  },
-  {
     type: "sysLog",
     name: "系统日志",
     action: ["page", "view", "create", "update", "delete", "export", "other"],
   },
   {
-    type: "musicAlbum",
-    name: "专辑",
+    type: "actor",
+    name: "演职员",
     action: ["page", "view", "create", "update", "delete", "export", "other"],
   },
   {
-    type: "musicArtist",
+    type: "artist",
     name: "艺术家",
+    action: ["page", "view", "create", "update", "delete", "export", "other"],
+  },
+  {
+    type: "author",
+    name: "作者",
     action: ["page", "view", "create", "update", "delete", "export", "other"],
   },
   {
@@ -94,13 +89,13 @@ export const ALL_RESOURCE: resourceItem[] = [
     action: ["page", "view", "create", "update", "delete", "export", "other"],
   },
   {
-    type: "comicSeries",
-    name: "漫画系列",
+    type: "musicAlbum",
+    name: "专辑",
     action: ["page", "view", "create", "update", "delete", "export", "other"],
   },
   {
-    type: "comicAuthor",
-    name: "漫画作者",
+    type: "comicSeries",
+    name: "漫画系列",
     action: ["page", "view", "create", "update", "delete", "export", "other"],
   },
 ];

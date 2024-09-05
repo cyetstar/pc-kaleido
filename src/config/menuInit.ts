@@ -71,10 +71,10 @@ export const MENUS = [
         permission: "comicSeries:page",
       },
       {
-        title: "漫画作者",
-        name: "comicAuthorPage",
-        path: "/comic/comicAuthor/page",
-        permission: "comicAuthor:page",
+        title: "作者",
+        name: "authorPage",
+        path: "/author/page",
+        permission: "author:page",
       },
     ],
   },
@@ -117,12 +117,6 @@ export const MENUS = [
         name: "SysConfigForm",
         path: "/sysadmin/sysConfig/form",
         permission: "sysConfig:create",
-      },
-      {
-        title: "操作日志",
-        name: "webLogPage",
-        path: "/sysadmin/webLog/page",
-        permission: "webLog:page",
       },
       {
         title: "系统日志",
