@@ -26,6 +26,7 @@
         @keyup.enter="onSearch"
       />
       <h-button @click="onSearch">搜索</h-button>
+      <h-button @click="onMatch">暂不匹配</h-button>
     </div>
 
     <a-table
@@ -50,6 +51,12 @@
         <template #="{ record }">
           <p>
             {{ record.title }}
+            <k-logo-link
+              type="plex"
+              :width="20"
+              :id="record.movieId"
+              class="mr-3"
+            />
           </p>
           <p class="text-muted" v-if="isNotEmpty(record.originalTitle)">
             {{ record.originalTitle }}

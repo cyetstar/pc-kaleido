@@ -23,12 +23,18 @@
             cancel-text="取消更新"
           />
           <k-action-button
-            action="tvshowSyncPlex"
+            action="tvshowSync"
             ok-text="同步Plex"
             cancel-text="取消同步"
             :form="searchForm"
           />
-          <h-button @click="onOpenDownloadFolder">打开下载目录</h-button>
+          <k-action-button
+            action="movieMatchInfo"
+            ok-text="自动抓取"
+            cancel-text="取消抓取"
+            :form="searchForm"
+          />
+          <h-button @click="onOpenDownloadFolder">文件源目录</h-button>
         </a-space>
       </div>
       <div class="flex justify-between items-center mt-4 mb-2">
