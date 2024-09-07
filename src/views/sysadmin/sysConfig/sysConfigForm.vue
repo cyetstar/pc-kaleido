@@ -177,6 +177,30 @@
               v-model:value="form.downloadLyricSleepSecond"
             />
           </h-col>
+          <h-col :span="12">
+            <h-radio
+              label="是否自动刷新Plex"
+              name="refreshMetadata"
+              v-model:value="form.refreshMetadata"
+              dict-type="sfbz"
+            />
+          </h-col>
+          <h-col :span="12">
+            <h-radio
+              label="是否开启重写ComicInfo"
+              name="writeComicInfo"
+              v-model:value="form.writeComicInfo"
+              dict-type="sfbz"
+            />
+          </h-col>
+          <h-col :span="12">
+            <h-radio
+              label="是否开启重写MovieNFO"
+              name="writeMovieNFO"
+              v-model:value="form.writeMovieNFO"
+              dict-type="sfbz"
+            />
+          </h-col>
         </a-tab-pane>
       </a-tabs>
       <h-col :span="12" :offset="3" class="mt-3">
@@ -221,6 +245,9 @@ let form = ref({
   tmmUrl: "",
   matchInfoSleepSecond: "3",
   downloadLyricSleepSecond: "3",
+  refreshMetadata: "1",
+  writeComicInfo: "1",
+  writeMovieNFO: "1",
 
   movieLibraryPath: "",
   tvshowLibraryPath: "",

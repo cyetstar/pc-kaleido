@@ -133,7 +133,7 @@
               mode="multiple"
               label="国家地区"
               v-model:value="form.countryList"
-              dictType="movieCountry"
+              dictType="Country"
               name="countryList"
             />
           </h-col>
@@ -142,7 +142,7 @@
               mode="multiple"
               label="语言"
               v-model:value="form.languageList"
-              dictType="movieLanguage"
+              dictType="Language"
               name="languageList"
             />
           </h-col>
@@ -151,7 +151,7 @@
               mode="multiple"
               label="类型"
               v-model:value="form.genreList"
-              dictType="movieGenre"
+              dictType="Genre"
               name="genreList"
             />
           </h-col>
