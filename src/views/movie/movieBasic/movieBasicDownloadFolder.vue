@@ -6,7 +6,13 @@
 <template>
   <k-file-modal ref="refFileModal">
     <template #footer>
-      <h-button plain type="primary" @click="onMatch">搜索匹配</h-button>
+      <h-button
+        plain
+        type="primary"
+        :disabled="refFileModal.selectedRows.length !== 1"
+        @click="onMatch"
+        >搜索匹配
+      </h-button>
     </template>
   </k-file-modal>
   <movie-basic-search-info

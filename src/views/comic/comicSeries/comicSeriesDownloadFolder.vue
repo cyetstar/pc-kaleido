@@ -11,7 +11,7 @@
         plain
         type="primary"
         @click="onMatch"
-        >人工匹配
+        >匹配搜索
       </h-button>
     </template>
   </k-file-modal>
@@ -33,8 +33,11 @@ const refFileModal = ref();
 const refComicSeriesSearchInfo = ref();
 
 const show = () => {
-  const path = appStore.$state.config["comicDownloadPath"];
-  refFileModal.value.show(path);
+  const libraryPath = appStore.$state.config["comicLibraryPath"];
+  const parts = libraryPath.split("/");
+  parts[parts.length - 1] = "import";
+  const importPath = parts.join("/");
+  refFileModal.value.show(importPath);
 };
 
 const onMatch = () => {

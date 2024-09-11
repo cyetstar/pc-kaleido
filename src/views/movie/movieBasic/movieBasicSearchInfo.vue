@@ -26,7 +26,7 @@
         @keyup.enter="onSearch"
       />
       <h-button @click="onSearch">搜索</h-button>
-      <h-button @click="onMatch">暂不匹配</h-button>
+      <h-button @click="onMatch">手动编辑</h-button>
     </div>
 
     <a-table
@@ -100,9 +100,9 @@ const emits = defineEmits(["match-success"]);
 const title = ref();
 const type = ref();
 const loading = ref();
-let movieRecord = {};
-let pathRecord = {};
 let visible = ref();
+let showRecord = {};
+let pathRecord = {};
 let dataSource = ref([]);
 let searchForm = ref({
   type: "douban",
@@ -136,9 +136,9 @@ const show = (record, showType) => {
     title.value = record.name;
     searchForm.value.keyword = pathRecord.name.replaceAll("\.", " ");
   } else {
-    movieRecord = record;
+    showRecord = record;
     title.value = record.title;
-    searchForm.value.keyword = movieRecord.title;
+    searchForm.value.keyword = showRecord.title;
   }
 };
 
@@ -152,14 +152,14 @@ const onSearch = () => {
 
 const onMatch = (record) => {
   if (type.value === "path") {
-    apiMovieBasicMatchPath({ ...pathRecord, ...record }).then((res) => {
-      message.success("抓取成功");
+    apiMovieBasicMatchPath({ ...pathRecord, ...record }).then(() => {
+      message.success("匹配成功");
       visible.value = false;
       emits("match-success");
     });
   } else {
-    apiMovieBasicMatchInfo({ ...movieRecord, ...record, ...searchForm.value })
-      .then((res) => {
+    apiMovieBasicMatchInfo({ ...showRecord, ...record, ...searchForm.value })
+      .then(() => {
         message.success("匹配成功");
         visible.value = false;
         emits("match-success");
@@ -173,7 +173,7 @@ const onMatch = (record) => {
 const onDownloadPoster = (record) => {
   loading.value = true;
   let url = record.poster.replace("s_ratio_poster", "m_ratio_poster");
-  apiMovieBasicDownloadPoster({ id: movieRecord.id, url: url }).then((res) => {
+  apiMovieBasicDownloadPoster({ id: showRecord.id, url: url }).then(() => {
     message.success("下载成功");
     visible.value = false;
   });
@@ -181,8 +181,8 @@ const onDownloadPoster = (record) => {
 
 const addRowColor = (record) => {
   if (
-    (record.doubanId && record.doubanId === movieRecord.doubanId) ||
-    (record.tmdbId && record.tmdbId === movieRecord.tmdbId)
+    (record.doubanId && record.doubanId === showRecord.doubanId) ||
+    (record.tmdbId && record.tmdbId === showRecord.tmdbId)
   ) {
     return "bg-highlight";
   }

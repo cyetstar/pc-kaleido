@@ -26,7 +26,7 @@
         @keyup.enter="onSearch"
       />
       <h-button @click="onSearch">搜索</h-button>
-      <h-button @click="onMatch">自动抓取</h-button>
+      <h-button @click="onMatch">手动编辑</h-button>
     </div>
 
     <a-table
@@ -98,9 +98,9 @@ const emits = defineEmits(["match-success"]);
 const title = ref();
 const type = ref();
 const loading = ref();
-let showRecord = {};
 let visible = ref();
-let pathRecords = [];
+let showRecord = {};
+let pathRecord = {};
 let dataSource = ref([]);
 let searchForm = ref({
   type: "douban",
@@ -113,17 +113,16 @@ let typeColumns = [
   },
 ];
 
-const show = (records, showType) => {
+const show = (record, showType) => {
   visible.value = true;
   type.value = showType;
   dataSource.value = [];
   if (type.value === "path") {
-    let pathRecord = records[0];
-    pathRecords = records;
-    title.value = pathRecord.name;
+    pathRecord = record;
+    title.value = record.name;
     searchForm.value.keyword = pathRecord.name.replaceAll("\.", " ");
   } else {
-    showRecord = records;
+    showRecord = record;
     title.value = showRecord.title;
     searchForm.value.keyword = showRecord.title;
   }
@@ -139,17 +138,14 @@ const onSearch = () => {
 
 const onMatch = (record) => {
   if (type.value === "path") {
-    apiTvshowShowMatchPath({
-      paths: pathRecords.map((s) => s.path),
-      ...record,
-    }).then((res) => {
-      message.success("抓取成功");
+    apiTvshowShowMatchPath({ ...pathRecord, ...record }).then(() => {
+      message.success("匹配成功");
       visible.value = false;
       emits("match-success");
     });
   } else {
     apiTvshowShowMatchInfo({ ...showRecord, ...record, ...searchForm.value })
-      .then((res) => {
+      .then(() => {
         message.success("匹配成功");
         visible.value = false;
         emits("match-success");

@@ -6,7 +6,13 @@
 <template>
   <k-file-modal ref="refFileModal">
     <template #footer>
-      <h-button plain type="primary" @click="onMatch">手动抓取</h-button>
+      <h-button
+        plain
+        :disabled="refFileModal.selectedRows.length !== 1"
+        type="primary"
+        @click="onMatch"
+        >匹配搜索</h-button
+      >
     </template>
   </k-file-modal>
   <tvshow-show-search-info
@@ -27,13 +33,16 @@ const refFileModal = ref();
 const refTvshowShowSearchInfo = ref();
 
 const show = () => {
-  const path = appStore.$state.config["tvshowDownloadPath"];
-  refFileModal.value.show(path);
+  const tvshowLibraryPath = appStore.$state.config["tvshowLibraryPath"];
+  const parts = tvshowLibraryPath.split("/");
+  parts[parts.length - 1] = "import";
+  const tvshowImportPath = parts.join("/");
+  refFileModal.value.show(tvshowImportPath);
 };
 
 const onMatch = () => {
-  let paths = refFileModal.value.selectedRows;
-  refTvshowShowSearchInfo.value.show(paths, "path");
+  let path = refFileModal.value.selectedRows[0];
+  refTvshowShowSearchInfo.value.show(path, "path");
 };
 
 const onMatchSuccess = () => {
