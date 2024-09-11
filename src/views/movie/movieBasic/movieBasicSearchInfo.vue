@@ -50,13 +50,10 @@
       <a-table-column title="影片信息">
         <template #="{ record }">
           <p>
-            {{ record.title }}
-            <k-logo-link
-              type="plex"
-              :width="20"
-              :id="record.movieId"
-              class="mr-3"
-            />
+            <a :href="getUrl(record)" target="_blank">
+              {{ record.title }}
+            </a>
+            <k-logo-link type="plex" :width="20" :id="record.id" class="mr-3" />
           </p>
           <p class="text-muted" v-if="isNotEmpty(record.originalTitle)">
             {{ record.originalTitle }}

@@ -54,7 +54,13 @@
       <a-table-column title="剧集信息">
         <template #="{ record }">
           <p>
-            {{ record.title }}
+            <a
+              :href="`https://movie.douban.com/subject/${record.doubanId}/`"
+              target="_blank"
+            >
+              {{ record.title }}
+            </a>
+            <k-logo-link type="plex" :width="20" :id="record.id" class="mr-3" />
           </p>
           <p class="text-muted" v-if="isNotEmpty(record.originalTitle)">
             {{ record.originalTitle }}

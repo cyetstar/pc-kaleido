@@ -54,6 +54,12 @@
             <a :href="`https://bgm.tv/subject/${record.bgmId}`" target="_blank">
               {{ record.series }}
             </a>
+            <k-logo-link
+              type="komga"
+              :width="20"
+              :id="record.id"
+              class="mr-3"
+            />
           </p>
           <p class="text-muted" v-if="isNotEmpty(record.originalSeries)">
             {{ record.originalSeries }}
