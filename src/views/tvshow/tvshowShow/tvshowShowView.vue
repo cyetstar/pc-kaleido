@@ -171,7 +171,7 @@ const onSearchInfo = () => {
 }
 
 const onFileManage = () => {
-  refTvshowShowFileManage.value.show(id);
+  refTvshowSeasonFileManage.value.show(id);
 };
 const onReadNFO = () => {
   apiTvshowShowReadNFO({id}).then((res) => {

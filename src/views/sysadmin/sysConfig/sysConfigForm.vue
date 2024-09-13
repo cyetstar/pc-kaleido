@@ -291,6 +291,17 @@ const onChange = (e, type) => {
 const onSave = async () => {
   apiSysConfigSave(form.value).then((res) => {
     if (res) {
+      Promise.all([apiPlexListLibrary(), apiKomgaListLibrary()]).then(
+        ([res1, res2]) => {
+          columns.value = [];
+          res1.forEach((s) => {
+            columns.value.push({ text: s.name, value: s.key, ...s });
+          });
+          res2.forEach((s) => {
+            columns.value.push({ text: s.name, value: s.key, ...s });
+          });
+        }
+      );
       appStore.initAppConfig();
       message.success("操作成功");
     }

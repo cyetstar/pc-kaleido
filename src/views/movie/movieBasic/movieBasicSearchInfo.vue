@@ -26,7 +26,7 @@
         @keyup.enter="onSearch"
       />
       <h-button @click="onSearch">搜索</h-button>
-      <h-button @click="onMatch">手动编辑</h-button>
+      <h-button @click="onMatch">无需匹配</h-button>
     </div>
 
     <a-table
@@ -53,7 +53,7 @@
             <a :href="getUrl(record)" target="_blank">
               {{ record.title }}
             </a>
-            <k-logo-link type="plex" :width="20" :id="record.id" class="mr-3" />
+            <k-logo-link type="plex" :width="20" :id="record.id" class="ml-3" />
           </p>
           <p class="text-muted" v-if="isNotEmpty(record.originalTitle)">
             {{ record.originalTitle }}
@@ -64,8 +64,16 @@
       <a-table-column title="操作" align="center" width="150px">
         <template #="{ record }">
           <a-space :size="0">
+            <h-button
+              v-if="isNotEmpty(record.id)"
+              type="primary"
+              size="small"
+              link
+              @click="onFileManage(record)"
+              >查看文件
+            </h-button>
             <h-button type="primary" size="small" link @click="onMatch(record)"
-              >匹配信息
+              >匹配
             </h-button>
             <h-button
               v-if="type !== 'path'"
@@ -80,6 +88,7 @@
       </a-table-column>
     </a-table>
   </a-modal>
+  <movie-basic-file-manage ref="refMovieBasicFileManage" />
 </template>
 
 <script setup>
@@ -92,8 +101,10 @@ import {
   apiMovieBasicSearchInfo,
 } from "@/api/movie/movieBasicApi";
 import { isNotEmpty } from "@ht/util";
+import MovieBasicFileManage from "@/views/movie/movieBasic/movieBasicFileManage.vue";
 
 const emits = defineEmits(["match-success"]);
+const refMovieBasicFileManage = ref();
 const title = ref();
 const type = ref();
 const loading = ref();
@@ -145,6 +156,10 @@ const onSearch = () => {
     dataSource.value = res;
     loading.value = false;
   });
+};
+
+const onFileManage = (infoRecord) => {
+  refMovieBasicFileManage.value.show(infoRecord.id);
 };
 
 const onMatch = (record) => {

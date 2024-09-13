@@ -26,7 +26,7 @@
         @keyup.enter="onSearch"
       />
       <h-button @click="onSearch">搜索</h-button>
-      <h-button @click="onMatch">自动匹配</h-button>
+      <h-button @click="onMatch">无需匹配</h-button>
     </div>
 
     <a-table
@@ -58,7 +58,7 @@
               type="komga"
               :width="20"
               :id="record.id"
-              class="mr-3"
+              class="ml-3"
             />
           </p>
           <p class="text-muted" v-if="isNotEmpty(record.originalSeries)">
@@ -70,14 +70,23 @@
       <a-table-column title="操作" align="center" width="150px">
         <template #="{ record }">
           <a-space :size="0">
+            <h-button
+              v-if="isNotEmpty(record.id)"
+              type="primary"
+              size="small"
+              link
+              @click="onFileManage(record)"
+              >查看文件
+            </h-button>
             <h-button type="primary" size="small" link @click="onMatch(record)"
-              >匹配信息
+              >匹配
             </h-button>
           </a-space>
         </template>
       </a-table-column>
     </a-table>
   </a-modal>
+  <comic-series-file-manage ref="refComicSeriesFileManage" />
 </template>
 
 <script setup>
@@ -89,7 +98,9 @@ import {
   apiComicSeriesMatchPath,
   apiComicSeriesSearchInfo,
 } from "@/api/comic/comicSeriesApi";
+import ComicSeriesFileManage from "@/views/comic/comicSeries/comicSeriesFileManage.vue";
 
+const refComicSeriesFileManage = ref();
 const emits = defineEmits(["match-success"]);
 const title = ref();
 const type = ref();
@@ -136,6 +147,10 @@ const onSearch = () => {
     dataSource.value = res;
     loading.value = false;
   });
+};
+
+const onFileManage = (infoRecord) => {
+  refComicSeriesFileManage.value.show(infoRecord.id);
 };
 
 const onMatch = (infoRecord) => {
