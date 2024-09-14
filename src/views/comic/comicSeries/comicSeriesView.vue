@@ -82,6 +82,15 @@
           </span>
         </p>
         <p class="flex">
+          <span class="mr-2">总卷数:</span>
+          <span class="flex-1">
+            {{ record.bookCount }}
+            <span v-if="isNotEmpty(bookRecords) && bookRecords.length!==record.bookCount">
+              ({{ bookRecords.length }})
+            </span>
+          </span>
+        </p>
+        <p class="flex">
           <span class="mr-2">更新于:</span>
           <span class="flex-1">
             {{ formatUnixTimestamp(record.updatedAt) }}
