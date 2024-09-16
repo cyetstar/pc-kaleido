@@ -11,13 +11,24 @@
       </template>
       <template #extra>
         <a-space>
-          <h-button @click="onFileManage">文件管理</h-button>
-          <h-button @click="onUpdateAudioTag">读取Tag</h-button>
-          <h-button @click="onSyncPlexById">同步Plex</h-button>
-          <h-button @click="onSearchNetease">匹配网易云</h-button>
           <h-button :disabled="!record.neteaseId" @click="onDownloadLyric"
           >下载歌词
           </h-button>
+          <k-action-button
+              action="musicSync"
+              ok-text="同步Plex"
+              cancel-text="取消同步"
+              :form="searchForm"
+          />
+          <k-action-button
+              action="movieMatchInfo"
+              ok-text="自动抓取"
+              cancel-text="取消抓取"
+              :form="searchForm"
+          />
+          <h-button @click="onSearchInfo">匹配抓取</h-button>
+          <h-button @click="onUpdate">编辑</h-button>
+          <h-button @click="onFileManage">文件管理</h-button>
         </a-space>
       </template>
     </a-page-header>
@@ -105,15 +116,10 @@
       <p>{{ lyrics }}</p>
     </template>
   </a-modal>
-  <music-album-search-netease
-      ref="refMusicAlbumSearchNetease"
-      @match-success="initAlbumData"
-  />
+  <music-album-form ref="refMusicAlbumForm"/>
+  <music-album-search-info ref="refMusicAlbumSearchInfo" @match-success="initAlbumData"/>
   <music-album-file-manage ref="refMusicAlbumFileManage"/>
-  <music-album-search-lyric
-      ref="refMusicAlbumSearchLyric"
-      @match-success="initTrackData"
-  />
+  <music-album-search-lyric ref="refMusicAlbumSearchLyric" @match-success="initTrackData"/>
 </template>
 
 <script setup>
@@ -131,10 +137,11 @@ import {
 } from "@/api/music/musicTrackApi";
 import {message} from "ant-design-vue";
 import {FileTextOutlined, LeftOutlined, FileSearchOutlined} from "@ant-design/icons-vue";
-import MusicAlbumSearchNetease from "@/views/music/musicAlbum/musicAlbumSearchNetease.vue";
+import MusicAlbumSearchInfo from "@/views/music/musicAlbum/musicAlbumSearchInfo.vue";
 import MusicAlbumFileManage from "@/views/music/musicAlbum/musicAlbumFileManage.vue";
-import {isNotEmpty} from "@ht/util";
 import MusicAlbumSearchLyric from "@/views/music/musicAlbum/musicAlbumSearchLyric.vue";
+import {isNotEmpty} from "@ht/util";
+import MusicAlbumForm from "@/views/music/musicAlbum/musicAlbumForm.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -145,8 +152,13 @@ const discRecords = ref([]);
 const modalLyricsVisible = ref(false);
 const modalLyricsTitle = ref();
 const lyrics = ref();
+const searchForm = ref({
+  albumId: id,
+  force: true
+})
 
-const refMusicAlbumSearchNetease = ref();
+const refMusicAlbumForm = ref();
+const refMusicAlbumSearchInfo = ref();
 const refMusicAlbumFileManage = ref();
 const refMusicAlbumSearchLyric = ref();
 
@@ -164,6 +176,10 @@ const initTrackData = () => {
       (res) => discRecords.value = res
   );
 };
+
+const onUpdate = () => {
+  refMusicAlbumForm.value.update(id);
+}
 
 const onFileManage = () => {
   refMusicAlbumFileManage.value.show(id);
@@ -195,9 +211,9 @@ const onSyncPlexById = () => {
   });
 };
 
-const onSearchNetease = () => {
-  refMusicAlbumSearchNetease.value.show(record.value);
-};
+const onSearchInfo = () => {
+  refMusicAlbumSearchInfo.value.show(record.value);
+}
 
 const onDownloadLyric = () => {
   apiMusicAlbumDownloadLyric({id: record.value.id}).then(() => {

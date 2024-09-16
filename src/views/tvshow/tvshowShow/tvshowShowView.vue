@@ -11,10 +11,21 @@
       </template>
       <template #extra>
         <a-space>
+          <k-action-button
+              action="tvshowSync"
+              ok-text="同步Plex"
+              cancel-text="取消同步"
+              :form="searchForm"
+          />
+          <k-action-button
+              action="tvshowMatchInfo"
+              ok-text="自动抓取"
+              cancel-text="取消抓取"
+              :form="searchForm"
+          />
+          <h-button @click="onSearchInfo">匹配抓取</h-button>
+          <h-button @click="onUpdate">编辑</h-button>
           <h-button @click="onFileManage">文件管理</h-button>
-          <h-button @click="onSearchInfo">抓取信息</h-button>
-          <h-button @click="onReadNFO">读取NFO</h-button>
-          <h-button @click="onSyncPlex">同步Plex</h-button>
         </a-space>
       </template>
     </a-page-header>
@@ -34,18 +45,52 @@
         </p>
         <p>
           <a-tag v-if="record.contentRating">{{ record.contentRating }}</a-tag>
-          <a-tag v-for="item in record.genreList" :key="item.id"
-          >{{ item.idLabel }}
-          </a-tag>
+          <a-tag v-for="item in record.countryList" :key="item">{{ item }}</a-tag>
+          <a-tag v-for="item in record.genreList" :key="item">{{ item }}</a-tag>
+          <a-tag v-for="item in record.languageList" :key="item">{{ item }}</a-tag>
+          <a-tag v-for="item in record.tagList" :key="item">{{ item }}</a-tag>
         </p>
         <p v-if="isNotEmpty(summaryList)">
           <p v-for="(item, index) in summaryList" :key="index">
             {{ item }}
           </p>
         </p>
+        <p class="flex" v-if="isNotEmpty(record.directorList)">
+          <span class="mr-2">导演:</span>
+          <span class="flex-1">
+            <template v-for="(item, index) in record.directorList">
+              <span v-if="index !== 0" class="px-2">/</span>
+              <a @click="onViewArtist(item)">{{ item.name }}</a>
+            </template>
+          </span>
+        </p>
+        <p class="flex" v-if="isNotEmpty(record.writerList)">
+          <span class="mr-2">编剧:</span>
+          <span class="flex-1">
+            <template v-for="(item, index) in record.writerList">
+              <span v-if="index !== 0" class="px-2">/</span>
+              <a @click="onViewArtist(item)">{{ item.name }}</a>
+            </template>
+          </span>
+        </p>
+        <p class="flex" v-if="isNotEmpty(record.akaList)">
+          <span class="mr-2">又名:</span>
+          <span class="flex-1">
+            <template v-for="(item, index) in record.akaList">
+              <span v-if="index !== 0" class="px-2">/</span>
+              {{ item }}
+            </template>
+          </span>
+        </p>
         <p class="flex" v-if="isNotEmpty(record.studio)">
           <span class="mr-2">制片方:</span>
           <span class="flex-1">{{ record.studio }}</span>
+        </p>
+        <p class="flex">
+          <span class="mr-2">更新于:</span>
+          <span class="flex-1">
+            {{ formatUnixTimestamp(record.updatedAt) }}
+          </span>
         </p>
         <p>
           <k-logo-link type="plex" :id="record.id" class="mr-3"/>
@@ -110,6 +155,7 @@
   </section>
   <tvshow-show-search-info ref="refTvshowShowSearchInfo"/>
   <tvshow-show-file-manage ref="refTvshowShowFileManage"/>
+  <tvshow-show-form ref="refTvshowShowForm"/>
 </template>
 
 <script setup>
@@ -117,12 +163,14 @@ import {ref, onMounted, computed} from "vue";
 import {FileTextOutlined, LeftOutlined} from "@ant-design/icons-vue";
 import {useRoute, useRouter} from "vue-router";
 import {isNotEmpty} from "@ht/util";
-import {apiTvshowShowReadNFO, apiTvshowShowSyncPlex, apiTvshowShowView} from "@/api/tvshow/tvshowShowApi.ts";
+import {apiTvshowShowReadNFO, apiTvshowShowSyncPlex, apiTvshowShowView} from "@/api/tvshow/tvshowShowApi";
 import {apiTvshowEpisodePage} from "@/api/tvshow/tvshowEpisodeApi";
 import {apiTvshowSeasonPage} from "@/api/tvshow/tvshowSeasonApi";
 import {message} from "ant-design-vue";
 import TvshowShowSearchInfo from "@/views/tvshow/tvshowShow/tvshowShowSearchInfo.vue";
 import TvshowShowFileManage from "@/views/tvshow/tvshowShow/tvshowShowFileManage.vue";
+import TvshowShowForm from "@/views/tvshow/tvshowShow/tvshowShowForm.vue";
+import {formatUnixTimestamp} from "@/utils/utils";
 
 const route = useRoute()
 const router = useRouter()
@@ -131,7 +179,13 @@ const episodeRecords = ref([]);
 const seasonRecords = ref([]);
 const refTvshowShowSearchInfo = ref();
 const refTvshowShowFileManage = ref();
+const refTvshowShowForm = ref();
 const id = route.query.id;
+const searchForm = ref({
+  id: id,
+  showId: id,
+  force: true
+})
 const rating = computed(() => record.value.rating / 2);
 const actorList = computed(() => {
   if (isNotEmpty(record.value.actorList) && record.value.actorList.length > 8) {
@@ -169,9 +223,11 @@ const onViewSeason = (id) => {
 const onSearchInfo = () => {
   refTvshowShowSearchInfo.value.show(record.value)
 }
-
+const onUpdate = () => {
+  refTvshowShowForm.value.update(id);
+}
 const onFileManage = () => {
-  refTvshowSeasonFileManage.value.show(id);
+  refTvshowShowFileManage.value.show(id);
 };
 const onReadNFO = () => {
   apiTvshowShowReadNFO({id}).then((res) => {

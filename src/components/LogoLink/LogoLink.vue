@@ -1,5 +1,5 @@
 <template>
-  <a v-if="href !== null" :href="href" target="_blank">
+  <a v-if="href" :href="href" target="_blank">
     <img :width="width" :src="src" style="border-radius: 50%" />
   </a>
 </template>

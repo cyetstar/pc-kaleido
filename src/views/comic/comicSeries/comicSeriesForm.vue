@@ -53,9 +53,9 @@
           </h-col>
           <h-col :span="24">
             <h-radio
-              label="状态"
+              label="完结状态"
               v-model:value="form.status"
-              dict-type="comic.series.status"
+              dict-type="wjzt"
               name="status"
             />
           </h-col>
@@ -70,15 +70,15 @@
         <a-tab-pane key="authors" tab="作者">
           <h-col :span="24">
             <k-select-author
-              v-model:value="form.writerIdList"
-              name="writerIdList"
+              v-model:value="form.writerList"
+              name="writerList"
               label="作者"
             />
           </h-col>
           <h-col :span="24">
             <k-select-author
-              v-model:value="form.pencillerIdList"
-              name="pencillerIdList"
+              v-model:value="form.pencillerList"
+              name="pencillerList"
               label="作画"
             />
           </h-col>
@@ -159,10 +159,10 @@ const update = async (id) => {
   formRef.value.reset();
   form.value = await apiComicSeriesView({ id });
   if (form.value.writerList.length > 0) {
-    form.value.writerIdList = form.value.writerList.map((s) => s.id);
+    form.value.writerList = form.value.writerList.map((s) => s.id);
   }
   if (form.value.pencillerList.length > 0) {
-    form.value.pencillerIdList = form.value.pencillerList.map((s) => s.id);
+    form.value.pencillerList = form.value.pencillerList.map((s) => s.id);
   }
   if (form.value.alternateTitleList.length === 0) {
     form.value.alternateTitleList.push("");

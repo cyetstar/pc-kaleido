@@ -11,16 +11,23 @@
     width="960px"
     :footer="null"
   >
-    <a-form layout="inline">
+    <div class="flex gap-2">
+      <h-radio
+        v-model:value="searchForm.type"
+        button
+        name="type"
+        :columns="typeColumns"
+      />
       <h-input
-        class="w-300px"
+        class="flex-1"
         placeholder=""
-        v-model:value="form.keywords"
-        name="keywords"
+        v-model:value="searchForm.keyword"
+        name="keyword"
         @keyup.enter="onSearch"
       />
       <h-button @click="onSearch">搜索</h-button>
-    </a-form>
+      <h-button @click="onMatch">无法匹配</h-button>
+    </div>
 
     <a-table
       size="small"
@@ -77,52 +84,85 @@
 
 <script setup>
 import { ref } from "vue";
-import { CheckCircleTwoTone } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
 import {
-  apiMusicAlbumSearchNetease,
-  apiMusicAlbumMatchNetease,
+  apiMusicAlbumSearchInfo,
+  apiMusicAlbumMatchInfo,
+  apiMusicAlbumMatchPath,
   apiMusicAlbumDownloadCover,
 } from "@/api/music/musicAlbumApi.ts";
-import { isNotEmpty } from "@ht/util";
 
 const emits = defineEmits(["match-success"]);
 const loading = ref();
-let albumRecord = {};
+const title = ref();
+const type = ref();
+let record = {};
+let path = {};
 let visible = ref();
 let dataSource = ref([]);
-let form = ref({
-  keywords: "",
+let searchForm = ref({
+  type: "musicbrainz",
+  keyword: "",
 });
+let typeColumns = [
+  {
+    text: "MusicBrainz",
+    value: "musicbrainz",
+  },
+  {
+    text: "网易",
+    value: "netease",
+  },
+];
 
-const show = (record) => {
+const show = (source, sourceType) => {
   visible.value = true;
-  albumRecord = record;
-  form.value.keywords = albumRecord.title + " " + albumRecord.artists;
-  onSearch();
+  type.value = sourceType;
+  dataSource.value = [];
+  if (type.value === "path") {
+    path = source;
+    title.value = path.name;
+    searchForm.value.keyword = title.value.replaceAll("\.", " ");
+  } else {
+    record = source;
+    title.value = record.title + " " + record.artists;
+    searchForm.value.keyword = title.value;
+  }
 };
 
 const onSearch = () => {
   loading.value = true;
-  apiMusicAlbumSearchNetease(form.value).then((res) => {
+  apiMusicAlbumSearchInfo(searchForm.value).then((res) => {
     dataSource.value = res;
     loading.value = false;
   });
 };
 
-const onMatch = (record) => {
+const onMatch = (source) => {
   loading.value = true;
-  apiMusicAlbumMatchNetease({ ...albumRecord, ...record }).then((res) => {
-    message.success("匹配成功");
-    visible.value = false;
-    loading.value = false;
-    emits("match-success");
-  });
+  if (type.value === "path") {
+    apiMusicAlbumMatchPath({ ...path, ...source }).then(() => {
+      message.success("匹配成功");
+      visible.value = false;
+      loading.value = false;
+      emits("match-success");
+    });
+  } else {
+    apiMusicAlbumMatchInfo({ ...record, ...source, ...searchForm.value })
+      .then(() => {
+        message.success("匹配成功");
+        visible.value = false;
+        emits("match-success");
+      })
+      .catch(() => {
+        loading.value = false;
+      });
+  }
 };
 
-const onDownloadCover = (record) => {
+const onDownloadCover = (source) => {
   loading.value = true;
-  apiMusicAlbumDownloadCover({ id: albumRecord.id, url: record.picUrl }).then(
+  apiMusicAlbumDownloadCover({ id: record.id, url: source.picUrl }).then(
     (res) => {
       message.success("下载成功");
       visible.value = false;
@@ -131,8 +171,8 @@ const onDownloadCover = (record) => {
   );
 };
 
-const addRowColor = (record) => {
-  if (record && record.neteaseId === albumRecord.neteaseId) {
+const addRowColor = (source) => {
+  if (source && source.neteaseId === record.neteaseId) {
     return "bg-highlight";
   }
 };

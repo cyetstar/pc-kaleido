@@ -18,22 +18,29 @@
         </a-form>
         <a-space>
           <k-action-button
-            action="musicReadAudioTag"
-            ok-text="读取Tag"
-            cancel-text="取消读取"
-            :form="searchForm"
-          />
-          <k-action-button
             action="musicDownloadLyric"
             ok-text="下载歌词"
             cancel-text="取消下载"
             :form="searchForm"
           />
           <k-action-button
-            action="musicSyncPlex"
+            action="musicUpdateSource"
+            ok-text="更新文件源"
+            cancel-text="取消更新"
+          />
+          <k-action-button
+            action="musicSync"
             ok-text="同步Plex"
             cancel-text="取消同步"
+            :form="searchForm"
           />
+          <k-action-button
+            action="musicMatchInfo"
+            ok-text="自动抓取"
+            cancel-text="取消抓取"
+            :form="searchForm"
+          />
+          <h-button @click="onOpenDownloadFolder">文件源目录</h-button>
         </a-space>
       </div>
       <div class="flex justify-between items-center mt-4 mb-2">
@@ -93,6 +100,7 @@
       </div>
     </section>
   </section>
+  <music-album-download-folder ref="refMusicAlbumDownloadFolder" />
 </template>
 
 <script setup>
@@ -102,12 +110,10 @@ import { Empty, message } from "ant-design-vue";
 import { CloseCircleOutlined } from "@ant-design/icons-vue";
 import { isEmpty, isNotEmpty } from "@ht/util";
 import { useAppStore } from "@/store/modules/app";
-import {
-  apiMusicAlbumPage,
-  apiMusicAlbumSyncPlex,
-} from "@/api/music/musicAlbumApi.ts";
+import { apiMusicAlbumPage } from "@/api/music/musicAlbumApi.ts";
 import { apiSysDictListByDictType } from "@/api/sysadmin/sysDictApi";
 import KActionButton from "@c/ActionButton/ActionButton.vue";
+import MusicAlbumDownloadFolder from "@/views/music/musicAlbum/musicAlbumDownloadFolder.vue";
 
 const router = useRouter();
 const appStore = useAppStore();
@@ -126,6 +132,7 @@ const dicts = ref([
   },
 ]);
 const refScrollGrid = ref();
+const refMusicAlbumDownloadFolder = ref();
 const searchForm = ref({});
 const loading = ref(false);
 const pageResult = ref({
@@ -164,6 +171,10 @@ const loadData = () => {
     pageResult.value.pageSize = res.pageSize;
     pageResult.value.total = res.total;
   });
+};
+
+const onOpenDownloadFolder = () => {
+  refMusicAlbumDownloadFolder.value.show();
 };
 
 const onSearch = () => {

@@ -27,6 +27,7 @@ export const useAppStore = defineStore("app", {
         "plexMusicLibraryId",
         "movieLibraryPath",
         "tvshowLibraryPath",
+        "musicLibraryPath",
         "comicLibraryPath",
       ]).then((res) => {
         this.config = { ...res };

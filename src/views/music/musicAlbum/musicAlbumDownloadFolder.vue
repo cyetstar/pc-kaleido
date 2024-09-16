@@ -15,8 +15,8 @@
       </h-button>
     </template>
   </k-file-modal>
-  <movie-basic-search-info
-    ref="refMovieBasicSearchInfo"
+  <music-album-search-info
+    ref="refMusicAlbumSearchInfo"
     @match-success="onMatchSuccess"
   />
 </template>
@@ -25,16 +25,16 @@
 import { ref } from "vue";
 import { useAppStore } from "@/store/modules/app";
 import { message } from "ant-design-vue";
-import MovieBasicSearchInfo from "@/views/movie/movieBasic/movieBasicSearchInfo.vue";
+import MusicAlbumSearchInfo from "@/views/music/musicAlbum/musicAlbumSearchInfo.vue";
 
 const emits = defineEmits(["match-success"]);
 
 const appStore = useAppStore();
 const refFileModal = ref();
-const refMovieBasicSearchInfo = ref();
+const refMusicAlbumSearchInfo = ref();
 
 const show = () => {
-  const libraryPath = appStore.$state.config["movieLibraryPath"];
+  const libraryPath = appStore.$state.config["musicLibraryPath"];
   const parts = libraryPath.split("/");
   parts[parts.length - 1] = "import";
   const importPath = parts.join("/");
@@ -47,7 +47,7 @@ const onMatch = () => {
     return;
   }
   let path = refFileModal.value.selectedRows[0];
-  refMovieBasicSearchInfo.value.show(path, "path");
+  refMusicAlbumSearchInfo.value.show(path, "path");
 };
 
 const onMatchSuccess = () => {

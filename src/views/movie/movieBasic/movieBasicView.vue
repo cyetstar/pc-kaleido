@@ -12,15 +12,15 @@
       <template #extra>
         <a-space>
           <k-action-button
-              action="movieSync"
-              ok-text="同步Plex"
-              cancel-text="取消同步"
-              :form="searchForm"
-          />
-          <k-action-button
               action="movieAnalyze"
               ok-text="分析文件"
               cancel-text="取消分析"
+              :form="searchForm"
+          />
+          <k-action-button
+              action="movieSync"
+              ok-text="同步Plex"
+              cancel-text="取消同步"
               :form="searchForm"
           />
           <k-action-button
@@ -97,14 +97,6 @@
             {{ formatUnixTimestamp(record.updatedAt) }}
           </span>
         </p>
-        <!--        <p class="flex" v-if="isNotEmpty(record.studio)">-->
-        <!--          <span class="mr-2">制片方:</span>-->
-        <!--          <span class="flex-1">{{ record.studio }}</span>-->
-        <!--        </p>-->
-        <!--        <p class="flex" v-if="isNotEmpty(record.website)">-->
-        <!--          <span class="mr-2">官网:</span>-->
-        <!--          <span class="flex-1">{{ record.website }}</span>-->
-        <!--        </p>-->
         <p>
           <k-logo-link type="plex" :id="record.id" class="mr-3"/>
           <k-logo-link type="imdb" :id="record.imdbId" class="mr-3"/>

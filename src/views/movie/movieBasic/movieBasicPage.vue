@@ -18,6 +18,18 @@
         </a-form>
         <a-space>
           <k-action-button
+            action="movieCheckThreadStatus"
+            ok-text="检测TLF"
+            cancel-text="取消检测"
+            :form="searchForm"
+          />
+          <k-action-button
+            action="movieAnalyze"
+            ok-text="分析文件"
+            cancel-text="取消分析"
+            :form="searchForm"
+          />
+          <k-action-button
             action="movieUpdateSource"
             ok-text="更新文件源"
             cancel-text="取消更新"
@@ -32,18 +44,6 @@
             action="movieMatchInfo"
             ok-text="自动抓取"
             cancel-text="取消抓取"
-            :form="searchForm"
-          />
-          <k-action-button
-            action="movieCheckThreadStatus"
-            ok-text="检测TLF"
-            cancel-text="取消检测"
-            :form="searchForm"
-          />
-          <k-action-button
-            action="movieAnalyze"
-            ok-text="分析文件"
-            cancel-text="取消分析"
             :form="searchForm"
           />
           <h-button @click="onOpenDownloadFolder">文件源目录</h-button>

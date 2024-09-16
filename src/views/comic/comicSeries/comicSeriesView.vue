@@ -16,6 +16,7 @@
       </template>
       <template #extra>
         <a-space>
+          <h-button @click="onSetCover">设置封面</h-button>
           <k-action-button
               action="comicSync"
               ok-text="同步Komga"
@@ -29,7 +30,6 @@
               :form="searchForm"
           />
           <h-button @click="onSearchInfo">匹配抓取</h-button>
-          <h-button @click="onSetCover">设置封面</h-button>
           <h-button @click="onUpdate">编辑</h-button>
           <h-button @click="onFileManage">文件管理</h-button>
         </a-space>
@@ -126,7 +126,8 @@
   </section>
   <comic-series-file-manage ref="refComicSeriesFileManage"/>
   <comic-series-set-cover ref="refComicSeriesSetCover"/>
-  <comic-series-form ref="refComicSeriesForm" @save-complete="onSaveComplete"/>
+  <comic-series-form ref="refComicSeriesForm" @save-complete="initData"/>
+  <comic-series-search-info ref="refComicSeriesSearchInfo"/>
 </template>
 
 <script setup>
@@ -147,6 +148,7 @@ import ComicSeriesSetCover from "@/views/comic/comicSeries/comicSeriesSetCover.v
 import ComicSeriesForm from "@/views/comic/comicSeries/comicSeriesForm.vue";
 import KActionButton from "@c/ActionButton/ActionButton.vue";
 import {formatUnixTimestamp} from "@/utils/utils";
+import ComicSeriesSearchInfo from "@/views/comic/comicSeries/comicSeriesSearchInfo.vue";
 
 const route = useRoute()
 const router = useRouter()
@@ -154,6 +156,7 @@ const record = ref({})
 const bookRecords = ref([]);
 const refComicSeriesSetCover = ref();
 const refComicSeriesFileManage = ref();
+const refComicSeriesSearchInfo = ref();
 const refComicSeriesForm = ref();
 const id = route.query.id;
 const rating = computed(() => record.value.rating / 2);
@@ -166,6 +169,7 @@ const summaryList = computed(() => {
 
 const searchForm = ref({
   id: id,
+  seriesId: id,
   force: true
 })
 
@@ -196,14 +200,14 @@ const onSetCover = () => {
   refComicSeriesSetCover.value.show(bookRecord)
 }
 
+const onSearchInfo = () => {
+  refComicSeriesSearchInfo.value.show(record.value);
+}
 
 const onUpdate = () => {
   refComicSeriesForm.value.update(id);
 }
 
-const onSaveComplete = () => {
-  initData();
-}
 
 onMounted(() => {
   initData()

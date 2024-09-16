@@ -64,18 +64,26 @@ export const apiMusicAlbumSyncPlexById = (data: any) => {
   });
 };
 
-export const apiMusicAlbumSearchNetease = (params: any) => {
+export const apiMusicAlbumSearchInfo = (params: any) => {
   return useFetch.get<any>({
-    url: "/musicAlbum/searchNetease",
+    url: "/musicAlbum/searchInfo",
     params,
   });
 };
-export const apiMusicAlbumMatchNetease = (data: any) => {
+export const apiMusicAlbumMatchInfo = (data: any) => {
   return useFetch.post<any>({
-    url: "/musicAlbum/matchNetease",
+    url: "/musicAlbum/matchInfo",
     data,
   });
 };
+
+export const apiMusicAlbumMatchPath = (data: any) => {
+  return useFetch.post<any>({
+    url: "/musicAlbum/matchPath",
+    data,
+  });
+};
+
 export const apiMusicAlbumDownloadLyric = (data: any) => {
   return useFetch.post<any>({
     url: "/musicAlbum/downloadLyric",

@@ -33,11 +33,11 @@ const refFileModal = ref();
 const refTvshowShowSearchInfo = ref();
 
 const show = () => {
-  const tvshowLibraryPath = appStore.$state.config["tvshowLibraryPath"];
-  const parts = tvshowLibraryPath.split("/");
+  const libraryPath = appStore.$state.config["tvshowLibraryPath"];
+  const parts = libraryPath.split("/");
   parts[parts.length - 1] = "import";
-  const tvshowImportPath = parts.join("/");
-  refFileModal.value.show(tvshowImportPath);
+  const importPath = parts.join("/");
+  refFileModal.value.show(importPath);
 };
 
 const onMatch = () => {
