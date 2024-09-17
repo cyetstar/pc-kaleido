@@ -7,76 +7,141 @@
   <h-form-modal
     ref="formRef"
     :label-col="{ span: 4 }"
-    width="600px"
+    width="1000px"
     v-model:form="form"
     title="剧集"
     @submit="onSubmit"
   >
-    <h-col :span="24">
-      <h-input label="剧集名" v-model:value="form.title" name="title" />
-    </h-col>
-    <h-col :span="24">
-      <h-input
-        label="原剧集名"
-        v-model:value="form.originalTitle"
-        name="originalTitle"
-      />
-    </h-col>
-    <h-col :span="24">
-      <h-input label="制片公司" v-model:value="form.studio" name="studio" />
-    </h-col>
-    <h-col :span="24">
-      <h-input
-        label="剧集评级"
-        v-model:value="form.contentRating"
-        name="contentRating"
-      />
-    </h-col>
-    <h-col :span="24">
-      <h-input label="简介" v-model:value="form.summary" name="summary" />
-    </h-col>
-    <h-col :span="24">
-      <h-input label="首播年份" v-model:value="form.year" name="year" />
-    </h-col>
-    <h-col :span="24">
-      <h-input
-        label="首播日期"
-        v-model:value="form.originallyAvailableAt"
-        name="originallyAvailableAt"
-      />
-    </h-col>
-    <h-col :span="24">
-      <h-input label="评分" v-model:value="form.rating" name="rating" />
-    </h-col>
-    <h-col :span="24">
-      <h-input label="海报" v-model:value="form.thumb" name="thumb" />
-    </h-col>
-    <h-col :span="24">
-      <h-input label="艺术图" v-model:value="form.art" name="art" />
-    </h-col>
-    <h-col :span="24">
-      <h-input
-        label="季数"
-        v-model:value="form.totalSeasons"
-        name="totalSeasons"
-      />
-    </h-col>
-    <h-col :span="24">
-      <h-input label="加入时间" v-model:value="form.addedAt" name="addedAt" />
-    </h-col>
-    <h-col :span="24">
-      <h-input
-        label="更新时间"
-        v-model:value="form.updatedAt"
-        name="updatedAt"
-      />
-    </h-col>
+    <a-col :span="24">
+      <a-tabs v-model:activeKey="activeKey" tab-position="left">
+        <a-tab-pane key="basic" tab="基本">
+          <h-col :span="24">
+            <h-input label="标题" v-model:value="form.title" name="title" />
+          </h-col>
+          <h-col :span="24">
+            <h-input
+              label="原标题"
+              v-model:value="form.originalTitle"
+              name="originalTitle"
+            />
+          </h-col>
+          <h-col :span="24">
+            <h-input
+              label="排序名"
+              v-model:value="form.sortTitle"
+              name="sortTitle"
+            />
+          </h-col>
+          <h-col :span="24">
+            <h-input
+              label="简介"
+              text-area
+              rows="4"
+              v-model:value="form.summary"
+              name="summary"
+            />
+          </h-col>
+          <h-col :span="24">
+            <h-input label="年份" v-model:value="form.year" name="year" />
+          </h-col>
+          <h-col :span="24">
+            <h-input label="评分" v-model:value="form.rating" name="rating" />
+          </h-col>
+          <h-col :span="24">
+            <h-select
+              label="评级"
+              v-model:value="form.contentRating"
+              dict-type="tvshowContentRating"
+              name="contentRating"
+            />
+          </h-col>
+          <h-col :span="24">
+            <h-input
+              label="IMDb编号"
+              v-model:value="form.imdbId"
+              name="imdbId"
+            />
+          </h-col>
+          <h-col :span="24">
+            <h-input
+              label="豆瓣编号"
+              v-model:value="form.doubanId"
+              name="doubanId"
+            />
+          </h-col>
+          <h-col :span="24">
+            <h-input
+              label="TMDB编号"
+              v-model:value="form.tmdbId"
+              name="tmdbId"
+            />
+          </h-col>
+        </a-tab-pane>
+        <a-tab-pane key="tags" tab="标签">
+          <h-col :span="24">
+            <h-select
+              mode="multiple"
+              label="国家地区"
+              v-model:value="form.countryList"
+              dictType="Country"
+              name="countryList"
+            />
+          </h-col>
+          <h-col :span="24">
+            <h-select
+              mode="multiple"
+              label="语言"
+              v-model:value="form.languageList"
+              dictType="Language"
+              name="languageList"
+            />
+          </h-col>
+          <h-col :span="24">
+            <h-select
+              mode="multiple"
+              label="类型"
+              v-model:value="form.genreList"
+              dictType="Genre"
+              name="genreList"
+            />
+          </h-col>
+          <h-col :span="24">
+            <h-select
+              mode="tags"
+              label="标签"
+              v-model:value="form.tagList"
+              name="tagList"
+            />
+          </h-col>
+        </a-tab-pane>
+        <a-tab-pane key="akas" tab="别名">
+          <h-col :span="24">
+            <template :key="i" v-for="(aka, i) in form.akaList">
+              <h-input
+                label="别名"
+                v-model:value="form.akaList[i]"
+                :name="'aka' + i"
+                search
+                @search="onAddAka(i)"
+                :allowClear="false"
+              >
+                <template #enterButton>
+                  <PlusOutlined v-if="i === 0" />
+                  <MinusOutlined v-else />
+                </template>
+              </h-input>
+            </template>
+          </h-col>
+        </a-tab-pane>
+      </a-tabs>
+    </a-col>
   </h-form-modal>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import { message } from "ant-design-vue";
+import { PlusOutlined, MinusOutlined } from "@ant-design/icons-vue";
 import {
   apiTvshowShowCreate,
   apiTvshowShowUpdate,
@@ -139,10 +204,25 @@ const onSubmit = async () => {
   } catch (e) {}
 };
 
+const onAddAka = (i) => {
+  if (i === 0) {
+    form.value.akaList.push("");
+  } else {
+    form.value.akaList.splice(i, 1);
+  }
+};
+
 defineExpose({
   create,
   update,
 });
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+/deep/ .ant-input-search-button {
+  background: #fff;
+  border: 1px solid #d9d9d9;
+  color: #00000072;
+  padding: 4px 10px;
+}
+</style>

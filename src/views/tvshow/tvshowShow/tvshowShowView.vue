@@ -23,7 +23,6 @@
               cancel-text="取消抓取"
               :form="searchForm"
           />
-          <h-button @click="onSearchInfo">匹配抓取</h-button>
           <h-button @click="onUpdate">编辑</h-button>
           <h-button @click="onFileManage">文件管理</h-button>
         </a-space>
@@ -50,8 +49,8 @@
           <a-tag v-for="item in record.languageList" :key="item">{{ item }}</a-tag>
           <a-tag v-for="item in record.tagList" :key="item">{{ item }}</a-tag>
         </p>
-        <p v-if="isNotEmpty(summaryList)">
-          <p v-for="(item, index) in summaryList" :key="index">
+        <p v-if="isNotEmpty(record.summaryList)">
+          <p v-for="(item, index) in record.summaryList" :key="index">
             {{ item }}
           </p>
         </p>
@@ -120,19 +119,6 @@
         </template>
       </div>
     </section>
-    <section v-if="isNotEmpty(episodeRecords)">
-      <h-module-title title="单集"/>
-      <div class="flex mb-6" v-for="episodeRecord in episodeRecords" :key="episodeRecord.id">
-        <k-plex-image
-            style="object-fit: cover; aspect-ratio: 16 / 9; width: 200px"
-            :plex-thumb="episodeRecord.thumb"
-        />
-        <div class="flex-1 ml-6">
-          <p>第 {{ episodeRecord.episodeIndex }} 集 {{ episodeRecord.title }}</p>
-          <p>{{ episodeRecord.summary }}</p>
-        </div>
-      </div>
-    </section>
     <section v-if="isNotEmpty(seasonRecords)">
       <h-module-title title="单季"/>
       <div class="grid grid-cols-24 gap-6">
@@ -153,21 +139,17 @@
       </div>
     </section>
   </section>
-  <tvshow-show-search-info ref="refTvshowShowSearchInfo"/>
   <tvshow-show-file-manage ref="refTvshowShowFileManage"/>
   <tvshow-show-form ref="refTvshowShowForm"/>
 </template>
 
 <script setup>
-import {ref, onMounted, computed} from "vue";
-import {FileTextOutlined, LeftOutlined} from "@ant-design/icons-vue";
+import {computed, onMounted, ref} from "vue";
+import {LeftOutlined} from "@ant-design/icons-vue";
 import {useRoute, useRouter} from "vue-router";
 import {isNotEmpty} from "@ht/util";
-import {apiTvshowShowReadNFO, apiTvshowShowSyncPlex, apiTvshowShowView} from "@/api/tvshow/tvshowShowApi";
-import {apiTvshowEpisodePage} from "@/api/tvshow/tvshowEpisodeApi";
+import {apiTvshowShowView} from "@/api/tvshow/tvshowShowApi";
 import {apiTvshowSeasonPage} from "@/api/tvshow/tvshowSeasonApi";
-import {message} from "ant-design-vue";
-import TvshowShowSearchInfo from "@/views/tvshow/tvshowShow/tvshowShowSearchInfo.vue";
 import TvshowShowFileManage from "@/views/tvshow/tvshowShow/tvshowShowFileManage.vue";
 import TvshowShowForm from "@/views/tvshow/tvshowShow/tvshowShowForm.vue";
 import {formatUnixTimestamp} from "@/utils/utils";
@@ -175,7 +157,6 @@ import {formatUnixTimestamp} from "@/utils/utils";
 const route = useRoute()
 const router = useRouter()
 const record = ref({})
-const episodeRecords = ref([]);
 const seasonRecords = ref([]);
 const refTvshowShowSearchInfo = ref();
 const refTvshowShowFileManage = ref();
@@ -193,63 +174,26 @@ const actorList = computed(() => {
   }
   return record.value.actorList;
 });
-const summaryList = computed(() => {
-  if (isNotEmpty(record.value.summary)) {
-    return record.value.summary.split("\n")
-  }
-  return null;
-});
 
 const initData = async () => {
   apiTvshowShowView({id}).then((res) => {
     record.value = res
-    if (res.totalSeasons === 1) {
-      apiTvshowEpisodePage({pageSize: 1000, orderBy: "ASC:episode_index", showId: id}).then(({records}) => {
-        episodeRecords.value = records
-      })
-    } else {
-      apiTvshowSeasonPage({pageSize: 1000, orderBy: "ASC:season_index", showId: id}).then(({records}) => {
-        seasonRecords.value = records
-      })
-    }
   });
+  apiTvshowSeasonPage({pageSize: 1000, orderBy: "ASC:season_index", showId: id}).then(({records}) => {
+    seasonRecords.value = records
+  })
 };
 
 const onViewSeason = (id) => {
   router.push({path: "/tvshow/tvshowSeason/view", query: {id, title: record.value.title}})
 };
 
-
-const onSearchInfo = () => {
-  refTvshowShowSearchInfo.value.show(record.value)
-}
 const onUpdate = () => {
   refTvshowShowForm.value.update(id);
 }
 const onFileManage = () => {
   refTvshowShowFileManage.value.show(id);
 };
-const onReadNFO = () => {
-  apiTvshowShowReadNFO({id}).then((res) => {
-    if (res) {
-      message.success("读取成功");
-      initData();
-    } else {
-      message.error("读取失败");
-    }
-  })
-}
-
-const onSyncPlex = () => {
-  apiTvshowShowSyncPlex({id}).then((res) => {
-    if (res) {
-      message.success("同步成功");
-      initData();
-    } else {
-      message.error("读取失败");
-    }
-  })
-}
 
 onMounted(() => {
   initData()

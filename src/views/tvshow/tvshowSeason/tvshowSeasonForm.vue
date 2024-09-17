@@ -4,103 +4,207 @@
  * @Description: 单季表单页面
 -->
 <template>
-    <h-form-modal ref="formRef" :label-col="{ span: 4 }" width="600px" v-model:form="form" title="单季"
-                  @submit="onSubmit">
-                <h-col :span="24">
-                        <h-input label="剧集id" v-model:value="form.showId"
-                                 name="showId"/>
+  <h-form-modal
+    ref="formRef"
+    :label-col="{ span: 4 }"
+    width="1000px"
+    v-model:form="form"
+    title="单季"
+    @submit="onSubmit"
+  >
+    <a-col :span="24">
+      <a-tabs v-model:activeKey="activeKey" tab-position="left">
+        <a-tab-pane key="basic" tab="基本">
+          <h-col :span="24">
+            <h-input label="标题" v-model:value="form.title" name="title" />
+          </h-col>
+          <h-col :span="24">
+            <h-input
+              label="原标题"
+              v-model:value="form.originalTitle"
+              name="originalTitle"
+            />
+          </h-col>
+          <h-col :span="24">
+            <h-input
+              label="排序名"
+              v-model:value="form.sortTitle"
+              name="sortTitle"
+            />
+          </h-col>
+          <h-col :span="24">
+            <h-input
+              label="简介"
+              text-area
+              rows="4"
+              v-model:value="form.summary"
+              name="summary"
+            />
+          </h-col>
+          <h-col :span="24">
+            <h-input label="年份" v-model:value="form.year" name="year" />
+          </h-col>
+          <h-col :span="24">
+            <h-input label="评分" v-model:value="form.rating" name="rating" />
+          </h-col>
+          <h-col :span="24">
+            <h-select
+              label="评级"
+              v-model:value="form.contentRating"
+              dict-type="tvshowContentRating"
+              name="contentRating"
+            />
+          </h-col>
+          <h-col :span="24">
+            <h-input
+              label="IMDb编号"
+              v-model:value="form.imdbId"
+              name="imdbId"
+            />
+          </h-col>
+          <h-col :span="24">
+            <h-input
+              label="豆瓣编号"
+              v-model:value="form.doubanId"
+              name="doubanId"
+            />
+          </h-col>
+          <h-col :span="24">
+            <h-input
+              label="TMDB编号"
+              v-model:value="form.tmdbId"
+              name="tmdbId"
+            />
+          </h-col>
+        </a-tab-pane>
+        <a-tab-pane key="authors" tab="演职表">
+          <h-col :span="24">
+            <k-select-actor
+              v-model:value="form.directorList"
+              mode="multiple"
+              name="directorIdList"
+              label="导演"
+            />
+          </h-col>
+          <h-col :span="24">
+            <k-select-actor
+              v-model:value="form.writerList"
+              mode="multiple"
+              name="writerList"
+              label="编剧"
+              :maxTagCount="1"
+            />
+          </h-col>
+          <h-col :span="24">
+            <template :key="i" v-for="(actor, i) in form.actorList">
+              <a-row>
+                <h-col :span="12">
+                  <k-select-actor
+                    :labelCol="{ span: 8 }"
+                    v-model:value="form.actorList[i].id"
+                    :name="'form.actorList[' + i + '].id'"
+                    label="主演"
+                  />
                 </h-col>
-                <h-col :span="24">
-                        <h-input label="标题" v-model:value="form.title"
-                                 name="title"/>
+                <h-col :span="12">
+                  <h-input
+                    v-model:value="form.actorList[i].playRole"
+                    :name="'form.actorList[' + i + '].playRole'"
+                    label="饰"
+                    search
+                    @search="onAddActor(i)"
+                  >
+                    <template #enterButton>
+                      <PlusOutlined v-if="i === 0" />
+                      <MinusOutlined v-else />
+                    </template>
+                  </h-input>
                 </h-col>
-                <h-col :span="24">
-                        <h-input label="简介" v-model:value="form.summary"
-                                 name="summary"/>
-                </h-col>
-                <h-col :span="24">
-                        <h-input label="季号" v-model:value="form.seasonIndex"
-                                 name="seasonIndex"/>
-                </h-col>
-                <h-col :span="24">
-                        <h-input label="海报" v-model:value="form.thumb"
-                                 name="thumb"/>
-                </h-col>
-                <h-col :span="24">
-                        <h-input label="艺术图" v-model:value="form.art"
-                                 name="art"/>
-                </h-col>
-                <h-col :span="24">
-                        <h-input label="加入时间" v-model:value="form.addedAt"
-                                 name="addedAt"/>
-                </h-col>
-                <h-col :span="24">
-                        <h-input label="更新时间" v-model:value="form.updatedAt"
-                                 name="updatedAt"/>
-                </h-col>
-    </h-form-modal>
+              </a-row>
+            </template>
+          </h-col>
+          <h-col :span="24" offset="4"
+            >找不到？<a @click="onCreateActor">新增演职员</a></h-col
+          >
+        </a-tab-pane>
+      </a-tabs>
+    </a-col>
+  </h-form-modal>
+  <movie-actor-form ref="refMovieActorForm" />
 </template>
 
 <script setup>
-  import {ref} from "vue";
-  import {message} from "ant-design-vue";
+import { ref } from "vue";
+import { message } from "ant-design-vue";
+import {
+  apiTvshowSeasonCreate,
+  apiTvshowSeasonUpdate,
+  apiTvshowSeasonView,
+} from "@/api/tvshow/tvshowSeasonApi";
+import { MinusOutlined, PlusOutlined } from "@ant-design/icons-vue";
+import MovieActorForm from "@/views/movie/movieActor/movieActorForm.vue";
 
-  const emits = defineEmits(["save-complete"]);
+const emits = defineEmits(["save-complete"]);
 
-    let formAction = ref("create");
+let formAction = ref("create");
 
-    let formRef = ref();
+let formRef = ref();
 
-    let form = ref({
-        id: "",
-        showId: "",
-        title: "",
-        summary: "",
-        seasonIndex: "",
-        thumb: "",
-        art: "",
-        addedAt: "",
-        updatedAt: "",
-    });
+let form = ref({
+  id: "",
+  showId: "",
+  title: "",
+  summary: "",
+  seasonIndex: "",
+  thumb: "",
+  art: "",
+  addedAt: "",
+  updatedAt: "",
+});
 
-    const create = () => {
-        formAction.value = "create";
-        formRef.value.reset();
-        formRef.value.show();
-    };
+const create = () => {
+  formAction.value = "create";
+  formRef.value.reset();
+  formRef.value.show();
+};
 
-    const update = async (id) => {
-        formAction.value = "update";
-        formRef.value.reset();
-        form.value = await apiTvshowSeasonView({id});
-        formRef.value.show();
-    };
+const update = async (id) => {
+  formAction.value = "update";
+  formRef.value.reset();
+  form.value = await apiTvshowSeasonView({ id });
+  if (form.value.directorList.length > 0) {
+    form.value.directorList = form.value.directorList.map((s) => s.id);
+  }
+  if (form.value.writerList.length > 0) {
+    form.value.writerList = form.value.writerList.map((s) => s.id);
+  }
+  formRef.value.show();
+};
 
-    const onSubmit = async () => {
-        try {
-            if (formAction.value === "create") {
-                let res = await apiTvshowSeasonCreate(form.value);
-                if (res) {
-                    message.success("操作成功");
-                    emits("save-complete");
-                    formRef.value.hide();
-                }
-            } else if (formAction.value === "update") {
-                let res = await apiTvshowSeasonUpdate(form.value);
-                if (res) {
-                    message.success("操作成功");
-                    emits("save-complete");
-                    formRef.value.hide();
-                }
-            }
-        } catch (e) {
-        }
-    };
+const onSubmit = async () => {
+  try {
+    if (formAction.value === "create") {
+      let res = await apiTvshowSeasonCreate(form.value);
+      if (res) {
+        message.success("操作成功");
+        emits("save-complete");
+        formRef.value.hide();
+      }
+    } else if (formAction.value === "update") {
+      let res = await apiTvshowSeasonUpdate(form.value);
+      if (res) {
+        message.success("操作成功");
+        emits("save-complete");
+        formRef.value.hide();
+      }
+    }
+  } catch (e) {}
+};
 
-    defineExpose({
-        create,
-        update,
-    });
+defineExpose({
+  create,
+  update,
+});
 </script>
 
 <style lang="less" scoped></style>

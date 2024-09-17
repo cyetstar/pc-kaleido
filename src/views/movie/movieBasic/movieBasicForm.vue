@@ -28,8 +28,8 @@
           <h-col :span="24">
             <h-input
               label="排序名"
-              v-model:value="form.titleSort"
-              name="titleSort"
+              v-model:value="form.sortTitle"
+              name="sortTitle"
             />
           </h-col>
           <h-col :span="24">
@@ -80,7 +80,7 @@
         <a-tab-pane key="authors" tab="演职表">
           <h-col :span="24">
             <k-select-actor
-              v-model:value="form.directorIdList"
+              v-model:value="form.directorList"
               mode="multiple"
               name="directorIdList"
               label="导演"
@@ -88,7 +88,7 @@
           </h-col>
           <h-col :span="24">
             <k-select-actor
-              v-model:value="form.writerIdList"
+              v-model:value="form.writerList"
               mode="multiple"
               name="writerIdList"
               label="编剧"
@@ -242,13 +242,10 @@ const update = async (id) => {
   formRef.value.reset();
   form.value = await apiMovieBasicView({ id });
   if (form.value.directorList.length > 0) {
-    form.value.directorIdList = form.value.directorList.map((s) => s.id);
+    form.value.directorList = form.value.directorList.map((s) => s.id);
   }
   if (form.value.writerList.length > 0) {
-    form.value.writerIdList = form.value.writerList.map((s) => s.id);
-  }
-  if (form.value.actorList.length > 0) {
-    form.value.actorIdList = form.value.actorList.map((s) => s.id);
+    form.value.writerList = form.value.writerList.map((s) => s.id);
   }
   formRef.value.show();
 };
