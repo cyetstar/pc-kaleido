@@ -49,16 +49,16 @@ export const apiTvshowSeasonExport = (params: any) => {
   });
 };
 
-export const apiTvshowSeasonReadNFO = (data: any) => {
+export const apiTvshowSeasonMatchInfo = (data: any) => {
   return useFetch.post<any>({
-    url: "/tvshowSeason/readNFO",
+    url: "/tvshowSeason/matchInfo",
     data,
   });
 };
 
-export const apiTvshowSeasonSyncPlex = (data: any) => {
+export const apiTvshowSeasonDownloadPoster = (data: any) => {
   return useFetch.post<any>({
-    url: "/tvshowSeason/syncPlex",
+    url: "/tvshowSeason/downloadPoster",
     data,
   });
 };

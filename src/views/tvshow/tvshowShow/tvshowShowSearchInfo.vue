@@ -60,7 +60,12 @@
             >
               {{ record.title }}
             </a>
-            <k-logo-link type="plex" :width="20" :id="record.id" class="ml-3" />
+            <k-logo-link
+              type="plex"
+              :width="20"
+              :id="record.existId"
+              class="ml-3"
+            />
           </p>
           <p class="text-muted" v-if="isNotEmpty(record.originalTitle)">
             {{ record.originalTitle }}
@@ -103,11 +108,13 @@ import { ref } from "vue";
 import { message } from "ant-design-vue";
 import { isNotEmpty } from "@ht/util";
 import {
-  apiTvshowShowDownloadPoster,
-  apiTvshowShowMatchInfo,
   apiTvshowShowMatchPath,
   apiTvshowShowSearchInfo,
 } from "@/api/tvshow/tvshowShowApi";
+import {
+  apiTvshowSeasonDownloadPoster,
+  apiTvshowSeasonMatchInfo,
+} from "@/api/tvshow/tvshowSeasonApi";
 import TvshowSeasonFileManage from "@/views/tvshow/tvshowSeason/tvshowSeasonFileManage.vue";
 
 const emits = defineEmits(["match-success"]);
@@ -130,6 +137,7 @@ let sourceColumns = [
   },
 ];
 
+const record = ref();
 const show = (record, recordType) => {
   visible.value = true;
   type.value = recordType;
@@ -141,7 +149,7 @@ const show = (record, recordType) => {
   } else {
     showRecord = record;
     title.value = showRecord.title;
-    searchForm.value.keyword = showRecord.title;
+    searchForm.value.keyword = showRecord.showTitle + " " + showRecord.title;
   }
 };
 
@@ -165,7 +173,7 @@ const onMatch = (record) => {
       emits("match-success");
     });
   } else {
-    apiTvshowShowMatchInfo({ ...showRecord, ...record, ...searchForm.value })
+    apiTvshowSeasonMatchInfo({ ...showRecord, ...record })
       .then(() => {
         message.success("匹配成功");
         visible.value = false;
@@ -180,7 +188,7 @@ const onMatch = (record) => {
 const onDownloadPoster = (record) => {
   loading.value = true;
   let url = record.poster.replace("s_ratio_poster", "m_ratio_poster");
-  apiTvshowShowDownloadPoster({ id: showRecord.id, url: url }).then((res) => {
+  apiTvshowSeasonDownloadPoster({ id: showRecord.id, url: url }).then((res) => {
     message.success("下载成功");
     visible.value = false;
   });

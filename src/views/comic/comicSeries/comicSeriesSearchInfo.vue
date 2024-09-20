@@ -57,7 +57,7 @@
             <k-logo-link
               type="komga"
               :width="20"
-              :id="record.id"
+              :id="record.existId"
               class="ml-3"
             />
           </p>

@@ -53,7 +53,12 @@
             <a :href="getUrl(record)" target="_blank">
               {{ record.title }}
             </a>
-            <k-logo-link type="plex" :width="20" :id="record.id" class="ml-3" />
+            <k-logo-link
+              type="plex"
+              :width="20"
+              :id="record.existId"
+              class="ml-3"
+            />
           </p>
           <p class="text-muted" v-if="isNotEmpty(record.originalTitle)">
             {{ record.originalTitle }}

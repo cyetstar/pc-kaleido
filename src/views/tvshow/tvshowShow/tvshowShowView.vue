@@ -163,7 +163,6 @@ const refTvshowShowFileManage = ref();
 const refTvshowShowForm = ref();
 const id = route.query.id;
 const searchForm = ref({
-  id: id,
   showId: id,
   force: true
 })

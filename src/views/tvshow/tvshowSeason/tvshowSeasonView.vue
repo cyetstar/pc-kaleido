@@ -160,7 +160,6 @@ const refTvshowSeasonForm = ref();
 const refTvshowSeasonFileManage = ref();
 const id = route.query.id;
 const searchForm = ref({
-  id: id,
   seasonId: id,
   force: true
 })
