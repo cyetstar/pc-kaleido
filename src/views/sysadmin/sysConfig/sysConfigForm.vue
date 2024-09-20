@@ -5,9 +5,9 @@
 -->
 <template>
   <section class="h-page-section" ref="appManagePage">
-    <a-form ref="refForm" :label-col="{ span: 6 }" v-model:form="form">
+    <a-form ref="refForm" :label-col="{ span: 9 }" v-model:form="form">
       <a-tabs v-model:activeKey="activeKey">
-        <a-tab-pane key="plex" tab="Plex">
+        <a-tab-pane key="third" tab="第三方">
           <h-col :span="12">
             <h-input
               label="Plex访问地址"
@@ -24,9 +24,31 @@
           </h-col>
           <h-col :span="12">
             <h-input
-              label="Plex重试次数"
-              name="plexRetries"
-              v-model:value="form.plexRetries"
+              label="Komga地址"
+              name="komgaUrl"
+              v-model:value="form.komgaUrl"
+            />
+          </h-col>
+          <h-col :span="12">
+            <h-input
+              label="Komga账号"
+              name="komgaUsername"
+              v-model:value="form.komgaUsername"
+            />
+          </h-col>
+          <h-col :span="12">
+            <h-input
+              label="Komga密码"
+              name="komgaPassword"
+              v-model:value="form.komgaPassword"
+            />
+          </h-col>
+
+          <h-col :span="12">
+            <h-input
+              label="TMM地址"
+              name="tmmUrl"
+              v-model:value="form.tmmUrl"
             />
           </h-col>
           <h-col :span="12">
@@ -54,29 +76,6 @@
               name="plexMusicLibraryId"
               @change="onChange($event, 'music')"
               v-model:value="form.plexMusicLibraryId"
-            />
-          </h-col>
-        </a-tab-pane>
-        <a-tab-pane key="komga" tab="Komga">
-          <h-col :span="12">
-            <h-input
-              label="Komga地址"
-              name="komgaUrl"
-              v-model:value="form.komgaUrl"
-            />
-          </h-col>
-          <h-col :span="12">
-            <h-input
-              label="Komga账号"
-              name="komgaUsername"
-              v-model:value="form.komgaUsername"
-            />
-          </h-col>
-          <h-col :span="12">
-            <h-input
-              label="Komga密码"
-              name="komgaPassword"
-              v-model:value="form.komgaPassword"
             />
           </h-col>
           <h-col :span="12">
@@ -119,50 +118,14 @@
             />
           </h-col>
         </a-tab-pane>
-        <a-tab-pane key="third" tab="TMM">
-          <h-col :span="12">
-            <h-input
-              label="TMM地址"
-              name="tmmUrl"
-              v-model:value="form.tmmUrl"
-            />
-          </h-col>
-          <h-col :span="12">
-            <h-input
-              label="网易云音乐API地址"
-              name="neteaseUrl"
-              v-model:value="form.neteaseUrl"
-            />
-          </h-col>
-          <h-col :span="12">
-            <h-input
-              label="豆瓣APIKey"
-              name="doubanApikey"
-              v-model:value="form.doubanApikey"
-            />
-          </h-col>
-          <h-col :span="12">
-            <h-input
-              label="豆瓣Cookie"
-              text-area
-              name="doubanCookie"
-              v-model:value="form.doubanCookie"
-            />
-          </h-col>
-          <h-col :span="12">
-            <h-input
-              label="番组计划AccessToken"
-              name="bgmAccessToken"
-              v-model:value="form.bgmAccessToken"
-            />
-            <h-col :offset="6">
-              <a href="https://next.bgm.tv/demo/access-token/create"
-                >https://next.bgm.tv/demo/access-token/create</a
-              ></h-col
-            >
-          </h-col>
-        </a-tab-pane>
         <a-tab-pane key="other" tab="其他">
+          <h-col :span="12">
+            <h-input
+              label="Plex重试次数"
+              name="plexRetries"
+              v-model:value="form.plexRetries"
+            />
+          </h-col>
           <h-col :span="12">
             <h-input
               label="单次抓取信息延时（秒）"
@@ -187,19 +150,75 @@
           </h-col>
           <h-col :span="12">
             <h-radio
-              label="是否开启重写ComicInfo"
+              label="是否重写电影NFO文件"
+              name="writeMovieNFO"
+              v-model:value="form.writeMovieNFO"
+              dict-type="sfbz"
+            />
+          </h-col>
+          <h-col :span="12">
+            <h-radio
+              label="是否重写剧集NFO文件"
+              name="writeTvshowNFO"
+              v-model:value="form.writeTvshowNFO"
+              dict-type="sfbz"
+            />
+          </h-col>
+          <h-col :span="12">
+            <h-radio
+              label="是否重写音频文件标签"
+              name="writeAudioTag"
+              v-model:value="form.writeAudioTag"
+              dict-type="sfbz"
+            />
+          </h-col>
+          <h-col :span="12">
+            <h-radio
+              label="是否重写ComicInfo文件"
               name="writeComicInfo"
               v-model:value="form.writeComicInfo"
               dict-type="sfbz"
             />
           </h-col>
           <h-col :span="12">
-            <h-radio
-              label="是否开启重写MovieNFO"
-              name="writeMovieNFO"
-              v-model:value="form.writeMovieNFO"
-              dict-type="sfbz"
-            />
+            <a-form-item label="重置电影分析进程">
+              {{ form.lastMovieAnalyzeTime }}
+              <h-button small @click="onSave('lastMovieAnalyzeTime', '0')"
+                >重置
+              </h-button>
+            </a-form-item>
+          </h-col>
+          <h-col :span="12">
+            <a-form-item label="重置电影抓取进程">
+              {{ form.lastMovieMatchInfo }}
+              <h-button small @click="onSave('lastMovieMatchInfo', '0')"
+                >重置
+              </h-button>
+            </a-form-item>
+          </h-col>
+          <h-col :span="12">
+            <a-form-item label="重置剧集抓取进程">
+              {{ form.lastTvshowMatchInfo }}
+              <h-button small @click="onSave('lastTvshowMatchInfo', '0')"
+                >重置
+              </h-button>
+            </a-form-item>
+          </h-col>
+          <h-col :span="12">
+            <a-form-item label="重置音乐抓取进程">
+              {{ form.lastMusicMatchInfo }}
+              <h-button small @click="onSave('lastMusicMatchInfo', '0')"
+                >重置
+              </h-button>
+            </a-form-item>
+          </h-col>
+          <h-col :span="12">
+            <a-form-item label="重置漫画抓取进程">
+              {{ form.lastComicMatchInfo }}
+              <h-button small @click="onSave('lastComicMatchInfo', '0')"
+                >重置
+              </h-button>
+            </a-form-item>
           </h-col>
         </a-tab-pane>
       </a-tabs>
@@ -226,33 +245,45 @@ let activeKey = ref();
 let columns = ref([]);
 
 let form = ref({
-  plexUrl: "",
-  plexToken: "",
-  plexRetries: "3",
-  plexMovieLibraryId: "",
-  plexTvshowLibraryId: "",
-  plexMusicLibraryId: "",
-
-  komgaUrl: "",
-  komgaUsername: "",
-  komgaPassword: "",
-  komgaComicLibraryId: "",
-
-  neteaseUrl: "",
-  doubanApikey: "",
-  doubanCookie: "",
-  bgmAccessToken: "",
-  tmmUrl: "",
-  matchInfoSleepSecond: "3",
-  downloadLyricSleepSecond: "3",
-  refreshMetadata: "1",
-  writeComicInfo: "1",
-  writeMovieNFO: "1",
-
   movieLibraryPath: "",
   tvshowLibraryPath: "",
   musicLibraryPath: "",
   comicLibraryPath: "",
+
+  plexUrl: "",
+  plexToken: "",
+  komgaUrl: "",
+  komgaUsername: "",
+  komgaPassword: "",
+  tmmUrl: "",
+  plexMovieLibraryId: "",
+  plexMovieLibraryPath: "",
+  plexTvshowLibraryId: "",
+  plexTvshowLibraryPath: "",
+  plexMusicLibraryId: "",
+  plexMusicLibraryPath: "",
+  komgaComicLibraryId: "",
+  komgaComicLibraryPath: "",
+
+  plexRetries: "",
+  matchInfoSleepSecond: "",
+  downloadLyricSleepSecond: "",
+
+  lastMovieAnalyzeTime: "",
+  lastMovieMatchInfo: "",
+  lastTvshowMatchInfo: "",
+  lastMusicMatchInfo: "",
+  lastComicMatchInfo: "",
+
+  writeComicInfo: "",
+  writeMovieNFO: "",
+  writeAudioTag: "",
+  writeTvshowNFO: "",
+  refreshMetadata: "",
+
+  videoExtension: "",
+  comicZipExtension: "",
+  audioExtension: "",
 });
 
 onMounted(() => {
@@ -288,8 +319,12 @@ const onChange = (e, type) => {
   }
 };
 
-const onSave = async () => {
-  apiSysConfigSave(form.value).then((res) => {
+const onSave = (key, value) => {
+  let data = form.value;
+  if (key && value) {
+    data = { [key]: value };
+  }
+  apiSysConfigSave(data).then((res) => {
     if (res) {
       Promise.all([apiPlexListLibrary(), apiKomgaListLibrary()]).then(
         ([res1, res2]) => {

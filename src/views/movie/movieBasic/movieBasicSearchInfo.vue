@@ -13,10 +13,10 @@
   >
     <div class="flex gap-2">
       <h-radio
-        v-model:value="searchForm.type"
+        v-model:value="searchForm.source"
         button
-        name="type"
-        :columns="typeColumns"
+        name="source"
+        :columns="sourceColumns"
       />
       <h-input
         class="flex-1"
@@ -113,10 +113,10 @@ let showRecord = {};
 let pathRecord = {};
 let dataSource = ref([]);
 let searchForm = ref({
-  type: "douban",
+  source: "douban",
   keyword: "",
 });
-let typeColumns = [
+let sourceColumns = [
   {
     text: "豆瓣",
     value: "douban",
@@ -135,9 +135,9 @@ const getUrl = (record) => {
   }
 };
 
-const show = (source, showType) => {
+const show = (source, recordType) => {
   visible.value = true;
-  type.value = showType;
+  type.value = recordType;
   dataSource.value = [];
   if (type.value === "path") {
     pathRecord = source;

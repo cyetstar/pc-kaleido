@@ -13,10 +13,10 @@
   >
     <div class="flex gap-2">
       <h-radio
-        v-model:value="searchForm.ver"
+        v-model:value="searchForm.source"
         button
-        name="ver"
-        :columns="typeColumns"
+        name="source"
+        :columns="sourceColumns"
       />
       <h-input
         class="flex-1"
@@ -100,41 +100,41 @@ import {
 } from "@/api/comic/comicSeriesApi";
 import ComicSeriesFileManage from "@/views/comic/comicSeries/comicSeriesFileManage.vue";
 
-const refComicSeriesFileManage = ref();
 const emits = defineEmits(["match-success"]);
+const refComicSeriesFileManage = ref();
+
 const title = ref();
 const type = ref();
 const loading = ref();
-let visible = ref();
+const visible = ref();
 let record = {};
-let dataSource = ref([]);
-let searchForm = ref({
-  ver: "1",
+const dataSource = ref([]);
+const searchForm = ref({
+  source: "bgm",
   keyword: "",
 });
-let typeColumns = [
+const sourceColumns = [
   {
     text: "bgm",
-    value: "1",
+    value: "bgm",
   },
   {
-    text: "bgm(新)",
-    value: "0",
+    text: "bgm(v0)",
+    value: "bgm_v0",
   },
 ];
 
-const show = (source, showType) => {
+const show = (source, recordType) => {
   record = source;
   visible.value = true;
-  type.value = showType;
+  type.value = recordType;
   dataSource.value = [];
   if (type.value === "path") {
     title.value = record.name;
     searchForm.value = {
       keyword: record.name.replaceAll("[", "").replaceAll("]", "").trim(),
-      ver: "1",
+      source: "bgm",
     };
-    searchForm.value.ver = "1";
   } else {
     title.value = record.title;
     searchForm.value.keyword = record.title;
