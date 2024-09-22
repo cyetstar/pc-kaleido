@@ -35,13 +35,6 @@ export const apiTvshowShowSearchInfo = (data: any) => {
   });
 };
 
-export const apiTvshowShowMatchPath = (data: any) => {
-  return useFetch.post<any>({
-    url: "/tvshowShow/matchPath",
-    data,
-  });
-};
-
 export const apiTvshowShowViewPath = (params: any) => {
   return useFetch.get<any>({
     url: "/tvshowShow/viewPath",

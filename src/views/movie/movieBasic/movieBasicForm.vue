@@ -82,7 +82,7 @@
             <k-select-actor
               v-model:value="form.directorList"
               mode="multiple"
-              name="directorIdList"
+              name="directorList"
               label="导演"
             />
           </h-col>
@@ -90,9 +90,8 @@
             <k-select-actor
               v-model:value="form.writerList"
               mode="multiple"
-              name="writerIdList"
+              name="writerList"
               label="编剧"
-              :maxTagCount="1"
             />
           </h-col>
           <h-col :span="24">
@@ -260,6 +259,7 @@ const onSubmit = async () => {
         formRef.value.hide();
       }
     } else if (formAction.value === "update") {
+      form.value.akaList = form.value.akaList.filter((s) => s !== "");
       let res = await apiMovieBasicUpdate(form.value);
       if (res) {
         message.success("操作成功");

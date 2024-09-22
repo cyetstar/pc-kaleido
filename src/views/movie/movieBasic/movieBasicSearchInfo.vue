@@ -70,11 +70,11 @@
         <template #="{ record }">
           <a-space :size="0">
             <h-button
-              v-if="isNotEmpty(record.id)"
+              v-if="isNotEmpty(record.existId)"
               type="primary"
               size="small"
               link
-              @click="onFileManage(record)"
+              @click="onFileManage(record.existId)"
               >查看文件
             </h-button>
             <h-button type="primary" size="small" link @click="onMatch(record)"
@@ -97,12 +97,11 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import { message } from "ant-design-vue";
 import {
   apiMovieBasicDownloadPoster,
   apiMovieBasicMatchInfo,
-  apiMovieBasicMatchPath,
   apiMovieBasicSearchInfo,
 } from "@/api/movie/movieBasicApi";
 import { isNotEmpty } from "@ht/util";
@@ -111,17 +110,15 @@ import MovieBasicFileManage from "@/views/movie/movieBasic/movieBasicFileManage.
 const emits = defineEmits(["match-success"]);
 const refMovieBasicFileManage = ref();
 const title = ref();
-const type = ref();
 const loading = ref();
-let visible = ref();
-let showRecord = {};
-let pathRecord = {};
-let dataSource = ref([]);
-let searchForm = ref({
+const visible = ref();
+const dataSource = ref([]);
+const searchForm = ref({
   source: "douban",
   keyword: "",
+  matchType: "path",
 });
-let sourceColumns = [
+const sourceColumns = [
   {
     text: "豆瓣",
     value: "douban",
@@ -131,27 +128,19 @@ let sourceColumns = [
     value: "tmdb",
   },
 ];
+let record = {};
 
-const getUrl = (record) => {
-  if (isNotEmpty(record.doubanId)) {
-    return `https://movie.douban.com/subject/${record.doubanId}/`;
-  } else {
-    return `https://www.themoviedb.org/movie/${record.tmdbId}/`;
-  }
-};
-
-const show = (source, recordType) => {
-  visible.value = true;
-  type.value = recordType;
+const show = (data, dataType) => {
+  record = data;
   dataSource.value = [];
-  if (type.value === "path") {
-    pathRecord = source;
-    title.value = source.name;
-    searchForm.value.keyword = pathRecord.name.replaceAll("\.", " ");
+  visible.value = true;
+  searchForm.value.matchType = dataType;
+  if (dataType === "path") {
+    title.value = record.name;
+    searchForm.value.keyword = record.name.replaceAll("\.", " ");
   } else {
-    showRecord = source;
-    title.value = source.title;
-    searchForm.value.keyword = showRecord.title;
+    title.value = record.title;
+    searchForm.value.keyword = record.title;
   }
 };
 
@@ -163,43 +152,41 @@ const onSearch = () => {
   });
 };
 
-const onFileManage = (infoRecord) => {
-  refMovieBasicFileManage.value.show(infoRecord.id);
+const onFileManage = (id) => {
+  refMovieBasicFileManage.value.show(id);
 };
 
-const onMatch = (record) => {
-  if (type.value === "path") {
-    apiMovieBasicMatchPath({ ...pathRecord, ...record }).then(() => {
+const onMatch = (data) => {
+  apiMovieBasicMatchInfo({ ...record, ...data, ...searchForm.value }).then(
+    () => {
       message.success("匹配成功");
       visible.value = false;
       emits("match-success");
-    });
-  } else {
-    apiMovieBasicMatchInfo({ ...showRecord, ...record, ...searchForm.value })
-      .then(() => {
-        message.success("匹配成功");
-        visible.value = false;
-        emits("match-success");
-      })
-      .catch(() => {
-        loading.value = false;
-      });
-  }
+    }
+  );
 };
 
-const onDownloadPoster = (record) => {
+const onDownloadPoster = (data) => {
   loading.value = true;
-  let url = record.poster.replace("s_ratio_poster", "m_ratio_poster");
-  apiMovieBasicDownloadPoster({ id: showRecord.id, url: url }).then(() => {
+  let url = data.poster.replace("s_ratio_poster", "m_ratio_poster");
+  apiMovieBasicDownloadPoster({ id: record.id, url: url }).then(() => {
     message.success("下载成功");
     visible.value = false;
   });
 };
 
-const addRowColor = (record) => {
+const getUrl = (data) => {
+  if (isNotEmpty(data.doubanId)) {
+    return `https://movie.douban.com/subject/${data.doubanId}/`;
+  } else {
+    return `https://www.themoviedb.org/movie/${data.tmdbId}/`;
+  }
+};
+
+const addRowColor = (data) => {
   if (
-    (record.doubanId && record.doubanId === showRecord.doubanId) ||
-    (record.tmdbId && record.tmdbId === showRecord.tmdbId)
+    (data.doubanId && data.doubanId === record.doubanId) ||
+    (data.tmdbId && data.tmdbId === record.tmdbId)
   ) {
     return "bg-highlight";
   }

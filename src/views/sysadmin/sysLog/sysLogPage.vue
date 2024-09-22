@@ -1,51 +1,56 @@
 <template>
   <div class="h-page-section">
-    <div class="flex flex-col h-full">
-      <a-form :model="searchForm" ref="formRef">
-        <a-row :gutter="32">
-          <h-col :span="6">
-            <h-select
-              required
-              label="日志文件"
-              name="fileName"
-              v-model:value="searchForm.fileName"
-              :columns="logFiles"
+    <a-form :model="searchForm" ref="formRef">
+      <a-row :gutter="32">
+        <a-col :span="6">
+          <h-select
+            required
+            label="日志文件"
+            name="fileName"
+            v-model:value="searchForm.fileName"
+            :columns="logFiles"
+            @change="onAutoRefresh"
+          />
+        </a-col>
+        <h-col :span="4">
+          <h-select
+            required
+            label="刷新频率"
+            name="frequency"
+            :disabled="!searchForm.auto"
+            v-model:value="searchForm.frequency"
+            :columns="frequencies"
+            @change="onAutoRefresh"
+          />
+        </h-col>
+        <h-col :span="6">
+          <a-space>
+            <a-switch
+              v-model:checked="searchForm.scroll"
+              name="scroll"
+              un-checked-children="固定"
+              checked-children="滚动"
             />
-          </h-col>
-          <h-col :span="4">
-            <h-select
-              required
-              label="刷新频率"
-              name="frequency"
-              :disabled="!searchForm.auto"
-              v-model:value="searchForm.frequency"
-              :columns="frequencies"
+            <a-switch
+              v-model:checked="searchForm.auto"
+              name="auto"
+              un-checked-children="手动刷新"
+              checked-children="自动刷新"
               @change="onAutoRefresh"
             />
-          </h-col>
-          <h-col :span="4">
-            <a-space>
-              <a-switch
-                v-model:checked="searchForm.auto"
-                name="auto"
-                un-checked-children="手动刷新"
-                checked-children="自动刷新"
-                @change="onAutoRefresh"
-              />
-              <h-button
-                type="primary"
-                :disabled="searchForm.auto"
-                @click="onRefresh"
-                >刷新
-              </h-button>
-            </a-space>
-          </h-col>
-        </a-row>
-      </a-form>
-      <div ref="consoleRef" class="console flex-1">
-        <div v-for="(log, index) in logs" :key="index">
-          <div v-html="log" style="margin-bottom: 5px; font-size: 16px"></div>
-        </div>
+            <h-button
+              type="primary"
+              :disabled="searchForm.auto"
+              @click="onRefresh"
+              >刷新
+            </h-button>
+          </a-space>
+        </h-col>
+      </a-row>
+    </a-form>
+    <div ref="consoleRef" class="console h-[calc(100vh-128px)]">
+      <div v-for="(log, index) in logs" :key="index">
+        <div v-html="log" style="margin-bottom: 5px; font-size: 16px"></div>
       </div>
     </div>
   </div>
@@ -58,7 +63,8 @@ import { onMounted, ref } from "vue";
 
 let searchForm = ref({
   frequency: 1,
-  auto: false,
+  auto: true,
+  scroll: true,
 });
 let formRef = ref();
 let consoleRef = ref();
@@ -78,7 +84,6 @@ const onAutoRefresh = () => {
   }
   if (searchForm.value.auto) {
     interval = setInterval(onRefresh, searchForm.value.frequency * 1000);
-    scrollToBottom();
   }
 };
 
@@ -86,6 +91,7 @@ const onRefresh = () => {
   formRef.value.validate().then(() => {
     if (searchForm.value.fileName !== fileName) {
       logs.value.splice(0, logs.value.length);
+      searchForm.value.lineNumber = 0;
     }
     fileName = searchForm.value.fileName;
     const ansiUp = new AnsiUp();
@@ -96,7 +102,9 @@ const onRefresh = () => {
         logs.value.push(log);
       }
     });
-    scrollToBottom();
+    if (searchForm.value.scroll) {
+      scrollToBottom();
+    }
   });
 };
 const scrollToBottom = () => {
@@ -119,5 +127,7 @@ onMounted(() => {
   border: 1px solid #d9d9d9;
   overflow: scroll;
   padding: 10px 10px 20px;
+  word-wrap: break-word; /* 确保长文本在小容器中换行 */
+  overflow-wrap: break-word;
 }
 </style>

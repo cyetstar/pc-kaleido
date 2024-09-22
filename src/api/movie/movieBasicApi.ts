@@ -50,39 +50,6 @@ export const apiMovieBasicExport = (params: any) => {
   });
 };
 
-export const apiMovieBasicSyncPlex = () => {
-  return useFetch.post<any>({
-    url: "/movieBasic/syncPlex",
-  });
-};
-
-export const apiMovieBasicSyncPlexById = (data: any) => {
-  return useFetch.post<any>({
-    url: "/movieBasic/syncPlexById",
-    data,
-  });
-};
-
-export const apiMovieBasicRefreshPlexById = (data: any) => {
-  return useFetch.post<any>({
-    url: "/movieBasic/refreshPlexById",
-    data,
-  });
-};
-
-export const apiMovieBasicReadNFO = () => {
-  return useFetch.post<any>({
-    url: "/movieBasic/readNFO",
-  });
-};
-
-export const apiMovieBasicReadNFOById = (data: any) => {
-  return useFetch.post<any>({
-    url: "/movieBasic/readNFOById",
-    data,
-  });
-};
-
 export const apiMovieBasicSearchInfo = (data: any) => {
   return useFetch.post<any>({
     url: "/movieBasic/searchInfo",
@@ -94,20 +61,6 @@ export const apiMovieBasicMatchInfo = (data: any) => {
   return useFetch.post<any>({
     url: "/movieBasic/matchInfo",
     data,
-  });
-};
-
-export const apiMovieBasicMatchPath = (data: any) => {
-  return useFetch.post<any>({
-    url: "/movieBasic/matchPath",
-    data,
-  });
-};
-
-export const apiMovieBasicViewNFO = (params: any) => {
-  return useFetch.open<any>({
-    url: "/movieBasic/viewNFO",
-    params,
   });
 };
 
@@ -129,59 +82,6 @@ export const apiMovieBasicUploadPoster = (data: any) => {
 export const apiMovieBasicDownloadPoster = (data: any) => {
   return useFetch.post<any>({
     url: "/movieBasic/downloadPoster",
-    data,
-  });
-};
-
-export const apiMovieBasicListByCollectionId = (params: any) => {
-  return useFetch.get<any>({
-    url: "/movieBasic/listByCollectionId",
-    params,
-  });
-};
-
-export const apiMovieCollectionSyncPlexById = (data: any) => {
-  return useFetch.post<any>({
-    url: "/movieCollection/syncPlexById",
-    data,
-  });
-};
-
-export const apiMovieBasicUpdateSource = () => {
-  return useFetch.post<any>({
-    url: "/movieBasic/updateSource",
-  });
-};
-
-export const apiMovieBasicCheckThreadStatus = () => {
-  return useFetch.post<any>({
-    url: "/movieBasic/checkThreadStatus",
-  });
-};
-
-export const apiMovieBasicExportNFO = (data: any) => {
-  return useFetch.post<any>({
-    url: "/movieBasic/exportNFO",
-    data,
-  });
-};
-
-export const apiMovieBasicUpdateSourceByDoubanId = (data: any) => {
-  return useFetch.post<any>({
-    url: "/movieBasic/updateSourceByDoubanId",
-    data,
-  });
-};
-
-export const apiMovieBasicMoveMovieFolder = () => {
-  return useFetch.post<any>({
-    url: "/movieBasic/moveMovieFolder",
-  });
-};
-
-export const apiMovieBasicAnalyze = (data: any) => {
-  return useFetch.post<any>({
-    url: "/movieBasic/analyze",
     data,
   });
 };

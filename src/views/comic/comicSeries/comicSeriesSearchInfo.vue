@@ -71,11 +71,11 @@
         <template #="{ record }">
           <a-space :size="0">
             <h-button
-              v-if="isNotEmpty(record.id)"
+              v-if="isNotEmpty(record.existId)"
               type="primary"
               size="small"
               link
-              @click="onFileManage(record)"
+              @click="onFileManage(record.existId)"
               >查看文件
             </h-button>
             <h-button type="primary" size="small" link @click="onMatch(record)"
@@ -90,28 +90,25 @@
 </template>
 
 <script setup>
-import { reactive, ref } from "vue";
+import { ref } from "vue";
 import { message } from "ant-design-vue";
 import { isNotEmpty } from "@ht/util";
 import {
   apiComicSeriesMatchInfo,
-  apiComicSeriesMatchPath,
   apiComicSeriesSearchInfo,
 } from "@/api/comic/comicSeriesApi";
 import ComicSeriesFileManage from "@/views/comic/comicSeries/comicSeriesFileManage.vue";
 
 const emits = defineEmits(["match-success"]);
 const refComicSeriesFileManage = ref();
-
 const title = ref();
-const type = ref();
 const loading = ref();
 const visible = ref();
-let record = {};
 const dataSource = ref([]);
 const searchForm = ref({
   source: "bgm",
   keyword: "",
+  matchType: "path",
 });
 const sourceColumns = [
   {
@@ -123,18 +120,19 @@ const sourceColumns = [
     value: "bgm_v0",
   },
 ];
+let record = {};
 
-const show = (source, recordType) => {
-  record = source;
-  visible.value = true;
-  type.value = recordType;
+const show = (data, dataType) => {
+  record = data;
   dataSource.value = [];
-  if (type.value === "path") {
+  visible.value = true;
+  searchForm.value.matchType = dataType;
+  if (dataType === "path") {
     title.value = record.name;
-    searchForm.value = {
-      keyword: record.name.replaceAll("[", "").replaceAll("]", "").trim(),
-      source: "bgm",
-    };
+    searchForm.value.keyword = record.name
+      .replaceAll("[", "")
+      .replaceAll("]", "")
+      .trim();
   } else {
     title.value = record.title;
     searchForm.value.keyword = record.title;
@@ -149,35 +147,22 @@ const onSearch = () => {
   });
 };
 
-const onFileManage = (infoRecord) => {
-  refComicSeriesFileManage.value.show(infoRecord.id);
+const onFileManage = (id) => {
+  refComicSeriesFileManage.value.show(id);
 };
 
-const onMatch = (infoRecord) => {
-  if (type.value === "path") {
-    apiComicSeriesMatchPath({
-      path: record.path,
-      ...infoRecord,
-    }).then(() => {
-      message.success("抓取成功");
+const onMatch = (data) => {
+  apiComicSeriesMatchInfo({ ...record, ...data, ...searchForm.value }).then(
+    () => {
+      message.success("匹配成功");
       visible.value = false;
       emits("match-success");
-    });
-  } else {
-    apiComicSeriesMatchInfo({ ...record, ...infoRecord, ...searchForm.value })
-      .then(() => {
-        message.success("匹配成功");
-        visible.value = false;
-        emits("match-success");
-      })
-      .catch(() => {
-        loading.value = false;
-      });
-  }
+    }
+  );
 };
 
-const addRowColor = (infoRecord) => {
-  if (infoRecord.bgmId && record.bgmId === infoRecord.bgmId) {
+const addRowColor = (data) => {
+  if (data.bgmId && data.bgmId === record.bgmId) {
     return "bg-highlight";
   }
 };

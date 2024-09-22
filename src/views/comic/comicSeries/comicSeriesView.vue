@@ -176,7 +176,7 @@ const searchForm = ref({
 const initData = async () => {
   apiComicSeriesView({id}).then((res) => {
     record.value = res
-    apiComicBookPage({pageSize: 1000, orderBy: "ASC:sort_number", seriesId: id}).then(({records}) => {
+    apiComicBookPage({pageSize: 1000, orderBy: "ASC:sort_number;ASC:book_number", seriesId: id}).then(({records}) => {
       bookRecords.value = records
     })
   });

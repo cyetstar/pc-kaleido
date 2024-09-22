@@ -38,7 +38,7 @@
         </p>
         <p class="flex">
           <span class="mr-2">文件:</span>
-          <span class="flex-1">{{ record.path }}</span>
+          <span class="flex-1">{{ record.filename }}</span>
         </p>
         <p>
           <k-logo-link type="komga" sub="book" :id="record.id" class="mr-3" />

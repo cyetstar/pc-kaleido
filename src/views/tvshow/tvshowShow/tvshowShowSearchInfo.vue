@@ -77,11 +77,11 @@
         <template #="{ record }">
           <a-space :size="0">
             <h-button
-              v-if="isNotEmpty(record.id)"
+              v-if="isNotEmpty(record.existId)"
               type="primary"
               size="small"
               link
-              @click="onFileManage(record)"
+              @click="onFileManage(record.existId)"
               >查看文件
             </h-button>
             <h-button type="primary" size="small" link @click="onMatch(record)"
@@ -107,10 +107,7 @@
 import { ref } from "vue";
 import { message } from "ant-design-vue";
 import { isNotEmpty } from "@ht/util";
-import {
-  apiTvshowShowMatchPath,
-  apiTvshowShowSearchInfo,
-} from "@/api/tvshow/tvshowShowApi";
+import { apiTvshowShowSearchInfo } from "@/api/tvshow/tvshowShowApi";
 import {
   apiTvshowSeasonDownloadPoster,
   apiTvshowSeasonMatchInfo,
@@ -120,36 +117,37 @@ import TvshowSeasonFileManage from "@/views/tvshow/tvshowSeason/tvshowSeasonFile
 const emits = defineEmits(["match-success"]);
 const refTvshowSeasonFileManage = ref();
 const title = ref();
-const type = ref();
 const loading = ref();
-let visible = ref();
-let showRecord = {};
-let pathRecord = {};
-let dataSource = ref([]);
-let searchForm = ref({
+const visible = ref();
+const dataSource = ref([]);
+const searchForm = ref({
   source: "douban",
   keyword: "",
+  matchType: "path",
 });
-let sourceColumns = [
+const sourceColumns = [
   {
     text: "豆瓣",
     value: "douban",
   },
+  {
+    text: "TMDB",
+    value: "tmdb",
+  },
 ];
+let record = {};
 
-const record = ref();
-const show = (record, recordType) => {
-  visible.value = true;
-  type.value = recordType;
+const show = (data, dataType) => {
+  record = data;
   dataSource.value = [];
-  if (type.value === "path") {
-    pathRecord = record;
+  visible.value = true;
+  searchForm.value.matchType = dataType;
+  if (dataType === "path") {
     title.value = record.name;
-    searchForm.value.keyword = pathRecord.name.replaceAll("\.", " ");
+    searchForm.value.keyword = record.name.replaceAll("\.", " ");
   } else {
-    showRecord = record;
-    title.value = showRecord.title;
-    searchForm.value.keyword = showRecord.showTitle + " " + showRecord.title;
+    title.value = record.title;
+    searchForm.value.keyword = record.showTitle + " " + record.title;
   }
 };
 
@@ -161,43 +159,33 @@ const onSearch = () => {
   });
 };
 
-const onFileManage = (infoRecord) => {
-  refTvshowSeasonFileManage.value.show(infoRecord.id);
+const onFileManage = (id) => {
+  refTvshowSeasonFileManage.value.show(id);
 };
 
-const onMatch = (record) => {
-  if (type.value === "path") {
-    apiTvshowShowMatchPath({ ...pathRecord, ...record }).then(() => {
+const onMatch = (data) => {
+  apiTvshowSeasonMatchInfo({ ...record, ...data, ...searchForm.value }).then(
+    () => {
       message.success("匹配成功");
       visible.value = false;
       emits("match-success");
-    });
-  } else {
-    apiTvshowSeasonMatchInfo({ ...showRecord, ...record })
-      .then(() => {
-        message.success("匹配成功");
-        visible.value = false;
-        emits("match-success");
-      })
-      .catch(() => {
-        loading.value = false;
-      });
-  }
+    }
+  );
 };
 
-const onDownloadPoster = (record) => {
+const onDownloadPoster = (data) => {
   loading.value = true;
-  let url = record.poster.replace("s_ratio_poster", "m_ratio_poster");
-  apiTvshowSeasonDownloadPoster({ id: showRecord.id, url: url }).then((res) => {
+  let url = data.poster.replace("s_ratio_poster", "m_ratio_poster");
+  apiTvshowSeasonDownloadPoster({ id: record.id, url: url }).then(() => {
     message.success("下载成功");
     visible.value = false;
   });
 };
 
-const addRowColor = (record) => {
+const addRowColor = (data) => {
   if (
-    (record.doubanId && record.doubanId === showRecord.doubanId) ||
-    (record.tmdbId && record.tmdbId === showRecord.tmdbId)
+    (data.doubanId && data.doubanId === record.doubanId) ||
+    (data.tmdbId && data.tmdbId === record.tmdbId)
   ) {
     return "bg-highlight";
   }

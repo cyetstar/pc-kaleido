@@ -194,6 +194,7 @@ const onSubmit = async () => {
         formRef.value.hide();
       }
     } else if (formAction.value === "update") {
+      form.value.akaList = form.value.akaList.filter((s) => s !== "");
       let res = await apiTvshowShowUpdate(form.value);
       if (res) {
         message.success("操作成功");

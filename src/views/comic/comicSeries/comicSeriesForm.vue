@@ -71,6 +71,7 @@
           <h-col :span="24">
             <k-select-author
               v-model:value="form.writerList"
+              mode="multiple"
               name="writerList"
               label="作者"
             />
@@ -78,6 +79,7 @@
           <h-col :span="24">
             <k-select-author
               v-model:value="form.pencillerList"
+              mode="multiple"
               name="pencillerList"
               label="作画"
             />
@@ -104,7 +106,7 @@
                 v-model:value="form.alternateTitleList[i]"
                 :name="'alternateTitle' + i"
                 search
-                @search="onEnterButton(i)"
+                @search="onAddAka(i)"
                 :allowClear="false"
               >
                 <template #enterButton>
@@ -170,7 +172,7 @@ const update = async (id) => {
   formRef.value.show();
 };
 
-const onEnterButton = (i) => {
+const onAddAka = (i) => {
   if (i === 0) {
     form.value.alternateTitleList.push("");
   } else {
