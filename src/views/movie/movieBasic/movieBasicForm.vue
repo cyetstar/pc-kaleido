@@ -185,24 +185,23 @@
       </a-tabs>
     </a-col>
   </h-form-modal>
-  <movie-actor-form ref="refMovieActorForm" />
+  <actor-form ref="refActorForm" />
 </template>
 
 <script setup>
 import { ref } from "vue";
 import { message } from "ant-design-vue";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons-vue";
+import ActorForm from "@/views/actor/actorForm.vue";
 import {
   apiMovieBasicCreate,
   apiMovieBasicUpdate,
   apiMovieBasicView,
 } from "@/api/movie/movieBasicApi";
-import KSelectActor from "@c/SelectActor/SelectActor.vue";
-import MovieActorForm from "@/views/movie/movieActor/movieActorForm.vue";
 
 const emits = defineEmits(["save-complete"]);
 
-let refMovieActorForm = ref();
+let refActorForm = ref();
 let activeKey = ref("basic");
 let formAction = ref("create");
 let formRef = ref();
@@ -228,7 +227,6 @@ let form = ref({
   addedAt: "",
   updatedAt: "",
 });
-let actorOptions = ref([]);
 
 const create = () => {
   formAction.value = "create";
@@ -290,7 +288,7 @@ const onAddAka = (i) => {
 };
 
 const onCreateActor = () => {
-  refMovieActorForm.value.create();
+  refActorForm.value.create();
 };
 
 defineExpose({

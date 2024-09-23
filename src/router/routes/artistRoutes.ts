@@ -1,10 +1,10 @@
 import type { AppRouteConfig } from "@/router/types";
 
-const musicArtistRoutes: AppRouteConfig[] = [
+const artistRoutes: AppRouteConfig[] = [
   {
-    path: "/music/musicArtist/page",
+    path: "/music/artist/page",
     name: "musicArtistPage",
-    component: () => import("@/views/music/musicArtist/musicArtistPage.vue"),
+    component: () => import("@/views/artist/artistPage.vue"),
     meta: {
       title: "艺术家",
       requiresAuth: false,
@@ -12,9 +12,9 @@ const musicArtistRoutes: AppRouteConfig[] = [
     },
   },
   {
-    path: "/music/musicArtist/view",
+    path: "/music/artist/view",
     name: "musicArtistView",
-    component: () => import("@/views/music/musicArtist/musicArtistView.vue"),
+    component: () => import("@/views/artist/artistView.vue"),
     meta: {
       title: "艺术家详情",
       requiresAuth: false,
@@ -22,4 +22,4 @@ const musicArtistRoutes: AppRouteConfig[] = [
   },
 ];
 
-export default musicArtistRoutes;
+export default artistRoutes;

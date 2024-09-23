@@ -53,6 +53,8 @@
       <h-radio button :columns="pageColumns" v-model:value="coverPageNumber" />
     </div>
     <template #footer>
+      <h-button type="default" @click="onRotate(90)">顺时针旋转</h-button>
+      <h-button type="default" @click="onRotate(-90)">逆时针旋转</h-button>
       <h-button type="default" @click="onFixed"
         >{{ !fixed ? "固定比例" : "取消固定" }}
       </h-button>
@@ -148,6 +150,13 @@ const onChangeBook = (e) => {
     coverPageNumber.value = record.value.pageCount;
   }
   genPageColumns();
+};
+
+const onRotate = (degree) => {
+  if (!cropper) {
+    return;
+  }
+  cropper.rotate(degree);
 };
 
 const onReady = () => {

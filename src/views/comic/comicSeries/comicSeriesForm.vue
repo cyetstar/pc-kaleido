@@ -84,6 +84,9 @@
               label="作画"
             />
           </h-col>
+          <h-col :span="24" offset="4"
+            >找不到？<a @click="onCreateAuthor">新增作者</a></h-col
+          >
         </a-tab-pane>
         <a-tab-pane key="tags" tab="标签">
           <h-col :span="24">
@@ -120,20 +123,22 @@
       </a-tabs>
     </a-col>
   </h-form-modal>
+  <author-form ref="refAuthorForm" />
 </template>
 
 <script setup>
 import { ref } from "vue";
 import { message } from "ant-design-vue";
+import { PlusOutlined, MinusOutlined } from "@ant-design/icons-vue";
+import AuthorForm from "@/views/author/authorForm.vue";
 import {
   apiComicSeriesCreate,
   apiComicSeriesUpdate,
   apiComicSeriesView,
 } from "@/api/comic/comicSeriesApi";
-import { PlusOutlined, MinusOutlined } from "@ant-design/icons-vue";
 
 const emits = defineEmits(["save-complete"]);
-
+let refAuthorForm = ref();
 let formAction = ref("create");
 let formRef = ref();
 let form = ref({
@@ -148,7 +153,6 @@ let form = ref({
 });
 
 let activeKey = ref("basic");
-let authorOptions = ref([]);
 
 const create = () => {
   formAction.value = "create";
@@ -178,6 +182,10 @@ const onAddAka = (i) => {
   } else {
     form.value.alternateTitleList.splice(i, 1);
   }
+};
+
+const onCreateAuthor = () => {
+  refAuthorForm.value.create();
 };
 
 const onSubmit = async () => {

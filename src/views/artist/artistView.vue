@@ -79,8 +79,8 @@
     </section>
   </section>
 
-  <music-artist-search-netease
-    ref="refMusicArtistSearchNetease"
+  <artist-search-netease
+    ref="refArtistSearchNetease"
     @match-success="onMatchSuccess"
   />
 </template>
@@ -89,13 +89,13 @@
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { message } from "ant-design-vue";
+import { LeftOutlined } from "@ant-design/icons-vue";
+import ArtistSearchNetease from "@/views/artist/artistSearchNetease.vue";
 import {
   apiMusicArtistSyncPlexById,
   apiMusicArtistView,
 } from "@/api/music/musicArtistApi.ts";
 import { apiMusicAlbumListByArtistId } from "@/api/music/musicAlbumApi";
-import MusicArtistSearchNetease from "@/views/music/musicArtist/musicArtistSearchNetease.vue";
-import { LeftOutlined } from "@ant-design/icons-vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -103,7 +103,7 @@ const id = route.query.id;
 
 const record = ref({});
 const albumRecords = ref([]);
-const refMusicArtistSearchNetease = ref();
+const refArtistSearchNetease = ref();
 const initData = () => {
   apiMusicArtistView({ id }).then((res) => (record.value = res));
   apiMusicAlbumListByArtistId({ artistId: id }).then(
@@ -122,7 +122,7 @@ const onSyncPlexById = () => {
 };
 
 const onSearchNetease = () => {
-  refMusicArtistSearchNetease.value.show(record.value);
+  refArtistSearchNetease.value.show(record.value);
 };
 
 const onMatchSuccess = ({ neteaseId }) => {

@@ -5,7 +5,7 @@
 -->
 <template>
   <h-form-modal
-    ref="formRef"
+    ref="refForm"
     :label-col="{ span: 4 }"
     width="1000px"
     v-model:form="form"
@@ -149,10 +149,8 @@ import {
 } from "@/api/tvshow/tvshowShowApi";
 
 const emits = defineEmits(["save-complete"]);
-
 let formAction = ref("create");
-
-let formRef = ref();
+let refForm = ref();
 
 let form = ref({
   id: "",
@@ -173,15 +171,15 @@ let form = ref({
 
 const create = () => {
   formAction.value = "create";
-  formRef.value.reset();
-  formRef.value.show();
+  refForm.value.reset();
+  refForm.value.show();
 };
 
 const update = async (id) => {
   formAction.value = "update";
-  formRef.value.reset();
+  refForm.value.reset();
   form.value = await apiTvshowShowView({ id });
-  formRef.value.show();
+  refForm.value.show();
 };
 
 const onSubmit = async () => {
@@ -191,7 +189,7 @@ const onSubmit = async () => {
       if (res) {
         message.success("操作成功");
         emits("save-complete");
-        formRef.value.hide();
+        refForm.value.hide();
       }
     } else if (formAction.value === "update") {
       form.value.akaList = form.value.akaList.filter((s) => s !== "");
@@ -199,7 +197,7 @@ const onSubmit = async () => {
       if (res) {
         message.success("操作成功");
         emits("save-complete");
-        formRef.value.hide();
+        refForm.value.hide();
       }
     }
   } catch (e) {}

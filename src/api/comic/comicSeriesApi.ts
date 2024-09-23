@@ -56,13 +56,6 @@ export const apiComicSeriesSearchInfo = (data: any) => {
   });
 };
 
-export const apiComicSeriesMatchPath = (data: any) => {
-  return useFetch.post<any>({
-    url: "/comicSeries/matchPath",
-    data,
-  });
-};
-
 export const apiComicSeriesMatchInfo = (data: any) => {
   return useFetch.post<any>({
     url: "/comicSeries/matchInfo",

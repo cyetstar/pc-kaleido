@@ -16,7 +16,7 @@ import webLogRoutes from "@/router/routes/sysadmin/webLogRoutes";
 import sysDictTypeRoutes from "@/router/routes/sysadmin/sysDictTypeRoutes";
 import sysLogRoutes from "@/router/routes/sysadmin/sysLogRoutes";
 import musicAlbumRoutes from "@/router/routes/music/musicAlbumRoutes";
-import musicArtistRoutes from "@/router/routes/music/musicArtistRoutes";
+import artistRoutes from "@/router/routes/artistRoutes";
 import sysConfigRoutes from "@/router/routes/sysadmin/sysConfigRoutes";
 import movieBasicRoutes from "@/router/routes/movie/movieBasicRoutes";
 import movieCollectionRoutes from "@/router/routes/movie/movieCollectionRoutes";
@@ -24,7 +24,6 @@ import tvshowShowRoutes from "@/router/routes/tvshow/tvshowShowRoutes";
 import tvshowSeasonRoutes from "@/router/routes/tvshow/tvshowSeasonRoutes";
 import movieDoubanWeeklyRoutes from "@/router/routes/movie/movieDoubanWeeklyRoutes";
 import comicSeriesRoutes from "@/router/routes/comic/comicSeriesRoutes";
-import comicAuthorRoutes from "@/router/routes/comic/comicAuthorRoutes";
 import comicBookRoutes from "@/router/routes/comic/comicBookRoutes";
 
 const LoginRoute: AppRouteConfig = {
@@ -63,7 +62,7 @@ const BackstageRoute: AppRouteConfig = {
     ...sysConfigRoutes,
     ...webLogRoutes,
     ...musicAlbumRoutes,
-    ...musicArtistRoutes,
+    ...artistRoutes,
     ...movieBasicRoutes,
     ...movieCollectionRoutes,
     ...movieDoubanWeeklyRoutes,
@@ -71,7 +70,6 @@ const BackstageRoute: AppRouteConfig = {
     ...tvshowSeasonRoutes,
     ...comicSeriesRoutes,
     ...comicBookRoutes,
-    ...comicAuthorRoutes,
   ],
 };
 export const allRoutes = [LoginRoute, BackstageRoute];

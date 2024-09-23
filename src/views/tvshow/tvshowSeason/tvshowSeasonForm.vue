@@ -5,7 +5,7 @@
 -->
 <template>
   <h-form-modal
-    ref="formRef"
+    ref="refForm"
     :label-col="{ span: 4 }"
     width="1000px"
     v-model:form="form"
@@ -130,25 +130,26 @@
       </a-tabs>
     </a-col>
   </h-form-modal>
-  <movie-actor-form ref="refMovieActorForm" />
+  <actor-form ref="refActorForm" />
 </template>
 
 <script setup>
 import { ref } from "vue";
 import { message } from "ant-design-vue";
+import { MinusOutlined, PlusOutlined } from "@ant-design/icons-vue";
 import {
   apiTvshowSeasonCreate,
   apiTvshowSeasonUpdate,
   apiTvshowSeasonView,
 } from "@/api/tvshow/tvshowSeasonApi";
-import { MinusOutlined, PlusOutlined } from "@ant-design/icons-vue";
-import MovieActorForm from "@/views/movie/movieActor/movieActorForm.vue";
+import ActorForm from "@/views/actor/actorForm.vue";
 
 const emits = defineEmits(["save-complete"]);
 
 let formAction = ref("create");
 
-let formRef = ref();
+let refForm = ref();
+let refActorForm = ref();
 
 let form = ref({
   id: "",
@@ -164,13 +165,13 @@ let form = ref({
 
 const create = () => {
   formAction.value = "create";
-  formRef.value.reset();
-  formRef.value.show();
+  refForm.value.reset();
+  refForm.value.show();
 };
 
 const update = async (id) => {
   formAction.value = "update";
-  formRef.value.reset();
+  refForm.value.reset();
   form.value = await apiTvshowSeasonView({ id });
   if (form.value.directorList.length > 0) {
     form.value.directorList = form.value.directorList.map((s) => s.id);
@@ -178,7 +179,22 @@ const update = async (id) => {
   if (form.value.writerList.length > 0) {
     form.value.writerList = form.value.writerList.map((s) => s.id);
   }
-  formRef.value.show();
+  refForm.value.show();
+};
+
+const onAddActor = (i) => {
+  if (i === 0) {
+    form.value.actorList.push({
+      id: "",
+      playRole: "",
+    });
+  } else {
+    form.value.actorList.splice(i, 1);
+  }
+};
+
+const onCreateActor = () => {
+  refActorForm.value.create();
 };
 
 const onSubmit = async () => {
@@ -188,14 +204,14 @@ const onSubmit = async () => {
       if (res) {
         message.success("操作成功");
         emits("save-complete");
-        formRef.value.hide();
+        refForm.value.hide();
       }
     } else if (formAction.value === "update") {
       let res = await apiTvshowSeasonUpdate(form.value);
       if (res) {
         message.success("操作成功");
         emits("save-complete");
-        formRef.value.hide();
+        refForm.value.hide();
       }
     }
   } catch (e) {}

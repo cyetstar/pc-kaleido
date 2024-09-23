@@ -131,23 +131,16 @@
 </template>
 
 <script setup>
-import {ref, onMounted, computed} from "vue";
-import {FileTextOutlined, LeftOutlined} from "@ant-design/icons-vue";
+import {computed, onMounted, ref} from "vue";
+import {LeftOutlined} from "@ant-design/icons-vue";
 import {useRoute, useRouter} from "vue-router";
 import {isNotEmpty} from "@ht/util";
-import {message} from "ant-design-vue";
-import {
-  apiComicSeriesReadComicInfo,
-  apiComicSeriesSync,
-  apiComicSeriesView,
-  apiComicSeriesWriteComicInfo
-} from "@/api/comic/comicSeriesApi";
+import {formatUnixTimestamp} from "@/utils/utils";
+import {apiComicSeriesView} from "@/api/comic/comicSeriesApi";
 import {apiComicBookPage} from "@/api/comic/comicBookApi";
 import ComicSeriesFileManage from "@/views/comic/comicSeries/comicSeriesFileManage.vue";
 import ComicSeriesSetCover from "@/views/comic/comicSeries/comicSeriesSetCover.vue";
 import ComicSeriesForm from "@/views/comic/comicSeries/comicSeriesForm.vue";
-import KActionButton from "@c/ActionButton/ActionButton.vue";
-import {formatUnixTimestamp} from "@/utils/utils";
 import ComicSeriesSearchInfo from "@/views/comic/comicSeries/comicSeriesSearchInfo.vue";
 
 const route = useRoute()
