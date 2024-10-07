@@ -55,10 +55,17 @@
     <template #footer>
       <h-button type="default" @click="onRotate(90)">顺时针旋转</h-button>
       <h-button type="default" @click="onRotate(-90)">逆时针旋转</h-button>
-      <h-button type="default" @click="onFixed"
-        >{{ !fixed ? "固定比例" : "取消固定" }}
+      <h-button type="default" @click="onSetCropBoxData"
+        >{{ local ? "上次比例" : "原先比例" }}
       </h-button>
       <h-button type="primary" @click="onSubmit">确认</h-button>
+      <h-button
+        :type="interval > 0 ? 'default' : 'primary'"
+        class="ml-3"
+        @click="onSubmitAuto"
+        v-if="bookCount > bookIndex + 1"
+        >{{ interval > 0 ? "关闭处理" : "自动处理" }}
+      </h-button>
       <h-button
         type="primary"
         class="ml-3"
@@ -106,8 +113,10 @@ let url = computed(() => {
   return url;
 });
 
-let fixed = ref(false);
+let local = ref(true);
 let appStore = useAppStore();
+let readied = false;
+let interval = ref(0);
 
 const genPageColumns = () => {
   pageColumns.value = [];
@@ -118,13 +127,14 @@ const genPageColumns = () => {
 
 const initData = () => {
   apiComicBookPage({
-    pageSize: 1000,
+    pageSize: 2000,
     orderBy: "ASC:book_number",
     seriesId: record.value.seriesId,
   }).then((res) => {
     bookColumns.value = res.records.map((s) => ({
       text: s.bookNumber,
       value: s.id,
+      className: s.coverPageNumber != null ? "cover" : "",
       ...s,
     }));
     bookCount.value = res.records.length;
@@ -163,26 +173,29 @@ const onReady = () => {
   if (!cropper) {
     return;
   }
-  let cropBoxData =
-    JSON.parse(record.value.coverBoxData) || appStore.$state.cropBoxData;
+  let cropBoxData = local.value
+    ? appStore.$state.cropBoxData
+    : JSON.parse(record.value.coverBoxData) || appStore.$state.cropBoxData;
   if (cropBoxData) {
     cropper.setCropBoxData(cropBoxData);
   }
   newUrl.value = cropper.getDataURL();
+  readied = true;
 };
 const onCropend = () => {
   if (!cropper) return;
   newUrl.value = cropper.getDataURL();
 };
 
-const onFixed = () => {
+const onSetCropBoxData = () => {
+  local.value = !local.value;
   if (!cropper) return;
-  if (fixed.value) {
-    cropper.setAspectRatio(NaN);
-  } else {
-    cropper.setAspectRatio(21 / 29.7);
+  let cropBoxData = local.value
+    ? appStore.$state.cropBoxData
+    : JSON.parse(record.value.coverBoxData) || appStore.$state.cropBoxData;
+  if (cropBoxData) {
+    cropper.setCropBoxData(cropBoxData);
   }
-  fixed.value = !fixed.value;
 };
 
 const onSubmitNextBook = () => {
@@ -192,6 +205,27 @@ const onSubmitNextBook = () => {
       onChangeBook({ id: bookId.value });
     }
   });
+};
+
+const onSubmitAuto = () => {
+  if (interval.value > 0) {
+    clearInterval(interval.value);
+    interval.value = 0;
+  } else {
+    interval.value = setInterval(() => {
+      if (!readied) {
+        return;
+      }
+      if (bookCount.value > bookIndex.value + 1) {
+        onSubmitNextBook();
+      } else {
+        onSubmitClose();
+        clearInterval(interval.value);
+        interval.value = 0;
+      }
+      readied = false;
+    }, 500);
+  }
 };
 
 const onSubmitClose = () => {
@@ -243,5 +277,9 @@ defineExpose({
   text-align: center;
   padding: 0;
   margin: 1px;
+}
+
+/deep/ .cover {
+  background: rgba(66, 152, 255, 0.4);
 }
 </style>

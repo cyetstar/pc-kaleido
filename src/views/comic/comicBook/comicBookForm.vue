@@ -83,6 +83,7 @@
               :columns="pageNumberColumns"
               v-model:value="form.coverPageNumber"
             />
+            <h-button type="danger" @click="onClear">清除封面</h-button>
           </div>
         </a-tab-pane>
       </a-tabs>
@@ -94,6 +95,7 @@
 import { computed, inject, ref } from "vue";
 import { message } from "ant-design-vue";
 import {
+  apiComicBookClearCover,
   apiComicBookUpdate,
   apiComicBookUploadCover,
   apiComicBookView,
@@ -119,7 +121,6 @@ let form = ref({
   bgmId: "",
 });
 
-let id;
 let newUrl = ref();
 let url = computed(() => {
   let url = inject("imageUrl");
@@ -163,6 +164,17 @@ const onCropend = () => {
     return;
   }
   newUrl.value = cropper.getDataURL();
+};
+
+const onClear = () => {
+  apiComicBookClearCover({ id: form.value.id }).then((res) => {
+    if (res) {
+      message.success("清除成功");
+      formRef.value.hide();
+    } else {
+      message.error("清除失败");
+    }
+  });
 };
 
 const compressorSettings = {

@@ -115,6 +115,16 @@
                   :thumb="bookRecord.id"
                   @click="onViewBook(bookRecord.id)"
               />
+              <div class="absolute top-0 left-0 m-2px">
+                <k-logo-link
+                    type="komga"
+                    sub="book"
+                    :id="bookRecord.id"
+                    :width="20"
+                    class="mr-1"
+                />
+                <k-logo-link type="bgm" :id="bookRecord.bgmId" :width="20" />
+              </div>
             </template>
             <a-card-meta :title="bookRecord.title">
             </a-card-meta>
@@ -122,7 +132,6 @@
         </template>
       </div>
     </section>
-
   </section>
   <comic-series-file-manage ref="refComicSeriesFileManage"/>
   <comic-series-set-cover ref="refComicSeriesSetCover"/>

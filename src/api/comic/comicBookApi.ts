@@ -50,16 +50,16 @@ export const apiComicBookExport = (params: any) => {
   });
 };
 
-export const apiComicBookListPage = (params: any) => {
-  return useFetch.get<any>({
-    url: "/comicBook/listPage",
-    params,
-  });
-};
-
 export const apiComicBookUploadCover = (data: any) => {
   return useFetch.post<any>({
     url: "/comicBook/uploadCover",
+    data,
+  });
+};
+
+export const apiComicBookClearCover = (data: any) => {
+  return useFetch.post<any>({
+    url: "/comicBook/clearCover",
     data,
   });
 };
