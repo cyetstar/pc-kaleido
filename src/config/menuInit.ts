@@ -83,6 +83,12 @@ export const MENUS = [
     name: "sysadmin",
     children: [
       {
+        title: "发布记录",
+        name: "ThreadPage",
+        path: "/thread/page",
+        permission: "thread:page",
+      },
+      {
         title: "用户管理",
         name: "SysUserPage",
         path: "/sysadmin/sysUser/page",

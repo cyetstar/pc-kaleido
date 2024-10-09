@@ -14,6 +14,11 @@ export interface resourceItem {
 
 export const ALL_RESOURCE: resourceItem[] = [
   {
+    type: "thread",
+    name: "发布记录",
+    action: ["page", "view", "create", "update", "delete", "export", "other"],
+  },
+  {
     type: "sysUser",
     name: "用户管理",
     action: ["page", "view", "create", "update", "delete", "export", "other"],
