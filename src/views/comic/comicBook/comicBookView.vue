@@ -18,13 +18,12 @@
     </a-page-header>
     <section class="flex">
       <div>
-        <k-cover-image
+        <k-thumb-image
           v-if="record.id"
           class="h-poster"
+          type="ComicBook"
           style="width: 250px"
-          type="comic"
-          sub="book"
-          :thumb="record.id"
+          :id="record.id"
         />
       </div>
       <div class="flex-1 ml-8">

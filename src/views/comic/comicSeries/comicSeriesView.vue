@@ -37,11 +37,11 @@
     </a-page-header>
     <section class="flex">
       <div>
-        <k-cover-image v-if="record.id"
-                       class="h-poster"
-                       style="width: 250px"
-                       type="comic"
-                       :thumb="record.id"
+        <k-thumb-image
+            class="h-poster"
+            style="width: 250px"
+            type="ComicSeries"
+            :id="record.id"
         />
       </div>
       <div class="flex-1 ml-8">
@@ -108,11 +108,11 @@
         <template :key="bookRecord.id" v-for="bookRecord in bookRecords">
           <a-card class="k-card col-span-3" :bordered="false">
             <template #cover>
-              <k-cover-image
-                  class="h-poster cursor-pointer"
-                  type="comic" sub="book"
+              <k-thumb-image
+                  class="h-poster"
+                  type="ComicBook"
                   :preview="false"
-                  :thumb="bookRecord.id"
+                  :id="bookRecord.id"
                   @click="onViewBook(bookRecord.id)"
               />
               <div class="absolute top-0 left-0 m-2px">
@@ -123,7 +123,7 @@
                     :width="20"
                     class="mr-1"
                 />
-                <k-logo-link type="bgm" :id="bookRecord.bgmId" :width="20" />
+                <k-logo-link type="bgm" :id="bookRecord.bgmId" :width="20"/>
               </div>
             </template>
             <a-card-meta :title="bookRecord.title">

@@ -142,6 +142,38 @@
           </h-col>
           <h-col :span="12">
             <h-radio
+              label="是否定时同步电影"
+              name="syncMovie"
+              v-model:value="form.syncMovie"
+              dict-type="sfbz"
+            />
+          </h-col>
+          <h-col :span="12">
+            <h-radio
+              label="是否定时同步剧集"
+              name="syncTvshow"
+              v-model:value="form.syncTvshow"
+              dict-type="sfbz"
+            />
+          </h-col>
+          <h-col :span="12">
+            <h-radio
+              label="是否定时同步音乐"
+              name="syncMusic"
+              v-model:value="form.syncMusic"
+              dict-type="sfbz"
+            />
+          </h-col>
+          <h-col :span="12">
+            <h-radio
+              label="是否定时同步漫画"
+              name="syncMusic"
+              v-model:value="form.syncComic"
+              dict-type="sfbz"
+            />
+          </h-col>
+          <h-col :span="12">
+            <h-radio
               label="是否自动刷新Plex"
               name="refreshMetadata"
               v-model:value="form.refreshMetadata"
@@ -220,6 +252,15 @@
               </h-button>
             </a-form-item>
           </h-col>
+          <h-col :span="12">
+            <a-form-item label="优化数据库">
+              <k-action-button
+                action="tableOptimize"
+                ok-text="执行"
+                cancel-text="取消"
+              />
+            </a-form-item>
+          </h-col>
         </a-tab-pane>
       </a-tabs>
       <h-col :span="12" :offset="3" class="mt-3">
@@ -239,6 +280,7 @@ import {
 } from "@/api/sysadmin/sysConfigApi";
 import { useAppStore } from "@/store/modules/app";
 import { apiKomgaListLibrary } from "@/api/komgaApi";
+import KActionButton from "@c/ActionButton/ActionButton.vue";
 
 let appStore = useAppStore();
 let activeKey = ref();
@@ -280,6 +322,13 @@ let form = ref({
   writeAudioTag: "",
   writeTvshowNFO: "",
   refreshMetadata: "",
+  syncMovie: "",
+  syncTvshow: "",
+  syncMusic: "",
+  syncComic: "",
+  checkThreadStatus: "",
+  checkMovieStatus: "",
+  analyzeMovie: "",
 
   videoExtension: "",
   comicZipExtension: "",

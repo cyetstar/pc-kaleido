@@ -34,11 +34,11 @@
     </a-page-header>
     <section class="flex">
       <div>
-        <k-plex-image
-            style="width: 250px"
+        <k-thumb-image
             class="h-cover"
-            :plex-thumb="record.thumb"
-            type="music"
+            type="MusicAlbum"
+            style="width: 250px"
+            :id="record.id"
         />
       </div>
       <div class="flex-1 ml-8">

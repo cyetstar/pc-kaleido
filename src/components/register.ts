@@ -76,9 +76,7 @@ import {
 } from "hta-ui";
 
 import GlobalConfig from "@/components/GlobalConfig";
-import CoverImage from "@/components/CoverImage";
-import PlexImage from "@/components/PlexImage";
-import KomgaImage from "@/components/KomgaImage";
+import ThumbImage from "@/components/ThumbImage";
 import LogoLink from "@/components/LogoLink";
 import FileModal from "@/components/FileModal";
 import ActionButton from "@/components/ActionButton";
@@ -109,10 +107,8 @@ export const registerGlobComp = (app: App) => {
     .component("k-action-button", ActionButton)
     .component("k-file-modal", FileModal)
     .component("k-global-config", GlobalConfig)
-    .component("k-cover-image", CoverImage)
-    .component("k-komga-image", KomgaImage)
+    .component("k-thumb-image", ThumbImage)
     .component("k-logo-link", LogoLink)
-    .component("k-plex-image", PlexImage)
     .component("k-select-actor", SelectActor)
     .component("k-select-author", SelectAuthor)
     .use(Layout)

@@ -30,10 +30,12 @@
     </a-page-header>
     <section class="flex">
       <div>
-        <k-plex-image
+        <k-thumb-image
+            v-if="record.id"
             class="h-poster"
+            type="TvshowShow"
             style="width: 250px"
-            :plex-thumb="record.thumb"
+            :id="record.id"
         />
       </div>
       <div class="flex-1 ml-8">
@@ -105,10 +107,11 @@
         <template :key="item.id" v-for="item in actorList">
           <a-card class="k-card col-span-3" :bordered="false">
             <template #cover>
-              <k-plex-image
+              <k-thumb-image
                   class="h-thumb"
                   :preview="false"
-                  :plex-thumb="item.thumb"
+                  :url="item.thumb"
+                  @click="onViewArtist(item)"
               />
             </template>
             <a-card-meta
@@ -125,10 +128,11 @@
         <template :key="seasonRecord.id" v-for="seasonRecord in seasonRecords">
           <a-card class="k-card col-span-3" :bordered="false">
             <template #cover>
-              <k-plex-image
-                  class="h-poster cursor-pointer"
+              <k-thumb-image
+                  class="h-poster"
+                  type="TvshowSeason"
                   :preview="false"
-                  :plex-thumb="seasonRecord.thumb"
+                  :id="seasonRecord.id"
                   @click="onViewSeason(seasonRecord.id)"
               />
             </template>

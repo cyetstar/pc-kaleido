@@ -37,10 +37,13 @@
     </a-page-header>
     <section class="flex">
       <div>
-        <k-plex-image
-            style="width: 250px"
+        <k-thumb-image
+            v-if="record.id"
             class="h-poster"
-            :plex-thumb="record.thumb"/>
+            type="MovieBasic"
+            style="width: 250px"
+            :id="record.id"
+        />
       </div>
       <div class="flex-1 ml-8">
         <p>{{ record.originalTitle }} <span v-if="isNotEmpty(record.year)">({{ record.year }})</span></p>
@@ -111,10 +114,10 @@
         <template :key="item.id" v-for="item in actorList">
           <a-card class="k-card col-span-3" :bordered="false">
             <template #cover>
-              <k-plex-image
-                  class="h-thumb cursor-pointer"
+              <k-thumb-image
+                  class="h-thumb"
                   :preview="false"
-                  :plex-thumb="item.thumb"
+                  :url="item.thumb"
                   @click="onViewArtist(item)"
               />
             </template>

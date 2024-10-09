@@ -64,11 +64,11 @@
         <template :key="record.id" v-for="record in pageResult.records">
           <a-card class="k-card col-span-3" :bordered="false">
             <template #cover>
-              <k-cover-image
-                class="h-poster cursor-pointer"
-                type="comic"
+              <k-thumb-image
+                class="h-poster"
+                type="ComicSeries"
                 :preview="false"
-                :thumb="record.id"
+                :id="record.id"
                 @click="onViewRecord(record.id)"
               />
               <div class="absolute top-0 left-0 m-2px">

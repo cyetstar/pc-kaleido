@@ -60,10 +60,11 @@
         <template :key="record.id" v-for="record in pageResult.records">
           <a-card class="k-card col-span-3" :bordered="false">
             <template #cover>
-              <k-plex-image
-                class="h-poster cursor-pointer"
+              <k-thumb-image
+                class="h-poster"
+                type="TvshowShow"
                 :preview="false"
-                :plex-thumb="record.thumb"
+                :id="record.id"
                 @click="onViewRecord(record.id)"
               />
               <div class="absolute top-0 left-0 m-2px">

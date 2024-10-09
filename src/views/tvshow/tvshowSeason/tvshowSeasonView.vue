@@ -31,10 +31,12 @@
     </a-page-header>
     <section class="flex">
       <div>
-        <k-plex-image
+        <k-thumb-image
+            v-if="record.id"
             class="h-poster"
+            type="TvshowSeason"
             style="width: 250px"
-            :plex-thumb="record.thumb"
+            :id="record.id"
         />
       </div>
       <div class="flex-1 ml-8">
@@ -106,10 +108,11 @@
         <template :key="item.id" v-for="item in actorList">
           <a-card class="k-card col-span-3" :bordered="false">
             <template #cover>
-              <k-plex-image
+              <k-thumb-image
                   class="h-thumb"
                   :preview="false"
-                  :plex-thumb="item.thumb"
+                  :url="item.thumb"
+                  @click="onViewArtist(item)"
               />
             </template>
             <a-card-meta
@@ -123,10 +126,13 @@
     <section v-if="isNotEmpty(episodeRecords)">
       <h-module-title title="单集"/>
       <div class="flex mb-6" v-for="episodeRecord in episodeRecords" :key="episodeRecord.id">
-        <k-plex-image
-            style="object-fit: cover; aspect-ratio: 16 / 9; width: 200px"
-            :plex-thumb="episodeRecord.thumb"
-        />
+        <div>
+          <k-thumb-image
+              style="object-fit: cover; aspect-ratio: 16 / 9; width: 200px"
+              type="TvshowEpisode"
+              :id="episodeRecord.id"
+          />
+        </div>
         <div class="flex-1 ml-6">
           <p>第 {{ episodeRecord.episodeIndex }} 集 {{ episodeRecord.title }}</p>
           <p>{{ episodeRecord.summary }}</p>

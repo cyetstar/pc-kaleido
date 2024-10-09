@@ -5,5 +5,5 @@
  * @LastEditTime: 2023-01-10 09:16:13
  * @Description:
  */
-import CoverImage from "./CoverImage.vue";
-export default CoverImage;
+import ThumbImage from "./ThumbImage.vue";
+export default ThumbImage;
