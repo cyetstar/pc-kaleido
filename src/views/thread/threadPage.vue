@@ -4,16 +4,18 @@
  * @Description: 系统配置表列表页面
 -->
 <template>
-  <section class="h-page-section" ref="appManagePage">
+  <section class="h-page-section">
     <h-form-search
       v-model:form="searchForm"
       @search="onSearch"
       @reset="onReset"
+      class="h-form"
     >
       <h-col :span="6">
-        <h-input
+        <h-select
           label="站点"
           v-model:value="searchForm.website"
+          dict-type="threadWebsite"
           name="website"
         />
       </h-col>
@@ -42,24 +44,30 @@
         />
       </h-col>
       <h-col :span="6">
-        <h-input label="状态" v-model:value="searchForm.status" name="status" />
+        <h-select
+          label="状态"
+          v-model:value="searchForm.status"
+          dict-type="threadStatus"
+          name="status"
+        />
       </h-col>
     </h-form-search>
-
     <a-space class="h-btn-space"></a-space>
-
     <h-table-data
       ref="tableRef"
       row-key="id"
       @loadData="loadData"
       @selection-change="selectionChange"
     >
-      <a-table-column title="标题" data-index="title"></a-table-column>
-      <a-table-column
-        title="状态"
-        data-index="status"
-        align="center"
-      ></a-table-column>
+      <a-table-column title="标题">
+        <template #="{ record }">
+          <a-tag :color="color[record.status]">{{ record.status }}</a-tag>
+          {{ record.title }}
+          <a v-if="record.url" :href="record.url" target="_blank">
+            <link-outlined />
+          </a>
+        </template>
+      </a-table-column>
       <a-table-column title="操作" align="center" width="80px">
         <template #="{ record }">
           <a-space :size="0">
@@ -67,10 +75,15 @@
               type="primary"
               size="small"
               link
-              v-permissKey="'thread:view'"
               @click="onViewRecord(record.id)"
               >详情
             </h-button>
+            <h-button-delete
+              size="small"
+              link
+              @delete="onDeleteRecord(record.id)"
+              >删除
+            </h-button-delete>
           </a-space>
         </template>
       </a-table-column>
@@ -89,18 +102,14 @@ import {
 
 import { message } from "ant-design-vue";
 import { useRouter } from "vue-router";
-import KActionButton from "@c/ActionButton/ActionButton.vue";
+import { LinkOutlined } from "@ant-design/icons-vue";
 
-const searchForm = ref({
-  id: "",
-  configName: "",
-  configKey: "",
-  configValue: "",
-  isDeleted: "",
-  createTime: "",
-  updateTime: "",
+const color = ref({
+  like: "green",
+  unlike: "red",
+  achieve: "blue",
 });
-
+const searchForm = ref({});
 const tableRef = ref();
 const onSearch = () => {
   tableRef.value.load(1);
@@ -111,9 +120,7 @@ const onReset = () => {
 };
 
 const loadData = (params, callbacks) => {
-  callbacks(
-    apiThreadPage({ ...params, ...searchForm.value, searchCount: true })
-  );
+  callbacks(apiThreadPage({ ...params, ...searchForm.value }));
 };
 
 const selectionChange = () => {};

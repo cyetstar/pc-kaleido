@@ -11,6 +11,7 @@
       v-model:form="searchForm"
       @search="onSearch"
       @reset="onReset"
+      class="h-form"
     >
       <a-col :span="5">
         <h-input v-model:value="searchForm.name" label="菜单标识" name="name" />

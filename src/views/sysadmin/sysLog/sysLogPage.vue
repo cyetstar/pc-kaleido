@@ -1,6 +1,6 @@
 <template>
   <div class="h-page-section">
-    <a-form :model="searchForm" ref="formRef">
+    <a-form :model="searchForm" ref="formRef" class="h-form">
       <a-row :gutter="32">
         <a-col :span="6">
           <h-select
@@ -48,9 +48,9 @@
         </h-col>
       </a-row>
     </a-form>
-    <div ref="consoleRef" class="console h-[calc(100vh-128px)]">
+    <div ref="consoleRef" class="console h-[calc(100vh-170px)]">
       <div v-for="(log, index) in logs" :key="index">
-        <div v-html="log" style="margin-bottom: 5px; font-size: 16px"></div>
+        <div v-html="log" style="font-size: 14px"></div>
       </div>
     </div>
   </div>

@@ -95,6 +95,12 @@
           </span>
         </p>
         <p class="flex">
+          <span class="mr-2">文件名:</span>
+          <span class="flex-1">
+            {{ record.filename }}
+          </span>
+        </p>
+        <p class="flex">
           <span class="mr-2">更新于:</span>
           <span class="flex-1">
             {{ formatUnixTimestamp(record.updatedAt) }}

@@ -11,6 +11,7 @@
       v-model:form="searchForm"
       @search="onSearch"
       @reset="onReset"
+      class="h-form"
     >
       <a-col :span="5">
         <h-input label="资源名称" name="name" v-model:value="searchForm.name" />

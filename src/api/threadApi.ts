@@ -48,3 +48,10 @@ export const apiThreadExport = (params: any) => {
     params,
   });
 };
+
+export const apiThreadUpdateStatus = (data: any) => {
+  return useFetch.post<any>({
+    url: "/thread/updateStatus",
+    data,
+  });
+};

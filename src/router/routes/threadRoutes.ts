@@ -7,8 +7,7 @@ const threadRoutes: AppRouteConfig[] = [
     component: () => import("@/views/thread/threadPage.vue"),
     meta: {
       title: "发布记录",
-      requiresAuth: false,
-      icon: ["i-home.png", "i-home-active.png"],
+      keepAlive: true,
     },
   },
   {
