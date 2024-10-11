@@ -101,10 +101,10 @@ const onRefresh = () => {
         const log = ansiUp.ansi_to_html(data.logs[i]);
         logs.value.push(log);
       }
+      if (searchForm.value.scroll && data.logs.length > 0) {
+        scrollToBottom();
+      }
     });
-    if (searchForm.value.scroll) {
-      scrollToBottom();
-    }
   });
 };
 const scrollToBottom = () => {
@@ -114,6 +114,7 @@ const scrollToBottom = () => {
 const initData = () => {
   sysLogListApi().then((data) => {
     logFiles.value = data;
+    scrollToBottom();
   });
 };
 

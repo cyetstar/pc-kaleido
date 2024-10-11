@@ -8,6 +8,7 @@
 <template>
   <section id="header-bar">
     <div class="flex items-center">
+      <img src="@/assets/images/logo.png" alt="" style="width: 30px" />
       <div class="font-350 cursor-pointer title" @click="router.replace('/')">
         {{ title }}
       </div>
@@ -36,9 +37,8 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
-import headerNotice from "./HeaderNotice.vue";
-import headerUser from "./HeaderUser.vue";
 import { useMenuStore } from "@/store/modules/menu";
+import headerUser from "./HeaderUser.vue";
 import HeaderAction from "@/layouts/backstage/section/HeaderAction.vue";
 
 const props = defineProps({
